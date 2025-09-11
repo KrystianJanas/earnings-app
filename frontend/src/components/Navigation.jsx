@@ -11,7 +11,7 @@ const NavContainer = styled.nav`
   right: 0;
   background: ${({ theme }) => theme.colors.cardBg};
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 8px ${({ theme }) => theme.spacing.sm};
   z-index: 100;
 `
 
@@ -27,7 +27,7 @@ const NavItem = styled(NavLink)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.xs};
+  padding: 4px ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text.muted};
   text-decoration: none;
   transition: all 0.2s ease;
@@ -42,12 +42,12 @@ const NavItem = styled(NavLink)`
   }
 
   svg {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.4rem;
+    margin-bottom: 2px;
   }
 
   span {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
   }
 `
@@ -56,7 +56,7 @@ const LogoutButton = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.xs};
+  padding: 4px ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text.muted};
   background: none;
   border: none;
@@ -69,12 +69,12 @@ const LogoutButton = styled.button`
   }
 
   svg {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.4rem;
+    margin-bottom: 2px;
   }
 
   span {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
   }
 `
