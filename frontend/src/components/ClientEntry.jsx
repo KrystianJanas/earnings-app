@@ -163,7 +163,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
         <NotesInput
           id={`client-notes-${index}`}
           type="text"
-          placeholder="np. fryzura, koloryzacja..."
+          placeholder="np. manicure, pedicure..."
           value={client.notes || ''}
           onChange={(e) => handleChange('notes', e.target.value)}
         />

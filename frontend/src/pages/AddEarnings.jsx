@@ -467,6 +467,13 @@ const AddEarnings = () => {
     setValue('clientsCount', '')
     setValue('hoursWorked', '')
     setValue('notes', '')
+    
+    // Auto-close calendar on mobile devices
+    setTimeout(() => {
+      if (e.target) {
+        e.target.blur()
+      }
+    }, 100)
   }
 
   const cashAmount = parseFloat(watch('cashAmount') || 0)
