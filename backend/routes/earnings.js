@@ -140,7 +140,7 @@ router.post('/day', [
     if (entryMode === 'detailed' && clients && clients.length > 0) {
       finalCashAmount = clients.filter(c => c.paymentMethod === 'cash').reduce((sum, c) => sum + c.amount, 0);
       finalCardAmount = clients.filter(c => c.paymentMethod === 'card').reduce((sum, c) => sum + c.amount, 0);
-      finalClientsCount = clients.length;
+      finalClientsCount = clients.filter(c => parseFloat(c.amount) > 0).length; // Only count clients with amount > 0
     }
 
     const earnings = await Earnings.createOrUpdate({
@@ -181,6 +181,11 @@ router.get('/monthly/:year/:month', async (req, res) => {
     
     const monthlyTotal = await Earnings.getMonthlyTotal(req.user.userId, year, month);
     const dailyBreakdown = await Earnings.getMonthlyBreakdown(req.user.userId, year, month);
+    
+    // Get user's hourly rate for estimated earnings calculation
+    const hourlyRate = await UserSettings.getHourlyRate(req.user.userId);
+    const totalHours = parseFloat(monthlyTotal.total_hours);
+    const estimatedEarnings = hourlyRate * totalHours;
 
     res.json({
       year: parseInt(year),
@@ -191,7 +196,9 @@ router.get('/monthly/:year/:month', async (req, res) => {
         card: parseFloat(monthlyTotal.total_card),
         tips: parseFloat(monthlyTotal.total_tips),
         clients: parseInt(monthlyTotal.total_clients),
-        hours: parseFloat(monthlyTotal.total_hours)
+        hours: parseFloat(monthlyTotal.total_hours),
+        estimatedEarnings: estimatedEarnings,
+        hourlyRate: hourlyRate
       },
       daily: dailyBreakdown.map(day => ({
         date: day.date,

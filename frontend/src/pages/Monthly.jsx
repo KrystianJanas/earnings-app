@@ -393,10 +393,11 @@ const Monthly = () => {
 
                 <StatItem>
                   <StatAmount color="#ec4899">
-                    -
+                    {(total.estimatedEarnings || 0).toFixed(2)} zł
                   </StatAmount>
                   <StatLabel>
-                    Dostępne w ustawieniach
+                    💰
+                    Prognozowana wypłata
                   </StatLabel>
                 </StatItem>
               </StatsRow>
