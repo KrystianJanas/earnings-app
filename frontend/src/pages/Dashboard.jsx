@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiDollarSign, FiCreditCard, FiGift, FiUsers, FiClock, FiChevronDown } from 'react-icons/fi'
+import { FiCreditCard, FiGift, FiUsers, FiClock, FiChevronDown } from 'react-icons/fi'
 import { earningsAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import { Container, Card } from '../styles/theme'
@@ -286,13 +286,13 @@ const Dashboard = () => {
               <EarningsHeader>
                 <EarningsTitle>Łączne zarobki</EarningsTitle>
                 <IconWrapper color="#6366f1">
-                  <FiDollarSign />
+                  💰
                 </IconWrapper>
               </EarningsHeader>
               <EarningsAmount>
                 {(earnings.totalEarnings || 0).toFixed(2)} zł
               </EarningsAmount>
-              <EarningsLabel>Zarobki w tym miesiącu</EarningsLabel>
+              <EarningsLabel>Zarobki {getPeriodLabel()}</EarningsLabel>
             </EarningsCard>
 
             <StatsGrid>
@@ -301,7 +301,7 @@ const Dashboard = () => {
                   {(earnings.cashAmount || 0).toFixed(2)} zł
                 </StatAmount>
                 <StatLabel>
-                  <FiDollarSign />
+                  💵
                   Płatności gotówką
                 </StatLabel>
               </StatCard>
@@ -355,7 +355,7 @@ const Dashboard = () => {
                   {(earnings.estimatedEarnings || 0).toFixed(2)} zł
                 </StatAmount>
                 <StatLabel>
-                  <FiDollarSign />
+                  💰
                   Szacunkowy zarobek
                 </StatLabel>
               </StatCard>

@@ -202,16 +202,23 @@ const ModeButton = styled.button`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
   padding: ${({ theme }) => theme.spacing.sm};
-  border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
+  border: 1px solid ${({ active, disabled, theme }) => 
+    disabled ? theme.colors.border + '50' : 
+    active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  background: ${({ active, theme }) => active ? theme.colors.primary : 'transparent'};
-  color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
+  background: ${({ active, disabled, theme }) => 
+    disabled ? theme.colors.surface + '50' : 
+    active ? theme.colors.primary : 'transparent'};
+  color: ${({ active, disabled, theme }) => 
+    disabled ? theme.colors.text.muted : 
+    active ? 'white' : theme.colors.text.primary};
   font-size: 0.8rem;
   font-weight: 500;
-  cursor: pointer;
+  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   flex: 1;
   justify-content: center;
+  opacity: ${({ disabled }) => disabled ? 0.5 : 1};
 
   @media (min-width: 640px) {
     padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
@@ -219,7 +226,7 @@ const ModeButton = styled.button`
     flex: initial;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
     border-color: ${({ theme }) => theme.colors.primary};
   }
@@ -343,10 +350,35 @@ const AddEarnings = () => {
     setClients(newClients)
   }
 
+  // Check if there's existing data that would prevent mode switching
+  const hasExistingData = existingData && (
+    (existingData.entryMode === 'summary' && (
+      existingData.cashAmount > 0 || 
+      existingData.cardAmount > 0 || 
+      existingData.clientsCount > 0
+    )) ||
+    (existingData.entryMode === 'detailed' && 
+      existingData.clients && existingData.clients.length > 0 &&
+      existingData.clients.some(client => parseFloat(client.amount) > 0)
+    )
+  )
+
   const switchMode = (mode) => {
+    // Prevent switching if there's existing data
+    if (hasExistingData) {
+      return
+    }
+    
     setEntryMode(mode)
-    if (mode === 'detailed' && clients.length === 0) {
+    
+    if (mode === 'detailed') {
+      // When switching to detailed, reset to one empty client
       setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+    } else if (mode === 'summary') {
+      // When switching to summary, clear form values
+      setValue('cashAmount', '')
+      setValue('cardAmount', '')
+      setValue('clientsCount', '')
     }
   }
 
@@ -433,6 +465,7 @@ const AddEarnings = () => {
                 <ModeButton 
                   type="button"
                   active={entryMode === 'detailed'}
+                  disabled={hasExistingData && entryMode !== 'detailed'}
                   onClick={() => switchMode('detailed')}
                 >
                   <FiToggleRight />
@@ -441,6 +474,7 @@ const AddEarnings = () => {
                 <ModeButton 
                   type="button"
                   active={entryMode === 'summary'}
+                  disabled={hasExistingData && entryMode !== 'summary'}
                   onClick={() => switchMode('summary')}
                 >
                   <FiToggleLeft />
