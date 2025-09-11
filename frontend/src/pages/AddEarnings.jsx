@@ -26,11 +26,13 @@ const Container = styled.div`
   max-width: 428px;
   margin: 0 auto;
   padding: 0 ${({ theme }) => theme.spacing.sm};
-  width: 100%;
+  width: calc(100% - ${({ theme }) => theme.spacing.sm} * 2);
+  box-sizing: border-box;
 
   @media (min-width: 768px) {
     max-width: 800px;
     padding: 0 ${({ theme }) => theme.spacing.lg};
+    width: calc(100% - ${({ theme }) => theme.spacing.lg} * 2);
   }
 `
 
@@ -53,6 +55,8 @@ const SubText = styled.p`
 
 const FormCard = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  width: 100%;
+  box-sizing: border-box;
 
   @media (min-width: 768px) {
     max-width: 600px;
@@ -69,10 +73,13 @@ const FormGroup = styled.div`
 const DateInputWrapper = styled.div`
   position: relative;
   width: 100%;
+  overflow: hidden;
 
   input {
     width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
+    padding-right: 40px;
   }
 
   svg {
@@ -82,6 +89,7 @@ const DateInputWrapper = styled.div`
     transform: translateY(-50%);
     color: ${({ theme }) => theme.colors.text.muted};
     font-size: 1.1rem;
+    z-index: 1;
   }
 `
 
@@ -285,11 +293,18 @@ const AddEarnings = () => {
     {
       enabled: !!selectedDate,
       onSuccess: (data) => {
-        setEntryMode(data.entryMode || 'detailed')
+        // If there's existing data, use its mode, otherwise keep 'detailed' as default
+        if (data.entryMode) {
+          setEntryMode(data.entryMode)
+        }
+        // Only change to detailed mode if no existing entry mode is specified
+        else if (!data.entryMode && (data.cashAmount === 0 && data.cardAmount === 0 && data.clientsCount === 0)) {
+          setEntryMode('detailed')
+        }
         
         if (data.entryMode === 'detailed' && data.clients && data.clients.length > 0) {
           setClients(data.clients)
-        } else {
+        } else if (data.entryMode !== 'detailed') {
           setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
           setValue('cashAmount', data.cashAmount > 0 ? data.cashAmount.toString() : '')
           setValue('cardAmount', data.cardAmount > 0 ? data.cardAmount.toString() : '')
