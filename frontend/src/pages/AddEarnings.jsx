@@ -238,8 +238,7 @@ const ClientsSection = styled.div`
 
 const ClientsSummary = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   padding: ${({ theme }) => theme.spacing.md};
   background: ${({ theme }) => theme.colors.primary}10;
   border: 1px solid ${({ theme }) => theme.colors.primary}30;
@@ -577,12 +576,12 @@ const AddEarnings = () => {
                     <ClientsSection>
                       {clientTotals.total > 0 && (
                         <ClientsSummary>
-                          <div>
+                          <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
                             <strong>Klientek: {clients.filter(c => parseFloat(c.amount) > 0).length}</strong>
                           </div>
-                          <div>
+                          <div style={{ textAlign: 'center' }}>
                             <strong>Łącznie: {clientTotals.total.toFixed(2)} zł</strong>
-                            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                            <div style={{ fontSize: '0.8rem', opacity: 0.8, marginTop: '0.25rem' }}>
                               Gotówka: {clientTotals.cash.toFixed(2)} zł | Karta: {clientTotals.card.toFixed(2)} zł
                             </div>
                           </div>
