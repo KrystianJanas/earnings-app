@@ -1,0 +1,47 @@
+{
+  "name": "beautician-earnings-frontend",
+  "version": "1.0.0",
+  "description": "Modern mobile-first frontend for beautician earnings tracking",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "axios": "^1.5.0",
+    "styled-components": "^6.0.7",
+    "react-query": "^3.39.3",
+    "react-hook-form": "^7.45.4",
+    "date-fns": "^2.30.0",
+    "react-icons": "^4.10.1",
+    "framer-motion": "^10.16.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "vite": "^4.4.9"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:host": "vite --host 127.0.0.1",
+    "dev:local": "vite --host localhost",
+    "dev:network": "vite --host 0.0.0.0",
+    "dev:docker": "vite --host 0.0.0.0 --clearScreen false",
+    "dev:clear": "vite --force --clearScreen false",
+    "dev:debug": "vite --debug --force --clearScreen false",
+    "build": "vite build",
+    "preview": "vite preview",
+    "preview:host": "vite preview --host 127.0.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
