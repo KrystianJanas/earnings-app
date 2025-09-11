@@ -621,9 +621,9 @@ const AddEarnings = () => {
                     
                     <DateDisplay>
                       {formatDisplayDate(selectedDate)}
-                      {/* <CalendarIcon> */}
-                        <FiCalendar />
-                      {/* </CalendarIcon> */}
+                      <CalendarIcon>
+                        {/* <FiCalendar /> */}
+                      </CalendarIcon>
                       <DateInputWrapper>
                         <Input
                           id="date"
