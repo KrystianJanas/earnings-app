@@ -22,6 +22,7 @@ CREATE TABLE daily_earnings (
     clients_count INTEGER DEFAULT 0,
     hours_worked DECIMAL(5,2) DEFAULT 0.00,
     notes TEXT,
+    entry_mode VARCHAR(20) DEFAULT 'summary' CHECK (entry_mode IN ('summary', 'detailed')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, date)
@@ -58,3 +59,66 @@ CREATE TRIGGER update_daily_earnings_updated_at BEFORE UPDATE ON daily_earnings
 
 CREATE TRIGGER update_user_settings_updated_at BEFORE UPDATE ON user_settings
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Client transactions table for detailed earnings tracking
+CREATE TABLE client_transactions (
+    id SERIAL PRIMARY KEY,
+    daily_earnings_id INTEGER REFERENCES daily_earnings(id) ON DELETE CASCADE,
+    amount DECIMAL(10,2) NOT NULL,
+    payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ('cash', 'card')),
+    client_order INTEGER NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Additional indexes for client transactions
+CREATE INDEX idx_client_transactions_daily_earnings ON client_transactions(daily_earnings_id);
+CREATE INDEX idx_client_transactions_order ON client_transactions(daily_earnings_id, client_order);
+
+-- Trigger for client_transactions updated_at
+CREATE TRIGGER update_client_transactions_updated_at BEFORE UPDATE ON client_transactions
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- View for easy querying of daily earnings with client details
+CREATE OR REPLACE VIEW daily_earnings_complete AS
+SELECT 
+    de.id,
+    de.user_id,
+    de.date,
+    de.entry_mode,
+    de.cash_amount,
+    de.card_amount,
+    de.tips_amount,
+    de.clients_count,
+    de.hours_worked,
+    de.notes,
+    de.created_at,
+    de.updated_at,
+    -- Calculate totals from client transactions for detailed mode
+    COALESCE(ct_summary.total_cash_from_clients, 0) as calculated_cash_amount,
+    COALESCE(ct_summary.total_card_from_clients, 0) as calculated_card_amount,
+    COALESCE(ct_summary.client_count_from_transactions, 0) as calculated_clients_count,
+    -- Use original values for summary mode, calculated for detailed mode
+    CASE 
+        WHEN de.entry_mode = 'detailed' THEN COALESCE(ct_summary.total_cash_from_clients, 0)
+        ELSE de.cash_amount
+    END as effective_cash_amount,
+    CASE 
+        WHEN de.entry_mode = 'detailed' THEN COALESCE(ct_summary.total_card_from_clients, 0)
+        ELSE de.card_amount
+    END as effective_card_amount,
+    CASE 
+        WHEN de.entry_mode = 'detailed' THEN COALESCE(ct_summary.client_count_from_transactions, 0)
+        ELSE de.clients_count
+    END as effective_clients_count
+FROM daily_earnings de
+LEFT JOIN (
+    SELECT 
+        daily_earnings_id,
+        SUM(CASE WHEN payment_method = 'cash' THEN amount ELSE 0 END) as total_cash_from_clients,
+        SUM(CASE WHEN payment_method = 'card' THEN amount ELSE 0 END) as total_card_from_clients,
+        COUNT(*) as client_count_from_transactions
+    FROM client_transactions
+    GROUP BY daily_earnings_id
+) ct_summary ON de.id = ct_summary.daily_earnings_id;

@@ -71,28 +71,38 @@ router.get('/dashboard', async (req, res) => {
 router.get('/day/:date', async (req, res) => {
   try {
     const { date } = req.params;
-    const earnings = await Earnings.getByDate(req.user.userId, date);
+    const earnings = await Earnings.getByDateWithClients(req.user.userId, date);
     
     if (!earnings) {
       return res.json({
         date,
+        entryMode: 'summary',
         cashAmount: 0,
         cardAmount: 0,
         tipsAmount: 0,
         clientsCount: 0,
         hoursWorked: 0,
-        notes: ''
+        notes: '',
+        clients: []
       });
     }
 
     res.json({
       date: earnings.date,
-      cashAmount: parseFloat(earnings.cash_amount),
-      cardAmount: parseFloat(earnings.card_amount),
-      tipsAmount: parseFloat(earnings.tips_amount),
-      clientsCount: parseInt(earnings.clients_count),
-      hoursWorked: parseFloat(earnings.hours_worked),
-      notes: earnings.notes || ''
+      entryMode: earnings.entry_mode || 'summary',
+      cashAmount: parseFloat(earnings.cash_amount || 0),
+      cardAmount: parseFloat(earnings.card_amount || 0),
+      tipsAmount: parseFloat(earnings.tips_amount || 0),
+      clientsCount: parseInt(earnings.clients_count || 0),
+      hoursWorked: parseFloat(earnings.hours_worked || 0),
+      notes: earnings.notes || '',
+      clients: earnings.clients ? earnings.clients.map(client => ({
+        id: client.id,
+        amount: parseFloat(client.amount),
+        paymentMethod: client.payment_method,
+        clientOrder: client.client_order,
+        notes: client.notes || ''
+      })) : []
     });
   } catch (error) {
     console.error('Get day earnings error:', error);
@@ -102,12 +112,17 @@ router.get('/day/:date', async (req, res) => {
 
 router.post('/day', [
   body('date').isISO8601().toDate(),
+  body('entryMode').optional().isIn(['summary', 'detailed']),
   body('cashAmount').optional().isFloat({ min: 0 }),
   body('cardAmount').optional().isFloat({ min: 0 }),
   body('tipsAmount').optional().isFloat({ min: 0 }),
   body('clientsCount').optional().isInt({ min: 0 }),
   body('hoursWorked').optional().isFloat({ min: 0 }),
-  body('notes').optional().isString()
+  body('notes').optional().isString(),
+  body('clients').optional().isArray(),
+  body('clients.*.amount').optional().isFloat({ min: 0 }),
+  body('clients.*.paymentMethod').optional().isIn(['cash', 'card']),
+  body('clients.*.notes').optional().isString()
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -115,28 +130,42 @@ router.post('/day', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { date, cashAmount, cardAmount, tipsAmount, clientsCount, hoursWorked, notes } = req.body;
+    const { date, entryMode, cashAmount, cardAmount, tipsAmount, clientsCount, hoursWorked, notes, clients } = req.body;
+
+    // For detailed mode, calculate amounts from clients if not provided
+    let finalCashAmount = cashAmount;
+    let finalCardAmount = cardAmount;
+    let finalClientsCount = clientsCount;
+
+    if (entryMode === 'detailed' && clients && clients.length > 0) {
+      finalCashAmount = clients.filter(c => c.paymentMethod === 'cash').reduce((sum, c) => sum + c.amount, 0);
+      finalCardAmount = clients.filter(c => c.paymentMethod === 'card').reduce((sum, c) => sum + c.amount, 0);
+      finalClientsCount = clients.length;
+    }
 
     const earnings = await Earnings.createOrUpdate({
       userId: req.user.userId,
       date,
-      cashAmount,
-      cardAmount,
+      entryMode: entryMode || 'summary',
+      cashAmount: finalCashAmount,
+      cardAmount: finalCardAmount,
       tipsAmount,
-      clientsCount,
+      clientsCount: finalClientsCount,
       hoursWorked,
-      notes
+      notes,
+      clients: clients || []
     });
 
     res.json({
       message: 'Earnings saved successfully',
       earnings: {
         date: earnings.date,
-        cashAmount: parseFloat(earnings.cash_amount),
-        cardAmount: parseFloat(earnings.card_amount),
-        tipsAmount: parseFloat(earnings.tips_amount),
-        clientsCount: parseInt(earnings.clients_count),
-        hoursWorked: parseFloat(earnings.hours_worked),
+        entryMode: earnings.entry_mode,
+        cashAmount: parseFloat(earnings.cash_amount || 0),
+        cardAmount: parseFloat(earnings.card_amount || 0),
+        tipsAmount: parseFloat(earnings.tips_amount || 0),
+        clientsCount: parseInt(earnings.clients_count || 0),
+        hoursWorked: parseFloat(earnings.hours_worked || 0),
         notes: earnings.notes
       }
     });
@@ -166,6 +195,7 @@ router.get('/monthly/:year/:month', async (req, res) => {
       },
       daily: dailyBreakdown.map(day => ({
         date: day.date,
+        entryMode: day.entry_mode,
         cashAmount: parseFloat(day.cash_amount),
         cardAmount: parseFloat(day.card_amount),
         tipsAmount: parseFloat(day.tips_amount),

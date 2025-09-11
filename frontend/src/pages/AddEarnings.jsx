@@ -3,11 +3,12 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiCalendar, FiSave, FiDollarSign, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle } from 'react-icons/fi'
+import { FiCalendar, FiSave, FiDollarSign, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight } from 'react-icons/fi'
 import { format } from 'date-fns'
 import { earningsAPI } from '../services/api'
 import { Container, Card, Button, Input, Label } from '../styles/theme'
 import Navigation from '../components/Navigation'
+import ClientEntry from '../components/ClientEntry'
 
 const AddEarningsContainer = styled.div`
   min-height: 100vh;
@@ -145,10 +146,85 @@ const LoadingText = styled.div`
   margin: ${({ theme }) => theme.spacing.md} 0;
 `
 
+const ModeToggle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`
+
+const ModeButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: ${({ active, theme }) => active ? theme.colors.primary : 'transparent'};
+  color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+`
+
+const ClientsSection = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
+const ClientsSummary = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.primary}10;
+  border: 1px solid ${({ theme }) => theme.colors.primary}30;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-weight: 500;
+`
+
+const AddClientButton = styled(Button)`
+  background: ${({ theme }) => theme.colors.success};
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.success}dd;
+  }
+`
+
+const GlobalFieldsSection = styled.div`
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  padding-top: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
+`
+
+const SectionTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
 const AddEarnings = () => {
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [successMessage, setSuccessMessage] = useState('')
   const [buttonSuccessMessage, setButtonSuccessMessage] = useState('')
+  const [entryMode, setEntryMode] = useState('summary') // 'summary' or 'detailed'
+  const [clients, setClients] = useState([{ amount: 0, paymentMethod: 'cash', notes: '' }])
   const queryClient = useQueryClient()
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
@@ -169,10 +245,18 @@ const AddEarnings = () => {
     {
       enabled: !!selectedDate,
       onSuccess: (data) => {
-        setValue('cashAmount', data.cashAmount > 0 ? data.cashAmount.toString() : '')
-        setValue('cardAmount', data.cardAmount > 0 ? data.cardAmount.toString() : '')
+        setEntryMode(data.entryMode || 'summary')
+        
+        if (data.entryMode === 'detailed' && data.clients && data.clients.length > 0) {
+          setClients(data.clients)
+        } else {
+          setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+          setValue('cashAmount', data.cashAmount > 0 ? data.cashAmount.toString() : '')
+          setValue('cardAmount', data.cardAmount > 0 ? data.cardAmount.toString() : '')
+          setValue('clientsCount', data.clientsCount > 0 ? data.clientsCount.toString() : '')
+        }
+        
         setValue('tipsAmount', data.tipsAmount > 0 ? data.tipsAmount.toString() : '')
-        setValue('clientsCount', data.clientsCount > 0 ? data.clientsCount.toString() : '')
         setValue('hoursWorked', data.hoursWorked > 0 ? data.hoursWorked.toString() : '')
         setValue('notes', data.notes || '')
       }
@@ -194,18 +278,64 @@ const AddEarnings = () => {
     }
   })
 
+  // Client management functions
+  const addClient = () => {
+    setClients([...clients, { amount: 0, paymentMethod: 'cash', notes: '' }])
+  }
+
+  const removeClient = (index) => {
+    if (clients.length > 1) {
+      const newClients = clients.filter((_, i) => i !== index)
+      setClients(newClients)
+    }
+  }
+
+  const updateClient = (index, clientData) => {
+    const newClients = [...clients]
+    newClients[index] = clientData
+    setClients(newClients)
+  }
+
+  const switchMode = (mode) => {
+    setEntryMode(mode)
+    if (mode === 'detailed' && clients.length === 0) {
+      setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+    }
+  }
+
+  // Calculate totals from clients in detailed mode
+  const clientTotals = clients.reduce((totals, client) => {
+    const amount = parseFloat(client.amount) || 0
+    if (client.paymentMethod === 'cash') {
+      totals.cash += amount
+    } else {
+      totals.card += amount
+    }
+    totals.total += amount
+    return totals
+  }, { cash: 0, card: 0, total: 0 })
+
   const onSubmit = (data) => {
     setSuccessMessage('')
     setButtonSuccessMessage('')
-    mutation.mutate({
+    
+    const submitData = {
       date: selectedDate,
-      cashAmount: parseFloat(data.cashAmount) || 0,
-      cardAmount: parseFloat(data.cardAmount) || 0,
+      entryMode,
       tipsAmount: parseFloat(data.tipsAmount) || 0,
-      clientsCount: parseInt(data.clientsCount) || 0,
       hoursWorked: parseFloat(data.hoursWorked) || 0,
       notes: data.notes || ''
-    })
+    }
+
+    if (entryMode === 'detailed') {
+      submitData.clients = clients.filter(client => parseFloat(client.amount) > 0)
+    } else {
+      submitData.cashAmount = parseFloat(data.cashAmount) || 0
+      submitData.cardAmount = parseFloat(data.cardAmount) || 0
+      submitData.clientsCount = parseInt(data.clientsCount) || 0
+    }
+
+    mutation.mutate(submitData)
   }
 
   const handleDateChange = (e) => {
