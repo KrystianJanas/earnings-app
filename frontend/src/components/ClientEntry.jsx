@@ -13,7 +13,7 @@ const ClientCard = styled.div`
 
 const ClientHeader = styled.div`
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
 `

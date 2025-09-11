@@ -381,146 +381,210 @@ const AddEarnings = () => {
                 </DateInputWrapper>
               </FormGroup>
 
+              {/* Mode Toggle */}
+              <ModeToggle>
+                <ModeButton 
+                  type="button"
+                  active={entryMode === 'summary'}
+                  onClick={() => switchMode('summary')}
+                >
+                  <FiToggleLeft />
+                  Podsumowanie dnia
+                </ModeButton>
+                <ModeButton 
+                  type="button"
+                  active={entryMode === 'detailed'}
+                  onClick={() => switchMode('detailed')}
+                >
+                  <FiToggleRight />
+                  Szczegółowo po kliencie
+                </ModeButton>
+              </ModeToggle>
+
               {isLoading ? (
                 <LoadingText>Ładowanie istniejących danych...</LoadingText>
               ) : (
                 <>
-                  <FormGroup>
-                    <Label htmlFor="cashAmount">Kwota gotówką</Label>
-                    <AmountInputWrapper>
-                      <FiDollarSign />
-                      <AmountInput
-                        id="cashAmount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        placeholder="0.00"
-                        {...register('cashAmount', {
-                          pattern: {
-                            value: /^\d*\.?\d{0,2}$/,
-                            message: 'Wprowadź poprawną kwotę'
-                          }
-                        })}
-                      />
-                    </AmountInputWrapper>
-                    {errors.cashAmount && (
-                      <ErrorMessage>{errors.cashAmount.message}</ErrorMessage>
-                    )}
-                  </FormGroup>
+                  {/* Entry Mode Content */}
+                  {entryMode === 'summary' ? (
+                    // Summary Mode - Original form
+                    <>
+                      <FormGroup>
+                        <Label htmlFor="cashAmount">Kwota gotówką</Label>
+                        <AmountInputWrapper>
+                          <FiDollarSign />
+                          <AmountInput
+                            id="cashAmount"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            placeholder="0.00"
+                            {...register('cashAmount', {
+                              pattern: {
+                                value: /^\d*\.?\d{0,2}$/,
+                                message: 'Wprowadź poprawną kwotę'
+                              }
+                            })}
+                          />
+                        </AmountInputWrapper>
+                        {errors.cashAmount && (
+                          <ErrorMessage>{errors.cashAmount.message}</ErrorMessage>
+                        )}
+                      </FormGroup>
 
-                  <FormGroup>
-                    <Label htmlFor="cardAmount">Kwota kartą</Label>
-                    <AmountInputWrapper>
-                      <FiCreditCard />
-                      <AmountInput
-                        id="cardAmount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        placeholder="0.00"
-                        {...register('cardAmount', {
-                          pattern: {
-                            value: /^\d*\.?\d{0,2}$/,
-                            message: 'Wprowadź poprawną kwotę'
-                          }
-                        })}
-                      />
-                    </AmountInputWrapper>
-                    {errors.cardAmount && (
-                      <ErrorMessage>{errors.cardAmount.message}</ErrorMessage>
-                    )}
-                  </FormGroup>
+                      <FormGroup>
+                        <Label htmlFor="cardAmount">Kwota kartą</Label>
+                        <AmountInputWrapper>
+                          <FiCreditCard />
+                          <AmountInput
+                            id="cardAmount"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            placeholder="0.00"
+                            {...register('cardAmount', {
+                              pattern: {
+                                value: /^\d*\.?\d{0,2}$/,
+                                message: 'Wprowadź poprawną kwotę'
+                              }
+                            })}
+                          />
+                        </AmountInputWrapper>
+                        {errors.cardAmount && (
+                          <ErrorMessage>{errors.cardAmount.message}</ErrorMessage>
+                        )}
+                      </FormGroup>
 
-                  {totalEarnings > 0 && (
-                    <FormGroup>
-                      <div style={{ 
-                        padding: '12px',
-                        background: '#6366f120',
-                        border: '1px solid #6366f140',
-                        borderRadius: '0.5rem',
-                        textAlign: 'center'
-                      }}>
-                        <strong>Łączne zarobki: {totalEarnings.toFixed(2)} zł</strong>
-                      </div>
-                    </FormGroup>
+                      {(parseFloat(watch('cashAmount') || 0) + parseFloat(watch('cardAmount') || 0)) > 0 && (
+                        <FormGroup>
+                          <div style={{ 
+                            padding: '12px',
+                            background: '#6366f120',
+                            border: '1px solid #6366f140',
+                            borderRadius: '0.5rem',
+                            textAlign: 'center'
+                          }}>
+                            <strong>Łączne zarobki: {(parseFloat(watch('cashAmount') || 0) + parseFloat(watch('cardAmount') || 0)).toFixed(2)} zł</strong>
+                          </div>
+                        </FormGroup>
+                      )}
+
+                      <FormGroup>
+                        <Label htmlFor="clientsCount">Liczba klientek</Label>
+                        <AmountInputWrapper>
+                          <FiUsers />
+                          <AmountInput
+                            id="clientsCount"
+                            type="number"
+                            min="0"
+                            placeholder="0"
+                            {...register('clientsCount', {
+                              pattern: {
+                                value: /^\d+$/,
+                                message: 'Wprowadź liczbę całkowitą'
+                              }
+                            })}
+                          />
+                        </AmountInputWrapper>
+                        {errors.clientsCount && (
+                          <ErrorMessage>{errors.clientsCount.message}</ErrorMessage>
+                        )}
+                      </FormGroup>
+                    </>
+                  ) : (
+                    // Detailed Mode - Client-by-client entry
+                    <ClientsSection>
+                      {clientTotals.total > 0 && (
+                        <ClientsSummary>
+                          <div>
+                            <strong>Klientek: {clients.filter(c => parseFloat(c.amount) > 0).length}</strong>
+                          </div>
+                          <div>
+                            <strong>Łącznie: {clientTotals.total.toFixed(2)} zł</strong>
+                            <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
+                              Gotówka: {clientTotals.cash.toFixed(2)} zł | Karta: {clientTotals.card.toFixed(2)} zł
+                            </div>
+                          </div>
+                        </ClientsSummary>
+                      )}
+                      
+                      {clients.map((client, index) => (
+                        <ClientEntry
+                          key={index}
+                          client={client}
+                          index={index}
+                          onChange={updateClient}
+                          onRemove={removeClient}
+                          canRemove={clients.length > 1}
+                        />
+                      ))}
+                      
+                      <AddClientButton type="button" onClick={addClient}>
+                        <FiPlus />
+                        Dodaj kolejną klientkę
+                      </AddClientButton>
+                    </ClientsSection>
                   )}
 
-                  <FormGroup>
-                    <Label htmlFor="tipsAmount">Napiwki (opcjonalne)</Label>
-                    <AmountInputWrapper>
-                      <FiGift />
-                      <AmountInput
-                        id="tipsAmount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        placeholder="0.00"
-                        {...register('tipsAmount', {
-                          pattern: {
-                            value: /^\d*\.?\d{0,2}$/,
-                            message: 'Wprowadź poprawną kwotę'
-                          }
-                        })}
-                      />
-                    </AmountInputWrapper>
-                    {errors.tipsAmount && (
-                      <ErrorMessage>{errors.tipsAmount.message}</ErrorMessage>
-                    )}
-                  </FormGroup>
+                  {/* Global fields - same for both modes */}
+                  <GlobalFieldsSection>
+                    <SectionTitle>Dodatkowe informacje</SectionTitle>
+                    
+                    <FormGroup>
+                      <Label htmlFor="tipsAmount">Napiwki (opcjonalne)</Label>
+                      <AmountInputWrapper>
+                        <FiGift />
+                        <AmountInput
+                          id="tipsAmount"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder="0.00"
+                          {...register('tipsAmount', {
+                            pattern: {
+                              value: /^\d*\.?\d{0,2}$/,
+                              message: 'Wprowadź poprawną kwotę'
+                            }
+                          })}
+                        />
+                      </AmountInputWrapper>
+                      {errors.tipsAmount && (
+                        <ErrorMessage>{errors.tipsAmount.message}</ErrorMessage>
+                      )}
+                    </FormGroup>
 
-                  <FormGroup>
-                    <Label htmlFor="clientsCount">Liczba klientek</Label>
-                    <AmountInputWrapper>
-                      <FiUsers />
-                      <AmountInput
-                        id="clientsCount"
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        {...register('clientsCount', {
-                          pattern: {
-                            value: /^\d+$/,
-                            message: 'Wprowadź liczbę całkowitą'
-                          }
-                        })}
-                      />
-                    </AmountInputWrapper>
-                    {errors.clientsCount && (
-                      <ErrorMessage>{errors.clientsCount.message}</ErrorMessage>
-                    )}
-                  </FormGroup>
+                    <FormGroup>
+                      <Label htmlFor="hoursWorked">Liczba przepracowanych godzin</Label>
+                      <AmountInputWrapper>
+                        <FiClock />
+                        <AmountInput
+                          id="hoursWorked"
+                          type="number"
+                          step="0.25"
+                          min="0"
+                          placeholder="8.00"
+                          {...register('hoursWorked', {
+                            pattern: {
+                              value: /^\d*\.?\d{0,2}$/,
+                              message: 'Wprowadź poprawną liczbę godzin'
+                            }
+                          })}
+                        />
+                      </AmountInputWrapper>
+                      {errors.hoursWorked && (
+                        <ErrorMessage>{errors.hoursWorked.message}</ErrorMessage>
+                      )}
+                    </FormGroup>
 
-                  <FormGroup>
-                    <Label htmlFor="hoursWorked">Liczba przepracowanych godzin</Label>
-                    <AmountInputWrapper>
-                      <FiClock />
-                      <AmountInput
-                        id="hoursWorked"
-                        type="number"
-                        step="0.25"
-                        min="0"
-                        placeholder="8.00"
-                        {...register('hoursWorked', {
-                          pattern: {
-                            value: /^\d*\.?\d{0,2}$/,
-                            message: 'Wprowadź poprawną liczbę godzin'
-                          }
-                        })}
+                    <FormGroup>
+                      <Label htmlFor="notes">Notatki (opcjonalne)</Label>
+                      <TextArea
+                        id="notes"
+                        placeholder="Dodatkowe notatki o dzisiejszej pracy..."
+                        {...register('notes')}
                       />
-                    </AmountInputWrapper>
-                    {errors.hoursWorked && (
-                      <ErrorMessage>{errors.hoursWorked.message}</ErrorMessage>
-                    )}
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Label htmlFor="notes">Notatki (opcjonalne)</Label>
-                    <TextArea
-                      id="notes"
-                      placeholder="Dodatkowe notatki o dzisiejszej pracy..."
-                      {...register('notes')}
-                    />
-                  </FormGroup>
+                    </FormGroup>
+                  </GlobalFieldsSection>
 
                   <Button
                     type="submit"
