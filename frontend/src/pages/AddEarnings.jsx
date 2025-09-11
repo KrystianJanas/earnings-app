@@ -3,8 +3,9 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight } from 'react-icons/fi'
-import { format } from 'date-fns'
+import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { format, addDays, subDays } from 'date-fns'
+import { pl } from 'date-fns/locale'
 import { earningsAPI } from '../services/api'
 import { Card, Button, Input, Label } from '../styles/theme'
 import Navigation from '../components/Navigation'
@@ -70,6 +71,63 @@ const FormGroup = styled.div`
   box-sizing: border-box;
 `
 
+const DateSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const DateNavigation = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const DateButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.text.primary};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.primary};
+    border-color: ${({ theme }) => theme.colors.primary};
+    color: white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    font-size: 1.1rem;
+  }
+`
+
+const DateDisplay = styled.div`
+  flex: 1;
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.sm};
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: 500;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const DateInputWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -79,6 +137,12 @@ const DateInputWrapper = styled.div`
     max-width: 100%;
     box-sizing: border-box;
     padding-right: 40px;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    cursor: pointer;
   }
 
   svg {
@@ -89,6 +153,7 @@ const DateInputWrapper = styled.div`
     color: ${({ theme }) => theme.colors.text.muted};
     font-size: 1.1rem;
     z-index: 1;
+    pointer-events: none;
   }
 `
 
@@ -453,11 +518,7 @@ const AddEarnings = () => {
     mutation.mutate(submitData)
   }
 
-  const handleDateChange = (e) => {
-    const newDate = e.target.value
-    setSelectedDate(newDate)
-    setSuccessMessage('')
-    
+  const resetFormForNewDate = () => {
     // Reset form and state when date changes
     setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
     setEntryMode('detailed')
@@ -467,6 +528,13 @@ const AddEarnings = () => {
     setValue('clientsCount', '')
     setValue('hoursWorked', '')
     setValue('notes', '')
+    setSuccessMessage('')
+  }
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value
+    setSelectedDate(newDate)
+    resetFormForNewDate()
     
     // Auto-close calendar on mobile devices
     setTimeout(() => {
@@ -474,6 +542,35 @@ const AddEarnings = () => {
         e.target.blur()
       }
     }, 100)
+  }
+
+  const goToPreviousDay = () => {
+    const currentDate = new Date(selectedDate)
+    const previousDay = subDays(currentDate, 1)
+    const newDate = format(previousDay, 'yyyy-MM-dd')
+    setSelectedDate(newDate)
+    resetFormForNewDate()
+  }
+
+  const goToNextDay = () => {
+    const currentDate = new Date(selectedDate)
+    const nextDay = addDays(currentDate, 1)
+    const newDate = format(nextDay, 'yyyy-MM-dd')
+    setSelectedDate(newDate)
+    resetFormForNewDate()
+  }
+
+  const formatDisplayDate = (dateString) => {
+    const date = new Date(dateString)
+    return format(date, 'd MMM yyyy (EEEE)', { locale: pl })
+  }
+
+  // Check if we can go to next day (not future)
+  const canGoToNextDay = () => {
+    const currentDate = new Date(selectedDate)
+    const nextDay = addDays(currentDate, 1)
+    const today = new Date()
+    return nextDay <= today
   }
 
   const cashAmount = parseFloat(watch('cashAmount') || 0)
@@ -500,17 +597,41 @@ const AddEarnings = () => {
           <FormCard>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormGroup>
-                <Label htmlFor="date">Data</Label>
-                <DateInputWrapper>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    max={format(new Date(), 'yyyy-MM-dd')}
-                  />
-                  <FiCalendar />
-                </DateInputWrapper>
+                <Label>Data</Label>
+                <DateSection>
+                  <DateNavigation>
+                    <DateButton 
+                      type="button"
+                      onClick={goToPreviousDay}
+                      title="Poprzedni dzień"
+                    >
+                      <FiChevronLeft />
+                    </DateButton>
+                    
+                    <DateDisplay>
+                      {formatDisplayDate(selectedDate)}
+                      <DateInputWrapper>
+                        <Input
+                          id="date"
+                          type="date"
+                          value={selectedDate}
+                          onChange={handleDateChange}
+                          max={format(new Date(), 'yyyy-MM-dd')}
+                        />
+                        <FiCalendar />
+                      </DateInputWrapper>
+                    </DateDisplay>
+                    
+                    <DateButton 
+                      type="button"
+                      onClick={goToNextDay}
+                      disabled={!canGoToNextDay()}
+                      title="Następny dzień"
+                    >
+                      <FiChevronRight />
+                    </DateButton>
+                  </DateNavigation>
+                </DateSection>
               </FormGroup>
 
               {/* Mode Toggle */}
