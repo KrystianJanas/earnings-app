@@ -38,6 +38,7 @@ services:
       - "${FRONTEND_HOST_PORT}:${FRONTEND_PORT}"
     environment:
       VITE_API_URL: ${VITE_API_URL}
+      VITE_ALLOWED_HOSTS: ${VITE_ALLOWED_HOSTS}
       PORT: ${FRONTEND_PORT}
       HOST: 0.0.0.0  # Override for Docker container
       DOCKER_ENV: true  # Flag to indicate Docker environment
