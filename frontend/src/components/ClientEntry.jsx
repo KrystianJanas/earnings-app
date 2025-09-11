@@ -4,18 +4,26 @@ import { FiCreditCard, FiTrash2, FiUser } from 'react-icons/fi'
 import { Input, Label, Button } from '../styles/theme'
 
 const ClientCard = styled.div`
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.sm};
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.md};
+  }
 `
 
 const ClientHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  @media (min-width: 640px) {
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
+  }
 `
 
 const ClientNumber = styled.div`
@@ -42,11 +50,13 @@ const RemoveButton = styled(Button)`
 const FormRow = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 
   @media (min-width: 640px) {
     flex-direction: row;
+    gap: ${({ theme }) => theme.spacing.sm};
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
   }
 `
 
@@ -71,7 +81,11 @@ const PaymentMethodWrapper = styled.div`
 const PaymentButtons = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.xs};
-  margin-top: ${({ theme }) => theme.spacing.xs};
+  margin-top: 4px;
+
+  @media (min-width: 640px) {
+    margin-top: ${({ theme }) => theme.spacing.xs};
+  }
 `
 
 const PaymentButton = styled.button`
@@ -80,15 +94,20 @@ const PaymentButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 8px ${({ theme }) => theme.spacing.xs};
   border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
   color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: 0.85rem;
+  }
 
   &:hover {
     background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
