@@ -73,7 +73,6 @@ const FormGroup = styled.div`
 const DateInputWrapper = styled.div`
   position: relative;
   width: 100%;
-  overflow: hidden;
 
   input {
     width: 100%;
@@ -293,14 +292,7 @@ const AddEarnings = () => {
     {
       enabled: !!selectedDate,
       onSuccess: (data) => {
-        // If there's existing data, use its mode, otherwise keep 'detailed' as default
-        if (data.entryMode) {
-          setEntryMode(data.entryMode)
-        }
-        // Only change to detailed mode if no existing entry mode is specified
-        else if (!data.entryMode && (data.cashAmount === 0 && data.cardAmount === 0 && data.clientsCount === 0)) {
-          setEntryMode('detailed')
-        }
+        setEntryMode(data.entryMode || 'detailed')
         
         if (data.entryMode === 'detailed' && data.clients && data.clients.length > 0) {
           setClients(data.clients)

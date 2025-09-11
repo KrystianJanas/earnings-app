@@ -76,7 +76,7 @@ router.get('/day/:date', async (req, res) => {
     if (!earnings) {
       return res.json({
         date,
-        entryMode: 'summary',
+        entryMode: 'detailed', // Default to detailed for new entries
         cashAmount: 0,
         cardAmount: 0,
         tipsAmount: 0,
