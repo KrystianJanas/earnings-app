@@ -272,6 +272,17 @@ const SectionTitle = styled.h3`
   margin-bottom: ${({ theme }) => theme.spacing.md};
 `
 
+const ResetHint = styled.div`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+  text-align: center;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.sm};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`
+
 const AddEarnings = () => {
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [successMessage, setSuccessMessage] = useState('')
@@ -350,6 +361,7 @@ const AddEarnings = () => {
   }
 
   // Check if there's existing data that would prevent mode switching
+  // Special case: allow switching from detailed mode if there's only one client with 0 amount
   const hasExistingData = existingData && (
     (existingData.entryMode === 'summary' && (
       existingData.cashAmount > 0 || 
@@ -358,13 +370,29 @@ const AddEarnings = () => {
     )) ||
     (existingData.entryMode === 'detailed' && 
       existingData.clients && existingData.clients.length > 0 &&
-      existingData.clients.some(client => parseFloat(client.amount) > 0)
+      existingData.clients.some(client => parseFloat(client.amount) > 0) &&
+      !(existingData.clients.length === 1 && parseFloat(existingData.clients[0].amount) === 0)
     )
   )
 
+  // Also check current form state for real-time mode locking
+  const hasCurrentData = (
+    (entryMode === 'summary' && (
+      parseFloat(watch('cashAmount') || 0) > 0 || 
+      parseFloat(watch('cardAmount') || 0) > 0 || 
+      parseInt(watch('clientsCount') || 0) > 0
+    )) ||
+    (entryMode === 'detailed' && 
+      clients.some(client => parseFloat(client.amount) > 0) &&
+      !(clients.length === 1 && parseFloat(clients[0].amount) === 0)
+    )
+  )
+
+  const canSwitchMode = !hasExistingData && !hasCurrentData
+
   const switchMode = (mode) => {
-    // Prevent switching if there's existing data
-    if (hasExistingData) {
+    // Prevent switching if there's existing data (with special case for single client with 0 amount)
+    if (!canSwitchMode) {
       return
     }
     
@@ -464,7 +492,7 @@ const AddEarnings = () => {
                 <ModeButton 
                   type="button"
                   active={entryMode === 'detailed'}
-                  disabled={hasExistingData && entryMode !== 'detailed'}
+                  disabled={!canSwitchMode && entryMode !== 'detailed'}
                   onClick={() => switchMode('detailed')}
                 >
                   <FiToggleRight />
@@ -473,7 +501,7 @@ const AddEarnings = () => {
                 <ModeButton 
                   type="button"
                   active={entryMode === 'summary'}
-                  disabled={hasExistingData && entryMode !== 'summary'}
+                  disabled={!canSwitchMode && entryMode !== 'summary'}
                   onClick={() => switchMode('summary')}
                 >
                   <FiToggleLeft />
@@ -574,6 +602,13 @@ const AddEarnings = () => {
                   ) : (
                     // Detailed Mode - Client-by-client entry
                     <ClientsSection>
+                      {/* Show reset hint if there's only one client with some amount */}
+                      {clients.length === 1 && parseFloat(clients[0].amount) > 0 && (
+                        <ResetHint>
+                          💡 Wskazówka: Wpisz kwotę "0" aby przejść z powrotem do trybu "Podsumowanie dnia"
+                        </ResetHint>
+                      )}
+                      
                       {clientTotals.total > 0 && (
                         <ClientsSummary>
                           <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
