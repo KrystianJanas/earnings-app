@@ -434,7 +434,12 @@ const AddEarnings = () => {
     }
 
     if (entryMode === 'detailed') {
-      submitData.clients = clients.filter(client => parseFloat(client.amount) > 0)
+      // Allow saving single client with 0 amount for reset functionality
+      if (clients.length === 1 && parseFloat(clients[0].amount) === 0) {
+        submitData.clients = clients
+      } else {
+        submitData.clients = clients.filter(client => parseFloat(client.amount) > 0)
+      }
     } else {
       submitData.cashAmount = parseFloat(data.cashAmount) || 0
       submitData.cardAmount = parseFloat(data.cardAmount) || 0
