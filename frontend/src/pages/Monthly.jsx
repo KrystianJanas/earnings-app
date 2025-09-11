@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiCalendar, FiTrendingUp, FiDollarSign, FiCreditCard, FiGift, FiChevronLeft, FiChevronRight, FiUsers, FiClock } from 'react-icons/fi'
+import { FiCalendar, FiTrendingUp, FiCreditCard, FiGift, FiChevronLeft, FiChevronRight, FiUsers, FiClock } from 'react-icons/fi'
 import { format, startOfMonth, endOfMonth, subMonths, addMonths } from 'date-fns'
 import { earningsAPI } from '../services/api'
 import { Container, Card } from '../styles/theme'
@@ -329,7 +329,7 @@ const Monthly = () => {
               <SummaryHeader>
                 <SummaryTitle>Łączne zarobki</SummaryTitle>
                 <IconWrapper color="#6366f1">
-                  <FiTrendingUp />
+                  💰
                 </IconWrapper>
               </SummaryHeader>
               <SummaryAmount>
@@ -342,7 +342,7 @@ const Monthly = () => {
                     {(total.cash || 0).toFixed(2)} zł
                   </StatAmount>
                   <StatLabel>
-                    <FiDollarSign />
+                    💵
                     Gotówka
                   </StatLabel>
                 </StatItem>
@@ -403,14 +403,16 @@ const Monthly = () => {
             </SummaryCard>
           </SummaryGrid>
 
-          {daily && daily.length > 0 ? (
+          {daily && daily.filter(day => day.totalDaily > 0).length > 0 ? (
             <DailyBreakdown>
               <BreakdownTitle>
                 <FiCalendar />
                 Zestawienie dzienne
               </BreakdownTitle>
               
-              {daily.map((day, index) => (
+              {daily
+                .filter(day => day.totalDaily > 0) // Hide days with 0 earnings
+                .map((day, index) => (
                 <DayItem key={index}>
                   <DayInfo>
                     <DayDate>
