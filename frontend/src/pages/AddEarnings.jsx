@@ -308,6 +308,10 @@ const AddEarnings = () => {
     () => earningsAPI.getDayEarnings(selectedDate).then(res => res.data),
     {
       enabled: !!selectedDate,
+      staleTime: 0, // Always fetch fresh data
+      cacheTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
       onSuccess: (data) => {
         setEntryMode(data.entryMode || 'detailed')
         
@@ -453,6 +457,16 @@ const AddEarnings = () => {
     const newDate = e.target.value
     setSelectedDate(newDate)
     setSuccessMessage('')
+    
+    // Reset form and state when date changes
+    setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+    setEntryMode('detailed')
+    setValue('cashAmount', '')
+    setValue('cardAmount', '')
+    setValue('tipsAmount', '')
+    setValue('clientsCount', '')
+    setValue('hoursWorked', '')
+    setValue('notes', '')
   }
 
   const cashAmount = parseFloat(watch('cashAmount') || 0)
