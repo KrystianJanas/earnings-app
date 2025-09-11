@@ -14,6 +14,10 @@ export default defineConfig({
     strictPort: false, // Allow fallback to different port if occupied
     open: !isDocker, // Only auto-open browser when NOT in Docker
     cors: true,
+    // Allow external hosts for production deployment
+    allowedHosts: process.env.VITE_ALLOWED_HOSTS ? 
+      process.env.VITE_ALLOWED_HOSTS.split(',').map(host => host.trim()) : 
+      ['localhost', '127.0.0.1'],
     // Additional network fixes for macOS (only for local development)
     hmr: isDocker ? {
       // For Docker: use port only, let Docker handle host mapping
