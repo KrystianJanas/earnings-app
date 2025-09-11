@@ -118,7 +118,7 @@ LEFT JOIN (
         daily_earnings_id,
         SUM(CASE WHEN payment_method = 'cash' THEN amount ELSE 0 END) as total_cash_from_clients,
         SUM(CASE WHEN payment_method = 'card' THEN amount ELSE 0 END) as total_card_from_clients,
-        COUNT(*) as client_count_from_transactions
+        COUNT(CASE WHEN amount > 0 THEN 1 END) as client_count_from_transactions
     FROM client_transactions
     GROUP BY daily_earnings_id
 ) ct_summary ON de.id = ct_summary.daily_earnings_id;
