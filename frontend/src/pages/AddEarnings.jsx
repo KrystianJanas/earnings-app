@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight } from 'react-icons/fi'
 import { format } from 'date-fns'
 import { earningsAPI } from '../services/api'
-import { Container, Card, Button, Input, Label } from '../styles/theme'
+import { Card, Button, Input, Label } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import ClientEntry from '../components/ClientEntry'
 
@@ -19,6 +19,18 @@ const AddEarningsContainer = styled.div`
   @media (min-width: 768px) {
     padding: ${({ theme }) => theme.spacing.lg} 0;
     padding-bottom: 100px;
+  }
+`
+
+const Container = styled.div`
+  max-width: 428px;
+  margin: 0 auto;
+  padding: 0 ${({ theme }) => theme.spacing.sm};
+  width: 100%;
+
+  @media (min-width: 768px) {
+    max-width: 800px;
+    padding: 0 ${({ theme }) => theme.spacing.lg};
   }
 `
 
@@ -50,10 +62,18 @@ const FormCard = styled(Card)`
 
 const FormGroup = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  width: 100%;
+  box-sizing: border-box;
 `
 
 const DateInputWrapper = styled.div`
   position: relative;
+  width: 100%;
+
+  input {
+    width: 100%;
+    max-width: 100%;
+  }
 
   svg {
     position: absolute;
@@ -405,19 +425,19 @@ const AddEarnings = () => {
               <ModeToggle>
                 <ModeButton 
                   type="button"
-                  active={entryMode === 'summary'}
-                  onClick={() => switchMode('summary')}
-                >
-                  <FiToggleLeft />
-                  Podsumowanie dnia
-                </ModeButton>
-                <ModeButton 
-                  type="button"
                   active={entryMode === 'detailed'}
                   onClick={() => switchMode('detailed')}
                 >
                   <FiToggleRight />
                   Szczegółowo po kliencie
+                </ModeButton>
+                <ModeButton 
+                  type="button"
+                  active={entryMode === 'summary'}
+                  onClick={() => switchMode('summary')}
+                >
+                  <FiToggleLeft />
+                  Podsumowanie dnia
                 </ModeButton>
               </ModeToggle>
 
