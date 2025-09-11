@@ -15,6 +15,11 @@ const AddEarningsContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.md} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
+
+  @media (min-width: 768px) {
+    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding-bottom: 100px;
+  }
 `
 
 const Header = styled.div`
@@ -36,6 +41,11 @@ const SubText = styled.p`
 
 const FormCard = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
+
+  @media (min-width: 768px) {
+    max-width: 600px;
+    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+  }
 `
 
 const FormGroup = styled.div`
@@ -98,6 +108,11 @@ const SuccessMessage = styled.div`
   font-size: 0.875rem;
   text-align: center;
   margin-bottom: ${({ theme }) => theme.spacing.md};
+
+  @media (min-width: 768px) {
+    max-width: 600px;
+    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+  }
 `;
 
 const ButtonSuccessMessage = styled.div`
@@ -147,6 +162,11 @@ const ModeToggle = styled.div`
   @media (min-width: 640px) {
     gap: ${({ theme }) => theme.spacing.md};
     padding: ${({ theme }) => theme.spacing.md};
+  }
+
+  @media (min-width: 768px) {
+    max-width: 600px;
+    margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
   }
 `
 
@@ -245,7 +265,7 @@ const AddEarnings = () => {
     {
       enabled: !!selectedDate,
       onSuccess: (data) => {
-        setEntryMode(data.entryMode || 'summary')
+        setEntryMode(data.entryMode || 'detailed')
         
         if (data.entryMode === 'detailed' && data.clients && data.clients.length > 0) {
           setClients(data.clients)

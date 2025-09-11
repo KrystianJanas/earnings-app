@@ -152,7 +152,10 @@ const Settings = () => {
                 <InputContainer>
                   <CurrencyInput
                     id="hourlyRate"
-                    type="text"
+                    type="number"
+                    inputMode="decimal"
+                    step="0.01"
+                    min="0"
                     value={hourlyRate}
                     onChange={handleHourlyRateChange}
                     onBlur={handleBlur}
