@@ -15,13 +15,26 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// We'll set up the response interceptor after AuthContext is available
+let authContextLogout = null
+
+export const setAuthLogout = (logoutFn) => {
+  authContextLogout = logoutFn
+}
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      window.location.href = '/login'
+      
+      // Use AuthContext logout if available, otherwise fallback to window.location
+      if (authContextLogout) {
+        authContextLogout()
+      } else {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }
@@ -30,6 +43,7 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
+  validate: () => api.get('/auth/validate'),
 }
 
 export const earningsAPI = {

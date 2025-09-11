@@ -87,4 +87,29 @@ router.post('/login', [
   }
 });
 
+// Validate token endpoint
+router.get('/validate', authenticateToken, async (req, res) => {
+  try {
+    // If middleware passed, token is valid
+    const user = await User.findById(req.user.userId);
+    
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    res.json({
+      valid: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name
+      }
+    });
+  } catch (error) {
+    console.error('Token validation error:', error);
+    res.status(401).json({ error: 'Invalid token' });
+  }
+});
+
 module.exports = router;
