@@ -9,11 +9,11 @@ const settingsRoutes = require('./routes/settings');
 const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
-const PORT = process.env.PORT || 5100;
+const PORT = process.env.BACKEND_PORT || 3001;
 
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3100',
+  origin: process.env.VITE_API_URL ? process.env.VITE_API_URL.replace(/:\d+$/, `:${process.env.FRONTEND_PORT || 3000}`) : 'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json());

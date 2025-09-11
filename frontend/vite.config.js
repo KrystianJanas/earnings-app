@@ -10,18 +10,18 @@ export default defineConfig({
   server: {
     // Host configuration - different for Docker vs local development
     host: isDocker ? '0.0.0.0' : '127.0.0.1',
-    port: 3100,
-    strictPort: false, // Allow fallback to different port if 3100 is occupied
+    port: parseInt(process.env.FRONTEND_PORT) || 3000,
+    strictPort: false, // Allow fallback to different port if occupied
     open: !isDocker, // Only auto-open browser when NOT in Docker
     cors: true,
     // Additional network fixes for macOS (only for local development)
     hmr: isDocker ? {
       // For Docker: use port only, let Docker handle host mapping
-      port: 3101,
+      port: parseInt(process.env.FRONTEND_PORT) + 1 || 3001,
     } : {
       // For local development: use explicit host
       host: '127.0.0.1',
-      port: 3101,
+      port: parseInt(process.env.FRONTEND_PORT) + 1 || 3001,
     },
     // Force HTTP to avoid HTTPS redirect issues in Chrome
     https: false,

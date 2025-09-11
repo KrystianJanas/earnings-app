@@ -2,11 +2,11 @@ services:
   database:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: beautician_app
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "35432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -17,12 +17,12 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "5100:5100"
+      - "${BACKEND_HOST_PORT}:${BACKEND_PORT}"
     environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://postgres:postgres123@database:5432/beautician_app
-      JWT_SECRET: your-secret-key-change-in-production
-      PORT: 5100
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: ${BACKEND_PORT}
     depends_on:
       - database
     restart: unless-stopped
@@ -35,11 +35,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3100:3100"
-      - "3101:3101"  # HMR port for development
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_PORT}"
     environment:
-      REACT_APP_API_URL: http://localhost:5100
-      PORT: 3100
+      VITE_API_URL: ${VITE_API_URL}
+      PORT: ${FRONTEND_PORT}
       HOST: 0.0.0.0  # Override for Docker container
       DOCKER_ENV: true  # Flag to indicate Docker environment
     depends_on:
