@@ -113,7 +113,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
       <ClientHeader>
         <ClientNumber>
           <FiUser size={16} />
-          Klientka #{index + 1}
+          Klient #{index + 1}
         </ClientNumber>
         {canRemove && (
           <RemoveButton type="button" onClick={() => onRemove(index)}>

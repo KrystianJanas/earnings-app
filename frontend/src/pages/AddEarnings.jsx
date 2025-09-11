@@ -126,34 +126,45 @@ const DateDisplay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary}10;
+    border-color: ${({ theme }) => theme.colors.primary}50;
+  }
 `
 
 const DateInputWrapper = styled.div`
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
 
   input {
     width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding-right: 40px;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
+    opacity: 0;
     cursor: pointer;
+    border: none;
+    background: transparent;
   }
+`
 
-  svg {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: ${({ theme }) => theme.colors.text.muted};
-    font-size: 1.1rem;
-    z-index: 1;
-    pointer-events: none;
+const CalendarIcon = styled.div`
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${({ theme }) => theme.colors.text.muted};
+  font-size: 1.1rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+
+  ${DateDisplay}:hover & {
+    color: ${({ theme }) => theme.colors.primary};
   }
 `
 
@@ -610,6 +621,9 @@ const AddEarnings = () => {
                     
                     <DateDisplay>
                       {formatDisplayDate(selectedDate)}
+                      <CalendarIcon>
+                        <FiCalendar />
+                      </CalendarIcon>
                       <DateInputWrapper>
                         <Input
                           id="date"
@@ -618,7 +632,6 @@ const AddEarnings = () => {
                           onChange={handleDateChange}
                           max={format(new Date(), 'yyyy-MM-dd')}
                         />
-                        <FiCalendar />
                       </DateInputWrapper>
                     </DateDisplay>
                     
