@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiCalendar, FiSave, FiDollarSign, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight } from 'react-icons/fi'
+import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight } from 'react-icons/fi'
 import { format } from 'date-fns'
 import { earningsAPI } from '../services/api'
 import { Container, Card, Button, Input, Label } from '../styles/theme'
@@ -57,19 +57,6 @@ const DateInputWrapper = styled.div`
 
 const AmountInputWrapper = styled.div`
   position: relative;
-
-  svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: ${({ theme }) => theme.colors.text.muted};
-    font-size: 1.1rem;
-  }
-
-  input {
-    padding-left: 40px;
-  }
 `
 
 const AmountInput = styled(Input)`
@@ -150,27 +137,40 @@ const ModeToggle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.sm};
   background: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (min-width: 640px) {
+    gap: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.md};
+  }
 `
 
 const ModeButton = styled.button`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.sm};
   border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   background: ${({ active, theme }) => active ? theme.colors.primary : 'transparent'};
   color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex: 1;
+  justify-content: center;
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+    font-size: 0.9rem;
+    flex: initial;
+  }
 
   &:hover {
     background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
@@ -223,7 +223,7 @@ const AddEarnings = () => {
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [successMessage, setSuccessMessage] = useState('')
   const [buttonSuccessMessage, setButtonSuccessMessage] = useState('')
-  const [entryMode, setEntryMode] = useState('summary') // 'summary' or 'detailed'
+  const [entryMode, setEntryMode] = useState('detailed') // 'summary' or 'detailed'
   const [clients, setClients] = useState([{ amount: 0, paymentMethod: 'cash', notes: '' }])
   const queryClient = useQueryClient()
 
@@ -410,12 +410,12 @@ const AddEarnings = () => {
                     // Summary Mode - Original form
                     <>
                       <FormGroup>
-                        <Label htmlFor="cashAmount">Kwota gotówką</Label>
+                        <Label htmlFor="cashAmount">Kwota gotówką (zł)</Label>
                         <AmountInputWrapper>
-                          <FiDollarSign />
                           <AmountInput
                             id="cashAmount"
                             type="number"
+                            inputMode="decimal"
                             step="0.01"
                             min="0"
                             placeholder="0.00"
@@ -433,12 +433,12 @@ const AddEarnings = () => {
                       </FormGroup>
 
                       <FormGroup>
-                        <Label htmlFor="cardAmount">Kwota kartą</Label>
+                        <Label htmlFor="cardAmount">Kwota kartą (zł)</Label>
                         <AmountInputWrapper>
-                          <FiCreditCard />
                           <AmountInput
                             id="cardAmount"
                             type="number"
+                            inputMode="decimal"
                             step="0.01"
                             min="0"
                             placeholder="0.00"
@@ -472,10 +472,10 @@ const AddEarnings = () => {
                       <FormGroup>
                         <Label htmlFor="clientsCount">Liczba klientek</Label>
                         <AmountInputWrapper>
-                          <FiUsers />
                           <AmountInput
                             id="clientsCount"
                             type="number"
+                            inputMode="numeric"
                             min="0"
                             placeholder="0"
                             {...register('clientsCount', {
@@ -531,12 +531,12 @@ const AddEarnings = () => {
                     <SectionTitle>Dodatkowe informacje</SectionTitle>
                     
                     <FormGroup>
-                      <Label htmlFor="tipsAmount">Napiwki (opcjonalne)</Label>
+                      <Label htmlFor="tipsAmount">Napiwki (zł, opcjonalne)</Label>
                       <AmountInputWrapper>
-                        <FiGift />
                         <AmountInput
                           id="tipsAmount"
                           type="number"
+                          inputMode="decimal"
                           step="0.01"
                           min="0"
                           placeholder="0.00"
@@ -556,10 +556,10 @@ const AddEarnings = () => {
                     <FormGroup>
                       <Label htmlFor="hoursWorked">Liczba przepracowanych godzin</Label>
                       <AmountInputWrapper>
-                        <FiClock />
                         <AmountInput
                           id="hoursWorked"
                           type="number"
+                          inputMode="decimal"
                           step="0.25"
                           min="0"
                           placeholder="8.00"

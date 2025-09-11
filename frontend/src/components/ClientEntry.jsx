@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FiDollarSign, FiCreditCard, FiTrash2, FiUser } from 'react-icons/fi'
+import { FiCreditCard, FiTrash2, FiUser } from 'react-icons/fi'
 import { Input, Label, Button } from '../styles/theme'
 
 const ClientCard = styled.div`
@@ -41,45 +41,58 @@ const RemoveButton = styled(Button)`
 
 const FormRow = styled.div`
   display: flex;
+  flex-direction: column;
   gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
 `
 
 const AmountInputWrapper = styled.div`
-  position: relative;
-  flex: 2;
+  flex: 1;
 
-  svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: ${({ theme }) => theme.colors.text.muted};
-    font-size: 1rem;
+  @media (min-width: 640px) {
+    flex: 2;
   }
+`
 
-  input {
-    padding-left: 35px;
-  }
+const AmountInput = styled(Input)`
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 500;
 `
 
 const PaymentMethodWrapper = styled.div`
   flex: 1;
 `
 
-const PaymentMethodSelect = styled.select`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.sm};
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 1rem;
+const PaymentButtons = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-top: ${({ theme }) => theme.spacing.xs};
+`
 
-  &:focus {
-    outline: none;
+const PaymentButton = styled.button`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  padding: ${({ theme }) => theme.spacing.sm};
+  border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
+  color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 `
 
@@ -111,11 +124,11 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
 
       <FormRow>
         <AmountInputWrapper>
-          <Label htmlFor={`client-amount-${index}`}>Kwota</Label>
-          <FiDollarSign />
-          <Input
+          <Label htmlFor={`client-amount-${index}`}>Kwota (zł)</Label>
+          <AmountInput
             id={`client-amount-${index}`}
             type="number"
+            inputMode="decimal"
             step="0.01"
             min="0"
             placeholder="0.00"
@@ -125,15 +138,23 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
         </AmountInputWrapper>
 
         <PaymentMethodWrapper>
-          <Label htmlFor={`client-payment-${index}`}>Płatność</Label>
-          <PaymentMethodSelect
-            id={`client-payment-${index}`}
-            value={client.paymentMethod || 'cash'}
-            onChange={(e) => handleChange('paymentMethod', e.target.value)}
-          >
-            <option value="cash">Gotówka</option>
-            <option value="card">Karta</option>
-          </PaymentMethodSelect>
+          <Label>Płatność</Label>
+          <PaymentButtons>
+            <PaymentButton
+              type="button"
+              active={client.paymentMethod === 'cash'}
+              onClick={() => handleChange('paymentMethod', 'cash')}
+            >
+              💵 Gotówka
+            </PaymentButton>
+            <PaymentButton
+              type="button"
+              active={client.paymentMethod === 'card'}
+              onClick={() => handleChange('paymentMethod', 'card')}
+            >
+              <FiCreditCard /> Karta
+            </PaymentButton>
+          </PaymentButtons>
         </PaymentMethodWrapper>
       </FormRow>
 
