@@ -27,11 +27,13 @@ const NavItem = styled(NavLink)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4px ${({ theme }) => theme.spacing.xs};
+  padding: 8px ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text.muted};
   text-decoration: none;
   transition: all 0.2s ease;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
+  min-height: 44px;
+  justify-content: center;
 
   &.active {
     color: ${({ theme }) => theme.colors.primary};
@@ -42,13 +44,24 @@ const NavItem = styled(NavLink)`
   }
 
   svg {
-    font-size: 1.4rem;
-    margin-bottom: 2px;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
   }
 
   span {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    svg {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+    
+    span {
+      font-size: 0.7rem;
+    }
   }
 `
 
@@ -56,26 +69,39 @@ const LogoutButton = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4px ${({ theme }) => theme.spacing.xs};
+  padding: 8px ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text.muted};
   background: none;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
+  min-height: 44px;
+  justify-content: center;
 
   &:hover {
     color: ${({ theme }) => theme.colors.error};
   }
 
   svg {
-    font-size: 1.4rem;
-    margin-bottom: 2px;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
   }
 
   span {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    svg {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+    
+    span {
+      font-size: 0.7rem;
+    }
   }
 `
 

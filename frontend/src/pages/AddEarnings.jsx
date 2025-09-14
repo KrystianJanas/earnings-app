@@ -26,14 +26,17 @@ const AddEarningsContainer = styled.div`
 const Container = styled.div`
   max-width: 428px;
   margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.spacing.sm};
-  width: calc(100% - ${({ theme }) => theme.spacing.sm} * 2);
+  padding: 0 ${({ theme }) => theme.spacing.md};
+  width: 100%;
   box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    padding: 0 ${({ theme }) => theme.spacing.sm};
+  }
 
   @media (min-width: 768px) {
     max-width: 800px;
     padding: 0 ${({ theme }) => theme.spacing.lg};
-    width: calc(100% - ${({ theme }) => theme.spacing.lg} * 2);
   }
 `
 
@@ -43,15 +46,23 @@ const Header = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
 `
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 1rem;
+  font-size: 1.1rem;
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `
 
 const FormCard = styled(Card)`
@@ -288,17 +299,24 @@ const ModeButton = styled.button`
   color: ${({ active, disabled, theme }) => 
     disabled ? theme.colors.text.muted : 
     active ? 'white' : theme.colors.text.primary};
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   flex: 1;
   justify-content: center;
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
+  min-height: 48px;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+    min-height: 44px;
+  }
 
   @media (min-width: 640px) {
     padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     flex: initial;
   }
 
