@@ -9,6 +9,7 @@ const settingsRoutes = require('./routes/settings');
 const clientsRoutes = require('./routes/clients');
 const companiesRoutes = require('./routes/companies');
 const invitationsRoutes = require('./routes/invitations');
+const employeesRoutes = require('./routes/employees');
 const { authenticateToken, requireCompanyAccess } = require('./middleware/auth');
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/invitations', authenticateToken, invitationsRoutes);
 app.use('/api/earnings', authenticateToken, requireCompanyAccess, earningsRoutes);
 app.use('/api/settings', authenticateToken, requireCompanyAccess, settingsRoutes);
 app.use('/api/clients', authenticateToken, requireCompanyAccess, clientsRoutes);
+app.use('/api/employees', authenticateToken, requireCompanyAccess, employeesRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

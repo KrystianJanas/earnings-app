@@ -1,7 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { FiHome, FiPlus, FiBarChart, FiSettings } from 'react-icons/fi'
+import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers } from 'react-icons/fi'
+import { useAuth } from '../context/AuthContext'
 
 const NavContainer = styled.nav`
   position: fixed;
@@ -66,6 +67,9 @@ const NavItem = styled(NavLink)`
 
 
 const Navigation = () => {
+  const { currentCompany } = useAuth()
+  const isOwner = currentCompany?.userRole === 'owner'
+
   return (
     <NavContainer>
       <NavContent>
@@ -83,6 +87,13 @@ const Navigation = () => {
           <FiBarChart />
           <span>Miesięcznie</span>
         </NavItem>
+
+        {isOwner && (
+          <NavItem to="/employees">
+            <FiUsers />
+            <span>Pracownicy</span>
+          </NavItem>
+        )}
 
         <NavItem to="/settings">
           <FiSettings />

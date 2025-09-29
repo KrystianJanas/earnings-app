@@ -68,10 +68,14 @@ class Earnings {
       SELECT 
         COALESCE(SUM(effective_cash_amount), 0) as total_cash,
         COALESCE(SUM(effective_card_amount), 0) as total_card,
+        COALESCE(SUM(effective_blik_amount), 0) as total_blik,
+        COALESCE(SUM(effective_prepaid_amount), 0) as total_prepaid,
+        COALESCE(SUM(effective_transfer_amount), 0) as total_transfer,
+        COALESCE(SUM(effective_free_amount), 0) as total_free,
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 
         AND EXTRACT(YEAR FROM date) = $2 
@@ -111,14 +115,18 @@ class Earnings {
       SELECT 
         COALESCE(effective_cash_amount, 0) as total_cash,
         COALESCE(effective_card_amount, 0) as total_card,
+        COALESCE(effective_blik_amount, 0) as total_blik,
+        COALESCE(effective_prepaid_amount, 0) as total_prepaid,
+        COALESCE(effective_transfer_amount, 0) as total_transfer,
+        COALESCE(effective_free_amount, 0) as total_free,
         COALESCE(tips_amount, 0) as total_tips,
         COALESCE(effective_clients_count, 0) as total_clients,
         COALESCE(hours_worked, 0) as total_hours,
-        COALESCE(effective_cash_amount + effective_card_amount, 0) as total_earnings
+        COALESCE(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount, 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 AND date = $2
     `, [companyId, date]);
-    return result.rows[0] || { total_cash: 0, total_card: 0, total_tips: 0, total_clients: 0, total_hours: 0, total_earnings: 0 };
+    return result.rows[0] || { total_cash: 0, total_card: 0, total_blik: 0, total_prepaid: 0, total_transfer: 0, total_free: 0, total_tips: 0, total_clients: 0, total_hours: 0, total_earnings: 0 };
   }
 
   static async getWeeklyTotal(companyId, startDate, endDate) {
@@ -126,10 +134,14 @@ class Earnings {
       SELECT 
         COALESCE(SUM(effective_cash_amount), 0) as total_cash,
         COALESCE(SUM(effective_card_amount), 0) as total_card,
+        COALESCE(SUM(effective_blik_amount), 0) as total_blik,
+        COALESCE(SUM(effective_prepaid_amount), 0) as total_prepaid,
+        COALESCE(SUM(effective_transfer_amount), 0) as total_transfer,
+        COALESCE(SUM(effective_free_amount), 0) as total_free,
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 AND date >= $2 AND date <= $3
     `, [companyId, startDate, endDate]);
@@ -141,10 +153,14 @@ class Earnings {
       SELECT 
         COALESCE(SUM(effective_cash_amount), 0) as total_cash,
         COALESCE(SUM(effective_card_amount), 0) as total_card,
+        COALESCE(SUM(effective_blik_amount), 0) as total_blik,
+        COALESCE(SUM(effective_prepaid_amount), 0) as total_prepaid,
+        COALESCE(SUM(effective_transfer_amount), 0) as total_transfer,
+        COALESCE(SUM(effective_free_amount), 0) as total_free,
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 AND EXTRACT(YEAR FROM date) = $2
     `, [companyId, year]);
@@ -156,13 +172,82 @@ class Earnings {
       SELECT 
         COALESCE(SUM(effective_cash_amount), 0) as total_cash,
         COALESCE(SUM(effective_card_amount), 0) as total_card,
+        COALESCE(SUM(effective_blik_amount), 0) as total_blik,
+        COALESCE(SUM(effective_prepaid_amount), 0) as total_prepaid,
+        COALESCE(SUM(effective_transfer_amount), 0) as total_transfer,
+        COALESCE(SUM(effective_free_amount), 0) as total_free,
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1
     `, [companyId]);
+    return result.rows[0];
+  }
+
+  // User-specific methods for employee statistics
+  static async getUserDailyTotal(userId, companyId, date) {
+    const result = await db.query(`
+      SELECT 
+        COALESCE(effective_cash_amount, 0) as total_cash,
+        COALESCE(effective_card_amount, 0) as total_card,
+        COALESCE(effective_blik_amount, 0) as total_blik,
+        COALESCE(effective_prepaid_amount, 0) as total_prepaid,
+        COALESCE(effective_transfer_amount, 0) as total_transfer,
+        COALESCE(effective_free_amount, 0) as total_free,
+        COALESCE(tips_amount, 0) as total_tips,
+        COALESCE(effective_clients_count, 0) as total_clients,
+        COALESCE(hours_worked, 0) as total_hours,
+        COALESCE(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount, 0) as total_earnings
+      FROM daily_earnings_complete 
+      WHERE user_id = $1 AND company_id = $2 AND date = $3
+    `, [userId, companyId, date]);
+    return result.rows[0] || { total_cash: 0, total_card: 0, total_blik: 0, total_prepaid: 0, total_transfer: 0, total_free: 0, total_tips: 0, total_clients: 0, total_hours: 0, total_earnings: 0 };
+  }
+
+  static async getUserWeeklyTotal(userId, companyId, startDate, endDate) {
+    const result = await db.query(`
+      SELECT 
+        COALESCE(SUM(effective_cash_amount), 0) as total_cash,
+        COALESCE(SUM(effective_card_amount), 0) as total_card,
+        COALESCE(SUM(effective_blik_amount), 0) as total_blik,
+        COALESCE(SUM(effective_prepaid_amount), 0) as total_prepaid,
+        COALESCE(SUM(effective_transfer_amount), 0) as total_transfer,
+        COALESCE(SUM(effective_free_amount), 0) as total_free,
+        COALESCE(SUM(tips_amount), 0) as total_tips,
+        COALESCE(SUM(effective_clients_count), 0) as total_clients,
+        COALESCE(SUM(hours_worked), 0) as total_hours,
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+      FROM daily_earnings_complete 
+      WHERE user_id = $1 AND company_id = $2 AND date >= $3 AND date <= $4
+    `, [userId, companyId, startDate, endDate]);
+    return result.rows[0];
+  }
+
+  static async getUserCurrentMonthTotal(userId, companyId) {
+    const now = new Date();
+    return this.getUserMonthlyTotal(userId, companyId, now.getFullYear(), now.getMonth() + 1);
+  }
+
+  static async getUserMonthlyTotal(userId, companyId, year, month) {
+    const result = await db.query(`
+      SELECT 
+        COALESCE(SUM(effective_cash_amount), 0) as total_cash,
+        COALESCE(SUM(effective_card_amount), 0) as total_card,
+        COALESCE(SUM(effective_blik_amount), 0) as total_blik,
+        COALESCE(SUM(effective_prepaid_amount), 0) as total_prepaid,
+        COALESCE(SUM(effective_transfer_amount), 0) as total_transfer,
+        COALESCE(SUM(effective_free_amount), 0) as total_free,
+        COALESCE(SUM(tips_amount), 0) as total_tips,
+        COALESCE(SUM(effective_clients_count), 0) as total_clients,
+        COALESCE(SUM(hours_worked), 0) as total_hours,
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+      FROM daily_earnings_complete 
+      WHERE user_id = $1 AND company_id = $2 
+        AND EXTRACT(YEAR FROM date) = $3 
+        AND EXTRACT(MONTH FROM date) = $4
+    `, [userId, companyId, year, month]);
     return result.rows[0];
   }
 }

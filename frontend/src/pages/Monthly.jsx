@@ -356,6 +356,48 @@ const Monthly = () => {
                     Karta
                   </StatLabel>
                 </StatItem>
+
+                <StatItem>
+                  <StatAmount color="#9333ea">
+                    {(total.blik || 0).toFixed(2)} zł
+                  </StatAmount>
+                  <StatLabel>
+                    📱
+                    BLIK
+                  </StatLabel>
+                </StatItem>
+              </StatsRow>
+
+              <StatsRow>
+                <StatItem>
+                  <StatAmount color="#ea580c">
+                    {(total.prepaid || 0).toFixed(2)} zł
+                  </StatAmount>
+                  <StatLabel>
+                    💰
+                    Przedpłata
+                  </StatLabel>
+                </StatItem>
+
+                <StatItem>
+                  <StatAmount color="#0891b2">
+                    {(total.transfer || 0).toFixed(2)} zł
+                  </StatAmount>
+                  <StatLabel>
+                    🏦
+                    Przelew
+                  </StatLabel>
+                </StatItem>
+
+                <StatItem>
+                  <StatAmount color="#dc2626">
+                    {(total.free || 0).toFixed(2)} zł
+                  </StatAmount>
+                  <StatLabel>
+                    🎁
+                    Gratis
+                  </StatLabel>
+                </StatItem>
               </StatsRow>
               
               <StatsRow>

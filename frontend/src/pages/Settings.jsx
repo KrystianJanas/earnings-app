@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiSave, FiSettings } from 'react-icons/fi';
-import api from '../services/api';
+import { FiSettings, FiUsers, FiArrowRight } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Container as ThemeContainer, Card, Button } from '../styles/theme';
 import Navigation from '../components/Navigation';
-import { Container as ThemeContainer, Card, Button, Input, Label } from '../styles/theme';
 
 const SettingsContainer = styled.div`
   min-height: 100vh;
@@ -29,97 +30,34 @@ const Title = styled.h1`
   gap: ${({ theme }) => theme.spacing.sm};
 `;
 
-const FormCard = styled(Card)`
+const InfoCard = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.lg};
 `;
 
-const FormGroup = styled.div`
+const InfoText = styled.p`
+  color: ${({ theme }) => theme.colors.text.secondary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  line-height: 1.6;
 `;
 
-const InputContainer = styled.div`
-  position: relative;
+const RedirectButton = styled(Button)`
   display: flex;
   align-items: center;
-`;
-
-const CurrencyInput = styled(Input)`
-  padding-right: 45px;
-`;
-
-const CurrencySymbol = styled.span`
-  position: absolute;
-  right: 15px;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  font-weight: 500;
-  pointer-events: none;
-`;
-
-const SuccessMessage = styled.div`
-  padding: ${({ theme }) => theme.spacing.sm};
-  background: ${({ theme }) => theme.colors.success};
-  color: white;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  text-align: center;
-`;
-
-const ErrorMessage = styled.div`
-  padding: ${({ theme }) => theme.spacing.sm};
-  background: ${({ theme }) => theme.colors.error};
-  color: white;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  text-align: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin: 0 auto;
 `;
 
 const Settings = () => {
-  const [hourlyRate, setHourlyRate] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: '', text: '' });
-
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  const loadSettings = async () => {
-    try {
-      const response = await api.get('/settings');
-      setHourlyRate(response.data.hourlyRate.toFixed(2));
-    } catch (error) {
-      console.error('Error loading settings:', error);
-      setMessage({ type: 'error', text: 'Błąd podczas ładowania ustawień' });
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage({ type: '', text: '' });
-
-    try {
-      const rate = parseFloat(hourlyRate) || 0;
-      await api.put('/settings', { hourlyRate: rate });
-      setMessage({ type: 'success', text: 'Ustawienia zostały zapisane' });
-    } catch (error) {
-      console.error('Error saving settings:', error);
-      setMessage({ type: 'error', text: 'Błąd podczas zapisywania ustawień' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleHourlyRateChange = (e) => {
-    const value = e.target.value;
-    if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
-      setHourlyRate(value);
-    }
-  };
-
-  const handleBlur = () => {
-    if (hourlyRate && !isNaN(parseFloat(hourlyRate))) {
-      setHourlyRate(parseFloat(hourlyRate).toFixed(2));
-    }
+  const { currentCompany } = useAuth();
+  const navigate = useNavigate();
+  
+  const isOwner = currentCompany?.userRole === 'owner';
+  
+  const handleNavigateToEmployees = () => {
+    navigate('/employees');
   };
 
   return (
@@ -132,49 +70,31 @@ const Settings = () => {
           </Title>
         </Header>
 
-        {message.text && (
-          message.type === 'success' ? (
-            <SuccessMessage>{message.text}</SuccessMessage>
-          ) : (
-            <ErrorMessage>{message.text}</ErrorMessage>
-          )
-        )}
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <FormCard>
-            <form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label htmlFor="hourlyRate">Stawka godzinowa</Label>
-                <InputContainer>
-                  <CurrencyInput
-                    id="hourlyRate"
-                    type="number"
-                    inputMode="decimal"
-                    step="0.01"
-                    min="0"
-                    value={hourlyRate}
-                    onChange={handleHourlyRateChange}
-                    onBlur={handleBlur}
-                    placeholder="30.00"
-                  />
-                  <CurrencySymbol>zł</CurrencySymbol>
-                </InputContainer>
-              </FormGroup>
-
-              <Button
-                type="submit"
-                fullWidth
-                disabled={loading}
-              >
-                <FiSave style={{ marginRight: '0.5rem' }} />
-                {loading ? 'Zapisywanie...' : 'Zapisz ustawienia'}
-              </Button>
-            </form>
-          </FormCard>
+          {isOwner ? (
+            <InfoCard>
+              <FiUsers size={48} style={{ marginBottom: '1rem', color: '#8B5CF6' }} />
+              <InfoText>
+                Ustawienia stawek godzinowych pracowników zostały przeniesione do sekcji zarządzania pracownikami.
+              </InfoText>
+              <RedirectButton onClick={handleNavigateToEmployees}>
+                <FiUsers size={16} />
+                Przejdź do zarządzania pracownikami
+                <FiArrowRight size={16} />
+              </RedirectButton>
+            </InfoCard>
+          ) : (
+            <InfoCard>
+              <FiSettings size={48} style={{ marginBottom: '1rem', color: '#8B5CF6' }} />
+              <InfoText>
+                Ustawienia są obecnie zarządzane przez właściciela salonu.
+              </InfoText>
+            </InfoCard>
+          )}
         </motion.div>
       </ThemeContainer>
       <Navigation />

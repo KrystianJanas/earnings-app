@@ -183,7 +183,7 @@ const ClientSearchInput = styled(Input)`
 const SearchIcon = styled.div`
   position: absolute;
   left: ${({ theme }) => theme.spacing.sm};
-  top: 50%;
+  top: calc(50% + 10px);
   transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.muted};
   font-size: 1rem;

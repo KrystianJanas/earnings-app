@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import AddEarnings from './pages/AddEarnings'
 import Monthly from './pages/Monthly'
 import Settings from './pages/Settings'
+import Employees from './pages/Employees'
 
 function App() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -77,6 +78,16 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <Settings />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/employees"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Employees />
             </Layout>
           </ProtectedRoute>
         }

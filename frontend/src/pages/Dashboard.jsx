@@ -139,6 +139,11 @@ const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.md};
+
+  &.three-columns {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
 `
 
 const StatCard = styled(Card)`
@@ -295,14 +300,14 @@ const Dashboard = () => {
               <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
             </EarningsCard>
 
-            <StatsGrid>
+            <StatsGrid className="three-columns">
               <StatCard>
                 <StatAmount color="#10b981">
                   {(earnings.cashAmount || 0).toFixed(2)} zł
                 </StatAmount>
                 <StatLabel>
                   💵
-                  Płatności gotówką
+                  Gotówka
                 </StatLabel>
               </StatCard>
 
@@ -312,7 +317,47 @@ const Dashboard = () => {
                 </StatAmount>
                 <StatLabel>
                   <FiCreditCard />
-                  Płatności kartą
+                  Karta
+                </StatLabel>
+              </StatCard>
+
+              <StatCard>
+                <StatAmount color="#9333ea">
+                  {(earnings.blikAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  📱
+                  BLIK
+                </StatLabel>
+              </StatCard>
+
+              <StatCard>
+                <StatAmount color="#ea580c">
+                  {(earnings.prepaidAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  💰
+                  Przedpłata
+                </StatLabel>
+              </StatCard>
+
+              <StatCard>
+                <StatAmount color="#0891b2">
+                  {(earnings.transferAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  🏦
+                  Przelew
+                </StatLabel>
+              </StatCard>
+
+              <StatCard>
+                <StatAmount color="#dc2626">
+                  {(earnings.freeAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  🎁
+                  Gratis
                 </StatLabel>
               </StatCard>
             </StatsGrid>

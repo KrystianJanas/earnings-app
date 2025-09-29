@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { FiChevronDown, FiUsers, FiLogOut } from 'react-icons/fi'
+import { FiChevronDown, FiUsers, FiLogOut, FiPlus } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
+import CreateCompany from './CreateCompany'
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -69,10 +70,10 @@ const Dropdown = styled.div`
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: ${({ theme }) => theme.colors.cardBg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   margin-top: 0.5rem;
   overflow: hidden;
   z-index: 1000;
@@ -85,14 +86,14 @@ const DropdownItem = styled.button`
   gap: 0.75rem;
   padding: 1rem;
   border: none;
-  background: white;
+  background: ${({ theme }) => theme.colors.cardBg};
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
   transition: background-color 0.2s ease;
   text-align: left;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.background};
+    background: ${({ theme }) => theme.colors.surface};
   }
 
   &:not(:last-child) {
@@ -150,11 +151,17 @@ const Overlay = styled.div`
 const Header = () => {
   const { currentCompany, companies, switchCompany, logout } = useAuth()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [showCreateCompany, setShowCreateCompany] = useState(false)
 
   const handleCompanySwitch = async (companyId) => {
     if (companyId !== currentCompany?.id) {
       await switchCompany(companyId)
     }
+    setIsDropdownOpen(false)
+  }
+
+  const handleCreateCompany = () => {
+    setShowCreateCompany(true)
     setIsDropdownOpen(false)
   }
 
@@ -176,6 +183,15 @@ const Header = () => {
 
   if (!currentCompany) {
     return null
+  }
+
+  if (showCreateCompany) {
+    return (
+      <CreateCompany 
+        onBack={() => setShowCreateCompany(false)}
+        onSuccess={() => setShowCreateCompany(false)}
+      />
+    )
   }
 
   return (
@@ -212,6 +228,13 @@ const Header = () => {
                       ))}
                     </DropdownSection>
                   )}
+
+                  <DropdownSection>
+                    <DropdownItem onClick={handleCreateCompany}>
+                      <FiPlus />
+                      Utwórz nowy salon
+                    </DropdownItem>
+                  </DropdownSection>
 
                   <DropdownSection>
                     <DropdownItem onClick={handleLogout}>

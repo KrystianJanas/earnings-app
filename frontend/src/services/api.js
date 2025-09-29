@@ -92,4 +92,9 @@ export const settingsAPI = {
   updateSettings: (data) => api.put('/settings', data),
 }
 
+export const employeesAPI = {
+  getEmployeeStats: (userId, period) => api.get(`/employees/${userId}/stats`, { params: { period } }),
+  updateHourlyRate: (userId, hourlyRate) => api.put(`/employees/${userId}/hourly-rate`, { hourlyRate }),
+}
+
 export default api
