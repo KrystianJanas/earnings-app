@@ -1,22 +1,22 @@
 const db = require('../config/database');
 
 class Client {
-  static async create({ userId, fullName, phone, email, notes }) {
+  static async create({ userId, companyId, fullName, phone, email, notes }) {
     const result = await db.query(`
-      INSERT INTO clients (user_id, full_name, phone, email, notes)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO clients (user_id, company_id, full_name, phone, email, notes)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
-    `, [userId, fullName, phone || null, email || null, notes || null]);
+    `, [userId, companyId, fullName, phone || null, email || null, notes || null]);
     return result.rows[0];
   }
 
-  static async findOrCreate({ userId, fullName, phone, email, notes }) {
-    // First try to find existing client by name
+  static async findOrCreate({ userId, companyId, fullName, phone, email, notes }) {
+    // First try to find existing client by name within the company
     let existingClient = await db.query(`
       SELECT * FROM clients 
-      WHERE user_id = $1 AND full_name ILIKE $2
+      WHERE company_id = $1 AND full_name ILIKE $2
       LIMIT 1
-    `, [userId, fullName]);
+    `, [companyId, fullName]);
 
     if (existingClient.rows.length > 0) {
       // Update existing client with new info if provided
@@ -30,15 +30,15 @@ class Client {
           updated_at = CURRENT_TIMESTAMP
         WHERE id = $1
         RETURNING *
-      `, [client.id, client.user_id, phone, email, notes]);
+      `, [client.id, phone, email, notes]);
       return updatedClient.rows[0];
     } else {
       // Create new client
-      return await this.create({ userId, fullName, phone, email, notes });
+      return await this.create({ userId, companyId, fullName, phone, email, notes });
     }
   }
 
-  static async search({ userId, query, limit = 10 }) {
+  static async search({ companyId, query, limit = 10 }) {
     const searchTerm = `%${query}%`;
     const result = await db.query(`
       SELECT 
@@ -50,7 +50,7 @@ class Client {
         total_visits,
         total_spent
       FROM clients_with_recent_activity
-      WHERE user_id = $1 
+      WHERE company_id = $1 
         AND (
           full_name ILIKE $2 
           OR phone ILIKE $2
@@ -64,7 +64,7 @@ class Client {
         -- Then by total visits
         total_visits DESC
       LIMIT $3
-    `, [userId, searchTerm, limit]);
+    `, [companyId, searchTerm, limit]);
     return result.rows;
   }
 
@@ -75,7 +75,7 @@ class Client {
     return result.rows[0];
   }
 
-  static async getByUserId({ userId, limit = 50, offset = 0 }) {
+  static async getByCompanyId({ companyId, limit = 50, offset = 0 }) {
     const result = await db.query(`
       SELECT 
         id,
@@ -87,10 +87,10 @@ class Client {
         total_spent,
         created_at
       FROM clients_with_recent_activity
-      WHERE user_id = $1
+      WHERE company_id = $1
       ORDER BY last_activity_date DESC NULLS LAST
       LIMIT $2 OFFSET $3
-    `, [userId, limit, offset]);
+    `, [companyId, limit, offset]);
     return result.rows;
   }
 

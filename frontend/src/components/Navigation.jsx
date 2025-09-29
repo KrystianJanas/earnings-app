@@ -1,8 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { FiHome, FiPlus, FiBarChart, FiSettings, FiLogOut } from 'react-icons/fi'
-import { useAuth } from '../context/AuthContext'
+import { FiHome, FiPlus, FiBarChart, FiSettings } from 'react-icons/fi'
 
 const NavContainer = styled.nav`
   position: fixed;
@@ -65,53 +64,8 @@ const NavItem = styled(NavLink)`
   }
 `
 
-const LogoutButton = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.text.muted};
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  min-height: 44px;
-  justify-content: center;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.error};
-  }
-
-  svg {
-    font-size: 1.5rem;
-    margin-bottom: 4px;
-  }
-
-  span {
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-
-  @media (max-width: 480px) {
-    svg {
-      font-size: 1.4rem;
-      margin-bottom: 2px;
-    }
-    
-    span {
-      font-size: 0.7rem;
-    }
-  }
-`
 
 const Navigation = () => {
-  const { logout } = useAuth()
-
-  const handleLogout = () => {
-    logout()
-  }
-
   return (
     <NavContainer>
       <NavContent>
@@ -134,11 +88,6 @@ const Navigation = () => {
           <FiSettings />
           <span>Ustawienia</span>
         </NavItem>
-
-        <LogoutButton onClick={handleLogout}>
-          <FiLogOut />
-          <span>Wyloguj</span>
-        </LogoutButton>
       </NavContent>
     </NavContainer>
   )

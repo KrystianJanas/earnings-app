@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import CompanySelector from './CompanySelector'
+import CreateCompany from './CreateCompany'
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, hasCompanyAccess, needsCompanySetup, isLoading } = useAuth()
+  const [showCreateCompany, setShowCreateCompany] = useState(false)
   const location = useLocation()
 
   if (isLoading) {
@@ -22,6 +25,23 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  if (!hasCompanyAccess) {
+    if (showCreateCompany) {
+      return (
+        <CreateCompany 
+          onBack={() => setShowCreateCompany(false)}
+          onSuccess={() => setShowCreateCompany(false)}
+        />
+      )
+    } else {
+      return (
+        <CompanySelector 
+          onCreateNew={() => setShowCreateCompany(true)}
+        />
+      )
+    }
   }
 
   return children

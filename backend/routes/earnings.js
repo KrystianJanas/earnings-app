@@ -15,14 +15,14 @@ router.get('/dashboard', async (req, res) => {
 
     switch (period) {
       case 'day':
-        data = await Earnings.getDailyTotal(req.user.userId, currentDate);
+        data = await Earnings.getDailyTotal(req.user.companyId, currentDate);
         break;
       case 'week':
         const weekStart = new Date(currentDate);
         weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // Monday
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 6); // Sunday
-        data = await Earnings.getWeeklyTotal(req.user.userId, 
+        data = await Earnings.getWeeklyTotal(req.user.companyId, 
           weekStart.toISOString().split('T')[0], 
           weekEnd.toISOString().split('T')[0]
         );
@@ -30,22 +30,22 @@ router.get('/dashboard', async (req, res) => {
       case 'prev-month':
         const prevMonth = new Date();
         prevMonth.setMonth(prevMonth.getMonth() - 1);
-        data = await Earnings.getMonthlyTotal(req.user.userId, prevMonth.getFullYear(), prevMonth.getMonth() + 1);
+        data = await Earnings.getMonthlyTotal(req.user.companyId, prevMonth.getFullYear(), prevMonth.getMonth() + 1);
         break;
       case 'year':
         const year = new Date(currentDate).getFullYear();
-        data = await Earnings.getYearlyTotal(req.user.userId, year);
+        data = await Earnings.getYearlyTotal(req.user.companyId, year);
         break;
       case 'all':
-        data = await Earnings.getAllTimeTotal(req.user.userId);
+        data = await Earnings.getAllTimeTotal(req.user.companyId);
         break;
       default: // 'month'
-        data = await Earnings.getCurrentMonthTotal(req.user.userId);
+        data = await Earnings.getCurrentMonthTotal(req.user.companyId);
         break;
     }
     
     // Get user's hourly rate for estimated earnings calculation
-    const hourlyRate = await UserSettings.getHourlyRate(req.user.userId);
+    const hourlyRate = await UserSettings.getHourlyRate(req.user.userId, req.user.companyId);
     const totalHours = parseFloat(data.total_hours);
     const estimatedEarnings = hourlyRate * totalHours;
 
@@ -71,7 +71,7 @@ router.get('/dashboard', async (req, res) => {
 router.get('/day/:date', async (req, res) => {
   try {
     const { date } = req.params;
-    const earnings = await Earnings.getByDateWithClients(req.user.userId, date);
+    const earnings = await Earnings.getByDateWithClients(req.user.userId, req.user.companyId, date);
     
     if (!earnings) {
       return res.json({
@@ -184,6 +184,7 @@ router.post('/day', [
 
     const earnings = await Earnings.createOrUpdate({
       userId: req.user.userId,
+      companyId: req.user.companyId,
       date,
       entryMode: entryMode || 'summary',
       cashAmount: finalCashAmount,
@@ -218,11 +219,11 @@ router.get('/monthly/:year/:month', async (req, res) => {
   try {
     const { year, month } = req.params;
     
-    const monthlyTotal = await Earnings.getMonthlyTotal(req.user.userId, year, month);
-    const dailyBreakdown = await Earnings.getMonthlyBreakdown(req.user.userId, year, month);
+    const monthlyTotal = await Earnings.getMonthlyTotal(req.user.companyId, year, month);
+    const dailyBreakdown = await Earnings.getMonthlyBreakdown(req.user.companyId, year, month);
     
     // Get user's hourly rate for estimated earnings calculation
-    const hourlyRate = await UserSettings.getHourlyRate(req.user.userId);
+    const hourlyRate = await UserSettings.getHourlyRate(req.user.userId, req.user.companyId);
     const totalHours = parseFloat(monthlyTotal.total_hours);
     const estimatedEarnings = hourlyRate * totalHours;
 

@@ -56,4 +56,40 @@ export const earningsAPI = {
   getMonthlyEarnings: (year, month) => api.get(`/earnings/monthly/${year}/${month}`),
 }
 
+export const companiesAPI = {
+  getCompanies: () => api.get('/companies'),
+  getCurrentCompany: () => api.get('/companies/current'),
+  switchCompany: (companyId) => api.post(`/companies/switch/${companyId}`),
+  createCompany: (data) => api.post('/companies', data),
+  updateCompany: (id, data) => api.put(`/companies/${id}`, data),
+  getEmployees: (id) => api.get(`/companies/${id}/employees`),
+  removeEmployee: (id, userId) => api.delete(`/companies/${id}/employees/${userId}`),
+  updateEmployeeRole: (id, userId, role) => api.put(`/companies/${id}/employees/${userId}/role`, { role }),
+  getInvitations: (id) => api.get(`/companies/${id}/invitations`),
+  createInvitation: (id, data) => api.post(`/companies/${id}/invitations`, data),
+  cancelInvitation: (id, invitationId) => api.delete(`/companies/${id}/invitations/${invitationId}`),
+}
+
+export const invitationsAPI = {
+  getMyInvitations: () => api.get('/invitations'),
+  getInvitationByToken: (token) => api.get(`/invitations/token/${token}`),
+  acceptInvitation: (token) => api.post(`/invitations/accept/${token}`),
+  declineInvitation: (token) => api.post(`/invitations/decline/${token}`),
+}
+
+export const clientsAPI = {
+  search: (query) => api.get('/clients/search', { params: { q: query } }),
+  getClients: (limit = 50, offset = 0) => api.get('/clients', { params: { limit, offset } }),
+  getClient: (id) => api.get(`/clients/${id}`),
+  createClient: (data) => api.post('/clients', data),
+  updateClient: (id, data) => api.put(`/clients/${id}`, data),
+  deleteClient: (id) => api.delete(`/clients/${id}`),
+  getTransactionHistory: (id, limit = 20) => api.get(`/clients/${id}/transactions`, { params: { limit } }),
+}
+
+export const settingsAPI = {
+  getSettings: () => api.get('/settings'),
+  updateSettings: (data) => api.put('/settings', data),
+}
+
 export default api

@@ -51,7 +51,7 @@ class ClientTransaction {
     }
   }
 
-  static async createMultiple(dailyEarningsId, clients, userId) {
+  static async createMultiple(dailyEarningsId, clients, userId, companyId) {
     const client = await db.getClient();
     
     try {
@@ -70,6 +70,7 @@ class ClientTransaction {
         if (clientData.clientName && clientData.clientName.trim()) {
           const clientRecord = await Client.findOrCreate({
             userId,
+            companyId,
             fullName: clientData.clientName.trim(),
             phone: clientData.clientPhone,
             email: clientData.clientEmail

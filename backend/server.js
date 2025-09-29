@@ -7,7 +7,9 @@ const authRoutes = require('./routes/auth');
 const earningsRoutes = require('./routes/earnings');
 const settingsRoutes = require('./routes/settings');
 const clientsRoutes = require('./routes/clients');
-const { authenticateToken } = require('./middleware/auth');
+const companiesRoutes = require('./routes/companies');
+const invitationsRoutes = require('./routes/invitations');
+const { authenticateToken, requireCompanyAccess } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.BACKEND_PORT || 3001;
@@ -20,9 +22,11 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/earnings', authenticateToken, earningsRoutes);
-app.use('/api/settings', authenticateToken, settingsRoutes);
-app.use('/api/clients', authenticateToken, clientsRoutes);
+app.use('/api/companies', authenticateToken, companiesRoutes);
+app.use('/api/invitations', authenticateToken, invitationsRoutes);
+app.use('/api/earnings', authenticateToken, requireCompanyAccess, earningsRoutes);
+app.use('/api/settings', authenticateToken, requireCompanyAccess, settingsRoutes);
+app.use('/api/clients', authenticateToken, requireCompanyAccess, clientsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const settings = await UserSettings.getOrCreate(req.user.userId);
+    const settings = await UserSettings.getOrCreate(req.user.userId, req.user.companyId);
     
     res.json({
       hourlyRate: parseFloat(settings.hourly_rate)
@@ -28,7 +28,7 @@ router.put('/', [
 
     const { hourlyRate } = req.body;
 
-    const settings = await UserSettings.update(req.user.userId, { hourlyRate });
+    const settings = await UserSettings.update(req.user.userId, req.user.companyId, { hourlyRate });
 
     res.json({
       message: 'Settings updated successfully',

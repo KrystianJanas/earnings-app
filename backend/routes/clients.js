@@ -16,7 +16,7 @@ router.get('/search', [
 
     const { q: query } = req.query;
     const results = await Client.search({ 
-      userId: req.user.userId, 
+      companyId: req.user.companyId, 
       query,
       limit: 10 
     });
@@ -40,8 +40,8 @@ router.get('/', [
     }
 
     const { limit = 50, offset = 0 } = req.query;
-    const clients = await Client.getByUserId({
-      userId: req.user.userId,
+    const clients = await Client.getByCompanyId({
+      companyId: req.user.companyId,
       limit,
       offset
     });
@@ -59,7 +59,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const client = await Client.getById(id);
     
-    if (!client || client.user_id !== req.user.userId) {
+    if (!client || client.company_id !== req.user.companyId) {
       return res.status(404).json({ error: 'Client not found' });
     }
 
@@ -87,6 +87,7 @@ router.post('/', [
     
     const client = await Client.findOrCreate({
       userId: req.user.userId,
+      companyId: req.user.companyId,
       fullName,
       phone,
       email,
@@ -122,7 +123,7 @@ router.put('/:id', [
 
     // First verify the client belongs to the user
     const existingClient = await Client.getById(id);
-    if (!existingClient || existingClient.user_id !== req.user.userId) {
+    if (!existingClient || existingClient.company_id !== req.user.companyId) {
       return res.status(404).json({ error: 'Client not found' });
     }
 
@@ -147,7 +148,7 @@ router.delete('/:id', async (req, res) => {
 
     // First verify the client belongs to the user
     const existingClient = await Client.getById(id);
-    if (!existingClient || existingClient.user_id !== req.user.userId) {
+    if (!existingClient || existingClient.company_id !== req.user.companyId) {
       return res.status(404).json({ error: 'Client not found' });
     }
 
@@ -174,7 +175,7 @@ router.get('/:id/transactions', [
 
     // First verify the client belongs to the user
     const client = await Client.getById(id);
-    if (!client || client.user_id !== req.user.userId) {
+    if (!client || client.company_id !== req.user.companyId) {
       return res.status(404).json({ error: 'Client not found' });
     }
 

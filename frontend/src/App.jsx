@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import Layout from './components/Layout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -44,7 +45,9 @@ function App() {
         path="/"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <Layout>
+              <Dashboard />
+            </Layout>
           </ProtectedRoute>
         }
       />
@@ -52,7 +55,9 @@ function App() {
         path="/add-earnings"
         element={
           <ProtectedRoute>
-            <AddEarnings />
+            <Layout>
+              <AddEarnings />
+            </Layout>
           </ProtectedRoute>
         }
       />
@@ -60,7 +65,9 @@ function App() {
         path="/monthly"
         element={
           <ProtectedRoute>
-            <Monthly />
+            <Layout>
+              <Monthly />
+            </Layout>
           </ProtectedRoute>
         }
       />
@@ -68,7 +75,9 @@ function App() {
         path="/settings"
         element={
           <ProtectedRoute>
-            <Settings />
+            <Layout>
+              <Settings />
+            </Layout>
           </ProtectedRoute>
         }
       />
