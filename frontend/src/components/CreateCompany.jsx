@@ -116,7 +116,7 @@ const PrimaryButton = styled(Button)`
 
 const SecondaryButton = styled(Button)`
   background: transparent;
-  color: ${props => props.theme.colors.textSecondary};
+  color: ${props => props.theme.colors.text.secondary};
   border: 2px solid ${props => props.theme.colors.border};
 
   &:hover:not(:disabled) {

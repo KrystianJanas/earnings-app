@@ -21,33 +21,37 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const validateAndSetAuth = async () => {
-      const savedToken = localStorage.getItem('token')
-      const savedUser = localStorage.getItem('user')
-      
-      if (savedToken && savedUser) {
-        try {
-          // Validate token with backend
-          const response = await authAPI.validate()
-          if (response.data.valid) {
-            setToken(savedToken)
-            setUser(response.data.user) // Use fresh user data from backend
-            
-            // Load company data
-            await loadCompanyData()
-          } else {
-            // Token invalid, clear storage
+      try {
+        const savedToken = localStorage.getItem('token')
+        const savedUser = localStorage.getItem('user')
+        
+        if (savedToken && savedUser) {
+          try {
+            // Validate token with backend
+            const response = await authAPI.validate()
+            if (response.data.valid) {
+              setToken(savedToken)
+              setUser(response.data.user) // Use fresh user data from backend
+              
+              // Load company data
+              await loadCompanyData()
+            } else {
+              // Token invalid, clear storage
+              localStorage.removeItem('token')
+              localStorage.removeItem('user')
+            }
+          } catch (error) {
+            // Token validation failed, clear storage
+            console.log('Token validation failed:', error.message)
             localStorage.removeItem('token')
             localStorage.removeItem('user')
           }
-        } catch (error) {
-          // Token validation failed, clear storage
-          console.log('Token validation failed:', error.message)
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
         }
+      } catch (error) {
+        console.error('Auth initialization error:', error)
+      } finally {
+        setIsLoading(false)
       }
-      
-      setIsLoading(false)
     }
     
     validateAndSetAuth()

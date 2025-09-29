@@ -28,7 +28,7 @@ const Title = styled.h1`
 `
 
 const Subtitle = styled.p`
-  color: ${props => props.theme.colors.textSecondary};
+  color: ${props => props.theme.colors.text.secondary};
   margin-bottom: 2rem;
   font-size: 1rem;
 `
@@ -68,7 +68,7 @@ const CompanyName = styled.div`
 
 const CompanyRole = styled.div`
   font-size: 0.875rem;
-  color: ${props => props.theme.colors.textSecondary};
+  color: ${props => props.theme.colors.text.secondary};
 `
 
 const Divider = styled.div`
