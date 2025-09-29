@@ -327,7 +327,7 @@ const Monthly = () => {
           <SummaryGrid>
             <SummaryCard color="#6366f1">
               <SummaryHeader>
-                <SummaryTitle>Łączne zarobki</SummaryTitle>
+                <SummaryTitle>Łączny obrót</SummaryTitle>
                 <IconWrapper color="#6366f1">
                   💰
                 </IconWrapper>
@@ -441,7 +441,7 @@ const Monthly = () => {
             <NoDataCard>
               <p>Brak zarobków zarejestrowanych w tym miesiącu</p>
               <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-                Zacznij dodawać swoje dzienne zarobki, aby je tutaj zobaczyć
+                Zacznij dodawać swój dzienny obrót, aby go tutaj zobaczyć
               </p>
             </NoDataCard>
           )}

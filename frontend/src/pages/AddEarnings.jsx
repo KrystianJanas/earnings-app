@@ -382,7 +382,13 @@ const AddEarnings = () => {
   const [successMessage, setSuccessMessage] = useState('')
   const [buttonSuccessMessage, setButtonSuccessMessage] = useState('')
   const [entryMode, setEntryMode] = useState('detailed') // 'summary' or 'detailed'
-  const [clients, setClients] = useState([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+  const [clients, setClients] = useState([{ 
+    amount: 0, 
+    paymentMethod: 'cash', 
+    notes: '', 
+    clientName: '',
+    payments: [{ amount: 0, method: 'cash' }] 
+  }])
   const queryClient = useQueryClient()
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
@@ -427,7 +433,7 @@ const AddEarnings = () => {
 
   const mutation = useMutation(earningsAPI.saveDayEarnings, {
     onSuccess: () => {
-      setSuccessMessage('Zarobki zostały pomyślnie zapisane!')
+      setSuccessMessage('Obrót został pomyślnie zapisany!')
       setButtonSuccessMessage('Zapisano pomyślnie!')
       queryClient.invalidateQueries('dashboard')
       queryClient.invalidateQueries(['dayEarnings', selectedDate])
@@ -442,7 +448,13 @@ const AddEarnings = () => {
 
   // Client management functions
   const addClient = () => {
-    setClients([...clients, { amount: 0, paymentMethod: 'cash', notes: '' }])
+    setClients([...clients, { 
+      amount: 0, 
+      paymentMethod: 'cash', 
+      notes: '', 
+      clientName: '',
+      payments: [{ amount: 0, method: 'cash' }] 
+    }])
   }
 
   const removeClient = (index) => {
@@ -481,8 +493,15 @@ const AddEarnings = () => {
       parseInt(watch('clientsCount') || 0) > 0
     )) ||
     (entryMode === 'detailed' && 
-      clients.some(client => parseFloat(client.amount) > 0) &&
-      !(clients.length === 1 && parseFloat(clients[0].amount) === 0)
+      clients.some(client => {
+        if (client.payments && client.payments.length > 0) {
+          return client.payments.some(payment => parseFloat(payment.amount) > 0)
+        }
+        return parseFloat(client.amount) > 0
+      }) &&
+      !(clients.length === 1 && 
+        ((clients[0].payments && clients[0].payments.length === 1 && parseFloat(clients[0].payments[0].amount) === 0) ||
+         (!clients[0].payments && parseFloat(clients[0].amount) === 0)))
     )
   )
 
@@ -497,8 +516,13 @@ const AddEarnings = () => {
     setEntryMode(mode)
     
     if (mode === 'detailed') {
-      // When switching to detailed, reset to one empty client
-      setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+      // When switching to detailed, reset to one empty client with new payment structure
+      setClients([{ 
+        amount: 0, 
+        payments: [{ amount: 0, method: 'cash' }], 
+        notes: '', 
+        clientName: '' 
+      }])
     } else if (mode === 'summary') {
       // When switching to summary, clear form values
       setValue('cashAmount', '')
@@ -509,15 +533,48 @@ const AddEarnings = () => {
 
   // Calculate totals from clients in detailed mode
   const clientTotals = clients.reduce((totals, client) => {
-    const amount = parseFloat(client.amount) || 0
-    if (client.paymentMethod === 'cash') {
-      totals.cash += amount
+    if (client.payments && client.payments.length > 0) {
+      // New multiple payments structure
+      client.payments.forEach(payment => {
+        const amount = parseFloat(payment.amount) || 0
+        totals.total += amount
+        
+        switch (payment.method) {
+          case 'cash':
+            totals.cash += amount
+            break
+          case 'card':
+            totals.card += amount
+            break
+          case 'blik':
+            totals.blik += amount
+            break
+          case 'prepaid':
+            totals.prepaid += amount
+            break
+          case 'transfer':
+            totals.transfer += amount
+            break
+          case 'free':
+            totals.free += amount
+            break
+          default:
+            break
+        }
+      })
     } else {
-      totals.card += amount
+      // Legacy single payment structure
+      const amount = parseFloat(client.amount) || 0
+      totals.total += amount
+      
+      if (client.paymentMethod === 'cash') {
+        totals.cash += amount
+      } else if (client.paymentMethod === 'card') {
+        totals.card += amount
+      }
     }
-    totals.total += amount
     return totals
-  }, { cash: 0, card: 0, total: 0 })
+  }, { cash: 0, card: 0, blik: 0, prepaid: 0, transfer: 0, free: 0, total: 0 })
 
   const onSubmit = (data) => {
     setSuccessMessage('')
@@ -549,7 +606,12 @@ const AddEarnings = () => {
 
   const resetFormForNewDate = () => {
     // Reset form and state when date changes
-    setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
+    setClients([{ 
+      amount: 0, 
+      payments: [{ amount: 0, method: 'cash' }], 
+      notes: '', 
+      clientName: '' 
+    }])
     setEntryMode('detailed')
     setValue('cashAmount', '')
     setValue('cardAmount', '')
@@ -610,7 +672,7 @@ const AddEarnings = () => {
     <AddEarningsContainer>
       <Container>
         <Header>
-          <Title>Dodaj zarobki</Title>
+          <Title>Dodaj obrót</Title>
           <SubText>Śledź swoje dzienne dochody</SubText>
         </Header>
 
@@ -750,7 +812,7 @@ const AddEarnings = () => {
                             borderRadius: '0.5rem',
                             textAlign: 'center'
                           }}>
-                            <strong>Łączne zarobki: {(parseFloat(watch('cashAmount') || 0) + parseFloat(watch('cardAmount') || 0)).toFixed(2)} zł</strong>
+                            <strong>Łączny obrót: {(parseFloat(watch('cashAmount') || 0) + parseFloat(watch('cardAmount') || 0)).toFixed(2)} zł</strong>
                           </div>
                         </FormGroup>
                       )}
@@ -790,12 +852,24 @@ const AddEarnings = () => {
                       {clientTotals.total > 0 && (
                         <ClientsSummary>
                           <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-                            <strong>Klientek: {clients.filter(c => parseFloat(c.amount) > 0).length}</strong>
+                            <strong>Klientek: {clients.filter(c => {
+                              if (c.payments && c.payments.length > 0) {
+                                return c.payments.some(payment => parseFloat(payment.amount) > 0)
+                              }
+                              return parseFloat(c.amount) > 0
+                            }).length}</strong>
                           </div>
                           <div style={{ textAlign: 'center' }}>
-                            <strong>Łącznie: {clientTotals.total.toFixed(2)} zł</strong>
+                            <strong>Łączny obrót: {clientTotals.total.toFixed(2)} zł</strong>
                             <div style={{ fontSize: '0.8rem', opacity: 0.8, marginTop: '0.25rem' }}>
-                              Gotówka: {clientTotals.cash.toFixed(2)} zł | Karta: {clientTotals.card.toFixed(2)} zł
+                              {[
+                                clientTotals.cash > 0 && `Gotówka: ${clientTotals.cash.toFixed(2)} zł`,
+                                clientTotals.card > 0 && `Karta: ${clientTotals.card.toFixed(2)} zł`,
+                                clientTotals.blik > 0 && `BLIK: ${clientTotals.blik.toFixed(2)} zł`,
+                                clientTotals.prepaid > 0 && `Przedpłata: ${clientTotals.prepaid.toFixed(2)} zł`,
+                                clientTotals.transfer > 0 && `Przelew: ${clientTotals.transfer.toFixed(2)} zł`,
+                                clientTotals.free > 0 && `Gratis: ${clientTotals.free.toFixed(2)} zł`
+                              ].filter(Boolean).join(' | ')}
                             </div>
                           </div>
                         </ClientsSummary>
@@ -889,7 +963,7 @@ const AddEarnings = () => {
                     ) : (
                       <>
                         <FiSave style={{ marginRight: '0.5rem' }} />
-                        Zapisz zarobki
+                        Zapisz obrót
                       </>
                     )}
                   </Button>

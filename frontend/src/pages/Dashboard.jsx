@@ -284,7 +284,7 @@ const Dashboard = () => {
           <EarningsGrid>
             <EarningsCard color="#6366f1">
               <EarningsHeader>
-                <EarningsTitle>Łączne zarobki</EarningsTitle>
+                <EarningsTitle>Łączny obrót</EarningsTitle>
                 <IconWrapper color="#6366f1">
                   💰
                 </IconWrapper>
@@ -292,7 +292,7 @@ const Dashboard = () => {
               <EarningsAmount>
                 {(earnings.totalEarnings || 0).toFixed(2)} zł
               </EarningsAmount>
-              <EarningsLabel>Zarobki {getPeriodLabel()}</EarningsLabel>
+              <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
             </EarningsCard>
 
             <StatsGrid>

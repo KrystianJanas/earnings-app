@@ -6,6 +6,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const earningsRoutes = require('./routes/earnings');
 const settingsRoutes = require('./routes/settings');
+const clientsRoutes = require('./routes/clients');
 const { authenticateToken } = require('./middleware/auth');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/earnings', authenticateToken, earningsRoutes);
 app.use('/api/settings', authenticateToken, settingsRoutes);
+app.use('/api/clients', authenticateToken, clientsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

@@ -27,7 +27,7 @@ class Earnings {
       
       // If detailed mode, handle client transactions
       if (entryMode === 'detailed' && clients && clients.length > 0) {
-        await ClientTransaction.createMultiple(dailyEarnings.id, clients);
+        await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId);
       } else if (entryMode === 'summary') {
         // If switching to summary mode, clean up any existing client transactions
         await ClientTransaction.deleteByDailyEarningsId(dailyEarnings.id);

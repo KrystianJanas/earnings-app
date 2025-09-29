@@ -98,10 +98,18 @@ router.get('/day/:date', async (req, res) => {
       notes: earnings.notes || '',
       clients: earnings.clients ? earnings.clients.map(client => ({
         id: client.id,
-        amount: parseFloat(client.amount),
+        amount: parseFloat(client.amount || 0),
         paymentMethod: client.payment_method,
         clientOrder: client.client_order,
-        notes: client.notes || ''
+        notes: client.notes || '',
+        clientId: client.client_id,
+        clientName: client.client_name,
+        clientPhone: client.client_phone,
+        clientEmail: client.client_email,
+        payments: client.payments || (client.payment_method ? 
+          [{ amount: parseFloat(client.amount || 0), method: client.payment_method }] : 
+          [{ amount: 0, method: 'cash' }]
+        )
       })) : []
     });
   } catch (error) {
@@ -121,7 +129,10 @@ router.post('/day', [
   body('notes').optional().isString(),
   body('clients').optional().isArray(),
   body('clients.*.amount').optional().isFloat({ min: 0 }),
-  body('clients.*.paymentMethod').optional().isIn(['cash', 'card']),
+  body('clients.*.paymentMethod').optional().isIn(['cash', 'card', 'blik', 'prepaid', 'transfer', 'free']),
+  body('clients.*.payments').optional().isArray(),
+  body('clients.*.payments.*.amount').optional().isFloat({ min: 0 }),
+  body('clients.*.payments.*.method').optional().isIn(['cash', 'card', 'blik', 'prepaid', 'transfer', 'free']),
   body('clients.*.notes').optional().isString()
 ], async (req, res) => {
   try {
@@ -138,9 +149,37 @@ router.post('/day', [
     let finalClientsCount = clientsCount;
 
     if (entryMode === 'detailed' && clients && clients.length > 0) {
-      finalCashAmount = clients.filter(c => c.paymentMethod === 'cash').reduce((sum, c) => sum + c.amount, 0);
-      finalCardAmount = clients.filter(c => c.paymentMethod === 'card').reduce((sum, c) => sum + c.amount, 0);
-      finalClientsCount = clients.filter(c => parseFloat(c.amount) > 0).length; // Only count clients with amount > 0
+      // Calculate totals from either new payment structure or legacy structure
+      let totalCash = 0;
+      let totalCard = 0;
+      let validClientsCount = 0;
+      
+      clients.forEach(client => {
+        if (client.payments && client.payments.length > 0) {
+          // New multiple payment structure
+          const clientTotal = client.payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
+          if (clientTotal > 0) {
+            validClientsCount++;
+            client.payments.forEach(payment => {
+              const amount = parseFloat(payment.amount || 0);
+              if (payment.method === 'cash') totalCash += amount;
+              else if (payment.method === 'card') totalCard += amount;
+            });
+          }
+        } else if (client.amount && parseFloat(client.amount) > 0) {
+          // Legacy single payment structure
+          validClientsCount++;
+          if (client.paymentMethod === 'cash') {
+            totalCash += parseFloat(client.amount);
+          } else if (client.paymentMethod === 'card') {
+            totalCard += parseFloat(client.amount);
+          }
+        }
+      });
+      
+      finalCashAmount = totalCash;
+      finalCardAmount = totalCard;
+      finalClientsCount = validClientsCount;
     }
 
     const earnings = await Earnings.createOrUpdate({
