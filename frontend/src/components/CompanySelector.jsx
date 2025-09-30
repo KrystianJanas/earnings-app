@@ -333,16 +333,24 @@ const CompanySelector = ({ onCreateNew }) => {
         
         {companies.length > 0 && (
           <CompanyList>
-            {companies.map((company) => (
-              <CompanyButton
-                key={company.id}
-                onClick={() => handleCompanySelect(company.id)}
-                disabled={isLoading}
-              >
-                <CompanyName>{company.name}</CompanyName>
-                <CompanyRole>{getRoleLabel(company.userRole)}</CompanyRole>
-              </CompanyButton>
-            ))}
+            {companies.map((company) => {
+              console.log('🏢 Company data:', { 
+                name: company.name, 
+                userRole: company.userRole, 
+                roleLabel: getRoleLabel(company.userRole),
+                fullCompany: company 
+              });
+              return (
+                <CompanyButton
+                  key={company.id}
+                  onClick={() => handleCompanySelect(company.id)}
+                  disabled={isLoading}
+                >
+                  <CompanyName>{company.name}</CompanyName>
+                  <CompanyRole>{getRoleLabel(company.userRole)}</CompanyRole>
+                </CompanyButton>
+              );
+            })}
           </CompanyList>
         )}
 
