@@ -61,7 +61,18 @@ export const AuthProvider = ({ children }) => {
     try {
       // Get user's companies
       const companiesResponse = await companiesAPI.getCompanies()
-      setCompanies(companiesResponse.data)
+      const mappedCompanies = companiesResponse.data.map(company => ({
+        id: company.company_id,
+        name: company.company_name,
+        description: company.company_description,
+        userRole: company.role,
+        isActive: company.is_active,
+        joinedAt: company.joined_at,
+        totalEmployees: company.total_employees,
+        isSoleOwner: company.is_sole_owner
+      }))
+      console.log('🏢 Mapped companies:', mappedCompanies)
+      setCompanies(mappedCompanies)
       
       // Get current company
       const currentCompanyResponse = await companiesAPI.getCurrentCompany()
