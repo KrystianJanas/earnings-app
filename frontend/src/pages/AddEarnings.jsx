@@ -311,7 +311,7 @@ const ModeToggle = styled.div`
     padding: ${({ theme }) => theme.spacing.md};
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     flex-direction: row;
     max-width: none;
   }
@@ -348,7 +348,7 @@ const ModeButton = styled.button`
     min-height: 44px;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     width: auto;
     min-width: 200px;
   }
