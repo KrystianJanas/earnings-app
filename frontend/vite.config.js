@@ -21,11 +21,11 @@ export default defineConfig({
     // Additional network fixes for macOS (only for local development)
     hmr: process.env.NODE_ENV === 'production' ? false : (isDocker ? {
       // For Docker: use port only, let Docker handle host mapping
-      port: parseInt(process.env.FRONTEND_PORT) + 1 || 3001,
+      port: 3002,
     } : {
       // For local development: use explicit host
       host: '127.0.0.1',
-      port: parseInt(process.env.FRONTEND_PORT) + 1 || 3001,
+      port: 3002,
     }),
     // Force HTTP to avoid HTTPS redirect issues in Chrome
     https: false,
