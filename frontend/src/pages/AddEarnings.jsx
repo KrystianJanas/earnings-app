@@ -630,23 +630,11 @@ const AddEarnings = () => {
     })
 
     if (entryMode === 'detailed') {
-      // Filter clients based on whether they have any payments with amounts > 0
-      const validClients = clients.filter(client => {
-        if (client.payments) {
-          // New multiple payments structure - check if there are any payments with amount > 0
-          return client.payments.length > 0 && client.payments.some(payment => parseFloat(payment.amount) > 0)
-        } else {
-          // Legacy single payment structure
-          return parseFloat(client.amount) > 0
-        }
-      })
+      // Send all clients - backend will handle filtering out empty ones
+      submitData.clients = clients
       
-      // Only send clients that have valid payments
-      submitData.clients = validClients
-      
-      console.log('🔍 Filtered clients for detailed mode:', {
-        originalClients: clients,
-        validClients,
+      console.log('🔍 Clients for detailed mode:', {
+        clients: clients,
         finalSubmitData: submitData
       })
     } else {

@@ -66,6 +66,16 @@ class ClientTransaction {
       const results = [];
       for (let i = 0; i < clients.length; i++) {
         const clientData = clients[i];
+        
+        // Skip clients with no valid payments
+        const hasValidPayments = clientData.payments ? 
+          clientData.payments.some(payment => parseFloat(payment.amount || 0) > 0) :
+          parseFloat(clientData.amount || 0) > 0;
+          
+        if (!hasValidPayments) {
+          continue; // Skip this client
+        }
+        
         let clientId = null;
         
         // Handle client data if provided
