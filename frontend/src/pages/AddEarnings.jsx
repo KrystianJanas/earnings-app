@@ -16,6 +16,9 @@ const AddEarningsContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.md} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (min-width: 768px) {
     padding: ${({ theme }) => theme.spacing.lg} 0;
@@ -29,6 +32,7 @@ const Container = styled.div`
   padding: 0 ${({ theme }) => theme.spacing.md};
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
 
   @media (max-width: 480px) {
     padding: 0 ${({ theme }) => theme.spacing.sm};
@@ -40,13 +44,13 @@ const Container = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 98vw;
-    padding: 0;
+    max-width: 95vw;
+    padding: 0 ${({ theme }) => theme.spacing.sm};
   }
 
   @media (min-width: 1280px) {
-    max-width: 98vw;
-    padding: 0;
+    max-width: 90vw;
+    padding: 0 ${({ theme }) => theme.spacing.md};
   }
 `
 
@@ -79,6 +83,7 @@ const FormCard = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
 
   @media (min-width: 768px) {
     max-width: 700px;
@@ -86,11 +91,13 @@ const FormCard = styled(Card)`
   }
 
   @media (min-width: 1024px) {
-    max-width: 95vw;
+    max-width: 90vw;
+    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
   }
 
   @media (min-width: 1280px) {
-    max-width: 95vw;
+    max-width: 85vw;
+    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
   }
 `
 
