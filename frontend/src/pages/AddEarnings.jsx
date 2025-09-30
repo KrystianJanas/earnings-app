@@ -289,8 +289,7 @@ const ModeToggle = styled.div`
   }
 
   @media (min-width: 768px) {
-    max-width: 600px;
-    margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
+    max-width: none;
   }
 `
 
@@ -327,7 +326,6 @@ const ModeButton = styled.button`
   @media (min-width: 640px) {
     padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
     font-size: 0.95rem;
-    flex: initial;
   }
 
   &:hover:not(:disabled) {
