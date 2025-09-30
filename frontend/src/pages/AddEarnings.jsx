@@ -35,18 +35,18 @@ const Container = styled.div`
   }
 
   @media (min-width: 768px) {
-    max-width: 800px;
-    padding: 0 ${({ theme }) => theme.spacing.lg};
+    max-width: 900px;
+    padding: 0 ${({ theme }) => theme.spacing.md};
   }
 
   @media (min-width: 1024px) {
-    max-width: 900px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
+    max-width: 1200px;
+    padding: 0;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1000px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
+    max-width: 1400px;
+    padding: 0;
   }
 `
 
@@ -81,8 +81,16 @@ const FormCard = styled(Card)`
   box-sizing: border-box;
 
   @media (min-width: 768px) {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 900px;
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1100px;
   }
 `
 
@@ -234,8 +242,16 @@ const SuccessMessage = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.md};
 
   @media (min-width: 768px) {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 900px;
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1100px;
   }
 `;
 
