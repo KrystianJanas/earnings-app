@@ -40,12 +40,12 @@ const Container = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 90vw;
+    max-width: 98vw;
     padding: 0;
   }
 
   @media (min-width: 1280px) {
-    max-width: 90vw;
+    max-width: 98vw;
     padding: 0;
   }
 `
@@ -86,11 +86,11 @@ const FormCard = styled(Card)`
   }
 
   @media (min-width: 1024px) {
-    max-width: 85vw;
+    max-width: 95vw;
   }
 
   @media (min-width: 1280px) {
-    max-width: 85vw;
+    max-width: 95vw;
   }
 `
 
