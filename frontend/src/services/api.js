@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5100'
+// Use production domain in production, localhost in development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (import.meta.env.PROD ? 'https://moje.studiopaulinka.pl/api' : 'http://localhost:5100/api')
 
-// Check if API_BASE_URL already includes /api to avoid duplication
+// Ensure we have the correct URL
 const baseURL = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`
 
 const api = axios.create({
