@@ -94,6 +94,8 @@ const PaymentButtons = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.xs};
   margin-top: 4px;
+  overflow: visible;
+  width: 100%;
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(3, 1fr);
@@ -102,6 +104,7 @@ const PaymentButtons = styled.div`
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(6, 1fr);
+    gap: ${({ theme }) => theme.spacing.xs};
   }
 `
 

@@ -83,7 +83,6 @@ const FormCard = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
   width: 100%;
   box-sizing: border-box;
-  overflow-x: hidden;
 
   @media (min-width: 768px) {
     max-width: 700px;
