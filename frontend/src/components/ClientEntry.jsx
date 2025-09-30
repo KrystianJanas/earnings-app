@@ -98,12 +98,8 @@ const PaymentButtons = styled.div`
   width: 100%;
 
   @media (min-width: 640px) {
-    grid-template-columns: repeat(3, 1fr);
-    margin-top: ${({ theme }) => theme.spacing.xs};
-  }
-
-  @media (min-width: 1024px) {
     grid-template-columns: repeat(6, 1fr);
+    margin-top: ${({ theme }) => theme.spacing.xs};
     gap: ${({ theme }) => theme.spacing.xs};
   }
 `
@@ -112,21 +108,25 @@ const PaymentButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 6px ${({ theme }) => theme.spacing.xs};
+  gap: 2px;
+  padding: 4px 2px;
   border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
   color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   @media (min-width: 640px) {
-    padding: 8px ${({ theme }) => theme.spacing.xs};
-    font-size: 0.8rem;
+    padding: 6px 4px;
+    font-size: 0.7rem;
+    gap: 3px;
   }
 
   &:hover {
