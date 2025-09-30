@@ -88,20 +88,36 @@ const SummaryGrid = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
-  }
-
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
+    grid-template-columns: 1fr 1fr;
+    gap: ${({ theme }) => theme.spacing.xl};
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1.2fr;
     gap: ${({ theme }) => theme.spacing.xl};
   }
+`
+
+const MainStatsCard = styled(Card)`
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #6366f1;
+  }
+`
+
+const DetailedStatsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
 `
 
 const SummaryCard = styled(Card)`
@@ -352,7 +368,7 @@ const Monthly = () => {
           transition={{ duration: 0.5 }}
         >
           <SummaryGrid>
-            <SummaryCard color="#6366f1">
+            <MainStatsCard>
               <SummaryHeader>
                 <SummaryTitle>Łączny obrót</SummaryTitle>
                 <IconWrapper color="#6366f1">
@@ -362,70 +378,6 @@ const Monthly = () => {
               <SummaryAmount>
                 {(total.earnings || 0).toFixed(2)} zł
               </SummaryAmount>
-              
-              <StatsRow>
-                <StatItem>
-                  <StatAmount color="#10b981">
-                    {(total.cash || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    💵
-                    Gotówka
-                  </StatLabel>
-                </StatItem>
-
-                <StatItem>
-                  <StatAmount color="#3b82f6">
-                    {(total.card || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    <FiCreditCard />
-                    Karta
-                  </StatLabel>
-                </StatItem>
-
-                <StatItem>
-                  <StatAmount color="#9333ea">
-                    {(total.blik || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    📱
-                    BLIK
-                  </StatLabel>
-                </StatItem>
-              </StatsRow>
-
-              <StatsRow>
-                <StatItem>
-                  <StatAmount color="#ea580c">
-                    {(total.prepaid || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    💰
-                    Przedpłata
-                  </StatLabel>
-                </StatItem>
-
-                <StatItem>
-                  <StatAmount color="#0891b2">
-                    {(total.transfer || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    🏦
-                    Przelew
-                  </StatLabel>
-                </StatItem>
-
-                <StatItem>
-                  <StatAmount color="#dc2626">
-                    {(total.free || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    🎁
-                    Gratis
-                  </StatLabel>
-                </StatItem>
-              </StatsRow>
               
               <StatsRow>
                 <StatItem>
@@ -439,24 +391,24 @@ const Monthly = () => {
                 </StatItem>
 
                 <StatItem>
-                  <StatAmount color="#f59e0b">
-                    {(total.tips || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    <FiGift />
-                    Napiwki
-                  </StatLabel>
-                </StatItem>
-              </StatsRow>
-
-              <StatsRow>
-                <StatItem>
                   <StatAmount color="#06b6d4">
                     {(total.hours || 0).toFixed(2)} h
                   </StatAmount>
                   <StatLabel>
                     <FiClock />
                     Przepracowane godziny
+                  </StatLabel>
+                </StatItem>
+              </StatsRow>
+
+              <StatsRow>
+                <StatItem>
+                  <StatAmount color="#f59e0b">
+                    {(total.tips || 0).toFixed(2)} zł
+                  </StatAmount>
+                  <StatLabel>
+                    <FiGift />
+                    Napiwki
                   </StatLabel>
                 </StatItem>
 
@@ -470,7 +422,82 @@ const Monthly = () => {
                   </StatLabel>
                 </StatItem>
               </StatsRow>
-            </SummaryCard>
+            </MainStatsCard>
+
+            <DetailedStatsContainer>
+              <SummaryCard color="#10b981">
+                <SummaryHeader>
+                  <SummaryTitle>Metody płatności</SummaryTitle>
+                  <IconWrapper color="#10b981">
+                    💳
+                  </IconWrapper>
+                </SummaryHeader>
+                
+                <StatsRow>
+                  <StatItem>
+                    <StatAmount color="#10b981">
+                      {(total.cash || 0).toFixed(2)} zł
+                    </StatAmount>
+                    <StatLabel>
+                      💵
+                      Gotówka
+                    </StatLabel>
+                  </StatItem>
+
+                  <StatItem>
+                    <StatAmount color="#3b82f6">
+                      {(total.card || 0).toFixed(2)} zł
+                    </StatAmount>
+                    <StatLabel>
+                      <FiCreditCard />
+                      Karta
+                    </StatLabel>
+                  </StatItem>
+
+                  <StatItem>
+                    <StatAmount color="#9333ea">
+                      {(total.blik || 0).toFixed(2)} zł
+                    </StatAmount>
+                    <StatLabel>
+                      📱
+                      BLIK
+                    </StatLabel>
+                  </StatItem>
+                </StatsRow>
+
+                <StatsRow>
+                  <StatItem>
+                    <StatAmount color="#ea580c">
+                      {(total.prepaid || 0).toFixed(2)} zł
+                    </StatAmount>
+                    <StatLabel>
+                      💰
+                      Przedpłata
+                    </StatLabel>
+                  </StatItem>
+
+                  <StatItem>
+                    <StatAmount color="#0891b2">
+                      {(total.transfer || 0).toFixed(2)} zł
+                    </StatAmount>
+                    <StatLabel>
+                      🏦
+                      Przelew
+                    </StatLabel>
+                  </StatItem>
+
+                  <StatItem>
+                    <StatAmount color="#dc2626">
+                      {(total.free || 0).toFixed(2)} zł
+                    </StatAmount>
+                    <StatLabel>
+                      🎁
+                      Gratis
+                    </StatLabel>
+                  </StatItem>
+                </StatsRow>
+              </SummaryCard>
+            </DetailedStatsContainer>
           </SummaryGrid>
 
           {daily && daily.filter(day => day.totalDaily > 0).length > 0 ? (

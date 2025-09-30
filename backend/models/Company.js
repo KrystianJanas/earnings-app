@@ -139,14 +139,17 @@ class Company {
     const result = await db.query(`
       SELECT 
         u.id,
+        uc.user_id as "userId",
         u.email,
-        u.first_name,
-        u.last_name,
+        u.first_name as "firstName",
+        u.last_name as "lastName",
         uc.role,
-        uc.is_active,
-        uc.joined_at
+        uc.is_active as "isActive",
+        uc.joined_at as "joinedAt",
+        COALESCE(us.hourly_rate, 0.00) as "hourlyRate"
       FROM user_companies uc
       JOIN users u ON uc.user_id = u.id
+      LEFT JOIN user_settings us ON us.user_id = u.id AND us.company_id = $1
       WHERE uc.company_id = $1
       ORDER BY uc.role DESC, u.first_name ASC
     `, [companyId]);

@@ -415,6 +415,7 @@ const Employees = () => {
     
     try {
       await employeesAPI.updateHourlyRate(employee.userId, newRate)
+      queryClient.invalidateQueries(['employees', currentCompany?.id])
       console.log('Hourly rate saved successfully')
     } catch (error) {
       console.error('Failed to save hourly rate:', error)
@@ -435,11 +436,22 @@ const Employees = () => {
   }
 
   const getInitials = (name) => {
+    if (!name || name.trim() === '' || name === 'undefined undefined') {
+      return '??'
+    }
     return name
       .split(' ')
       .map(word => word[0])
       .join('')
       .toUpperCase()
+  }
+
+  const getEmployeeName = (employee) => {
+    const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim()
+    if (!fullName || fullName === 'undefined undefined' || fullName === 'null null') {
+      return employee.email || 'Pracownik'
+    }
+    return fullName
   }
 
   const handleInviteSubmit = (e) => {
@@ -584,11 +596,11 @@ const Employees = () => {
                 <EmployeeHeader>
                   <EmployeeInfo>
                     <EmployeeAvatar>
-                      {getInitials(`${employee.firstName} ${employee.lastName}`)}
+                      {getInitials(getEmployeeName(employee))}
                     </EmployeeAvatar>
                     <EmployeeDetails>
                       <EmployeeName>
-                        {employee.firstName} {employee.lastName}
+                        {getEmployeeName(employee)}
                       </EmployeeName>
                       <EmployeeRole>
                         {getRoleLabel(employee.role)}
