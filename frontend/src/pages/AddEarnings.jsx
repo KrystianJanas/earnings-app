@@ -324,7 +324,7 @@ const ModeToggle = styled.div`
   }
 
   @media (min-width: 640px) {
-    flex-direction: row;
+    flex-direction: column;
     max-width: none;
   }
 `
