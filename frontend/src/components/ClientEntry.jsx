@@ -59,24 +59,16 @@ const PaymentsSection = styled.div`
 const PaymentEntry = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.xs};
+  padding: ${({ theme }) => theme.spacing.sm};
   background: ${({ theme }) => theme.colors.background}80;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border: 1px solid ${({ theme }) => theme.colors.border}50;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    align-items: end;
-    gap: ${({ theme }) => theme.spacing.sm};
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-  }
 `
 
 const AmountInputWrapper = styled.div`
-  flex: 0 0 120px;
-  min-width: 120px;
+  width: 100%;
 `
 
 const AmountInput = styled(Input)`
@@ -86,8 +78,7 @@ const AmountInput = styled(Input)`
 `
 
 const PaymentMethodWrapper = styled.div`
-  flex: 1;
-  min-width: 300px;
+  width: 100%;
 `
 
 const PaymentButtons = styled.div`
