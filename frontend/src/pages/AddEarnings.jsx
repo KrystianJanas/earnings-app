@@ -11,6 +11,18 @@ import { Card, Button, Input, Label } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import ClientEntry from '../components/ClientEntry'
 
+// Debug media queries
+const logMediaQueries = () => {
+  const width = window.innerWidth;
+  console.log(`🖥️ Screen width: ${width}px`);
+  
+  if (width >= 1200) console.log('📱 Active breakpoint: >= 1200px (XL)');
+  else if (width >= 900) console.log('📱 Active breakpoint: >= 900px (LG)');
+  else if (width >= 768) console.log('📱 Active breakpoint: >= 768px (MD)');
+  else if (width >= 640) console.log('📱 Active breakpoint: >= 640px (SM)');
+  else console.log('📱 Active breakpoint: < 640px (XS)');
+}
+
 const AddEarningsContainer = styled.div`
   min-height: 100vh;
   padding: ${({ theme }) => theme.spacing.md} 0;
@@ -420,6 +432,18 @@ const AddEarnings = () => {
   const [successMessage, setSuccessMessage] = useState('')
   const [buttonSuccessMessage, setButtonSuccessMessage] = useState('')
   const [entryMode, setEntryMode] = useState('detailed') // 'summary' or 'detailed'
+  
+  // Debug media queries on mount and resize
+  useEffect(() => {
+    logMediaQueries();
+    
+    const handleResize = () => {
+      logMediaQueries();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
   const [clients, setClients] = useState([{ 
     amount: 0, 
     paymentMethod: 'cash', 
