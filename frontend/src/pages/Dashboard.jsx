@@ -113,12 +113,12 @@ const PaymentMethodsGrid = styled.div`
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 `
