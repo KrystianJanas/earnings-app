@@ -714,7 +714,8 @@ const Employees = () => {
                         Ładowanie statystyk...
                       </div>
                     ) : (
-                      <StatsGrid>
+                      <>
+                        <StatsGrid>
                         <StatItem 
                           onClick={() => setExpandedStats(!expandedStats)}
                           style={{ cursor: 'pointer', position: 'relative' }}
@@ -839,6 +840,7 @@ const Employees = () => {
                           </PaymentBreakdown>
                         </motion.div>
                       )}
+                      </>
                     )}
                   </StatsSection>
                 )}
