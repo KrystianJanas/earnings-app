@@ -9,7 +9,9 @@ const router = express.Router();
 // Get user's companies
 router.get('/', async (req, res) => {
   try {
+    console.log('📋 Getting companies for user:', req.user.userId);
     const companies = await Company.getByUserId(req.user.userId);
+    console.log('📋 Found companies:', companies);
     res.json(companies);
   } catch (error) {
     console.error('Get companies error:', error);
