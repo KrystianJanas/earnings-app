@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useQueryClient } from 'react-query'
 import { setAuthLogout, authAPI, companiesAPI } from '../services/api'
 
 const AuthContext = createContext({})
@@ -12,6 +13,7 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
+  const queryClient = useQueryClient()
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [currentCompany, setCurrentCompany] = useState(null)
@@ -116,6 +118,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await companiesAPI.switchCompany(companyId)
       await loadCompanyData() // Reload company data
+      
+      // Invalidate all queries to refresh data for new company
+      queryClient.invalidateQueries()
+      
       return true
     } catch (error) {
       console.error('Failed to switch company:', error)
@@ -127,6 +133,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await companiesAPI.createCompany(companyData)
       await loadCompanyData() // Reload company data
+      
+      // Invalidate all queries to refresh data for new company
+      queryClient.invalidateQueries()
+      
       return response.data
     } catch (error) {
       console.error('Failed to create company:', error)
