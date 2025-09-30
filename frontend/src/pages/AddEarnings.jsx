@@ -296,6 +296,7 @@ const LoadingText = styled.div`
 
 const ModeToggle = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
@@ -311,6 +312,7 @@ const ModeToggle = styled.div`
   }
 
   @media (min-width: 768px) {
+    flex-direction: row;
     max-width: none;
   }
 `
@@ -338,11 +340,17 @@ const ModeButton = styled.button`
   justify-content: center;
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
   min-height: 48px;
+  width: 100%;
 
   @media (max-width: 480px) {
     font-size: 0.8rem;
     padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
     min-height: 44px;
+  }
+
+  @media (min-width: 768px) {
+    width: auto;
+    min-width: 200px;
   }
 
   @media (min-width: 640px) {
