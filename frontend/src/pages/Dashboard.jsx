@@ -126,6 +126,14 @@ const PaymentMethodsGrid = styled.div`
 const EarningsCard = styled(Card)`
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100px;
+
+  @media (min-width: 1024px) {
+    min-height: 120px;
+  }
 
   &::before {
     content: '';
@@ -209,6 +217,14 @@ const StatsGrid = styled.div`
 
 const StatCard = styled(Card)`
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100px;
+
+  @media (min-width: 1024px) {
+    min-height: 120px;
+  }
 `
 
 const StatsContainer = styled.div`
