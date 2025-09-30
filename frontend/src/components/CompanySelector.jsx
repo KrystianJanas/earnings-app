@@ -219,6 +219,12 @@ const CompanySelector = ({ onCreateNew }) => {
   const [error, setError] = useState('')
   const [processingInvitations, setProcessingInvitations] = useState({})
 
+  console.log('🔍 CompanySelector render:', { 
+    companies, 
+    companiesLength: companies?.length, 
+    needsCompanySetup 
+  })
+
   const { data: invitations, isLoading: invitationsLoading } = useQuery(
     'myInvitations',
     () => invitationsAPI.getMyInvitations().then(res => res.data),
