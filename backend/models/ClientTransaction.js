@@ -8,15 +8,17 @@ class ClientTransaction {
     try {
       await client.query('BEGIN');
       
-      if (payments && payments.length > 1) {
+      if (payments && payments.length > 0) {
         // New multiple payments structure
         const totalAmount = payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
+        const hasMultiplePayments = payments.length > 1;
+        const paymentMethod = hasMultiplePayments ? 'multiple' : (payments[0].method || 'cash');
         
         const transactionResult = await client.query(`
-          INSERT INTO client_transactions (daily_earnings_id, amount, total_amount, has_multiple_payments, client_order, notes)
-          VALUES ($1, $2, $2, TRUE, $3, $4)
+          INSERT INTO client_transactions (daily_earnings_id, amount, payment_method, total_amount, has_multiple_payments, client_order, notes)
+          VALUES ($1, $2, $3, $2, $4, $5, $6)
           RETURNING *
-        `, [dailyEarningsId, totalAmount, clientOrder, notes]);
+        `, [dailyEarningsId, totalAmount, paymentMethod, hasMultiplePayments, clientOrder, notes]);
         
         const transaction = transactionResult.rows[0];
         
@@ -81,12 +83,14 @@ class ClientTransaction {
         if (clientData.payments && clientData.payments.length > 0) {
           // New multiple payments structure
           const totalAmount = clientData.payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
+          const hasMultiplePayments = clientData.payments.length > 1;
+          const paymentMethod = hasMultiplePayments ? 'multiple' : (clientData.payments[0].method || 'cash');
           
           const transactionResult = await client.query(`
-            INSERT INTO client_transactions (daily_earnings_id, client_id, amount, total_amount, has_multiple_payments, client_order, notes)
-            VALUES ($1, $2, $3, $3, TRUE, $4, $5)
+            INSERT INTO client_transactions (daily_earnings_id, client_id, amount, payment_method, total_amount, has_multiple_payments, client_order, notes)
+            VALUES ($1, $2, $3, $4, $3, $5, $6, $7)
             RETURNING *
-          `, [dailyEarningsId, clientId, totalAmount, i + 1, clientData.notes || null]);
+          `, [dailyEarningsId, clientId, totalAmount, paymentMethod, hasMultiplePayments, i + 1, clientData.notes || null]);
           
           const transaction = transactionResult.rows[0];
           
