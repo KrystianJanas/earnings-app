@@ -91,18 +91,10 @@ const AllCardsGrid = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   grid-template-columns: 1fr;
+  max-width: 600px;
+  margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(4, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 `
