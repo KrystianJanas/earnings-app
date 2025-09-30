@@ -92,12 +92,12 @@ const EarningsGrid = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   @media (min-width: 1024px) {
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(5, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 `
@@ -105,6 +105,10 @@ const EarningsGrid = styled.div`
 const EarningsCard = styled(Card)`
   position: relative;
   overflow: hidden;
+
+  @media (min-width: 1024px) {
+    grid-column: span 2;
+  }
 
   &::before {
     content: '';
@@ -181,7 +185,7 @@ const StatsGrid = styled.div`
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 `
