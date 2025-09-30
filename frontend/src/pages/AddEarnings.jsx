@@ -40,12 +40,12 @@ const Container = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1200px;
+    max-width: 1600px;
     padding: 0;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1400px;
+    max-width: 1800px;
     padding: 0;
   }
 `
@@ -86,11 +86,11 @@ const FormCard = styled(Card)`
   }
 
   @media (min-width: 1024px) {
-    max-width: 900px;
+    max-width: 1200px;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1100px;
+    max-width: 1400px;
   }
 `
 
@@ -247,11 +247,11 @@ const SuccessMessage = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 900px;
+    max-width: 1200px;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1100px;
+    max-width: 1400px;
   }
 `;
 
@@ -504,8 +504,16 @@ const AddEarnings = () => {
     )) ||
     (existingData.entryMode === 'detailed' && 
       existingData.clients && existingData.clients.length > 0 &&
-      existingData.clients.some(client => parseFloat(client.amount) > 0) &&
-      !(existingData.clients.length === 1 && parseFloat(existingData.clients[0].amount) === 0)
+      existingData.clients.some(client => {
+        if (client.payments && client.payments.length > 0) {
+          return client.payments.some(payment => parseFloat(payment.amount) > 0)
+        }
+        return parseFloat(client.amount) > 0
+      }) &&
+      !(existingData.clients.length === 1 && (
+        (existingData.clients[0].payments && existingData.clients[0].payments.length === 1 && parseFloat(existingData.clients[0].payments[0].amount) === 0) ||
+        (!existingData.clients[0].payments && parseFloat(existingData.clients[0].amount) === 0)
+      ))
     )
   )
 
@@ -613,11 +621,25 @@ const AddEarnings = () => {
     }
 
     if (entryMode === 'detailed') {
-      // Allow saving single client with 0 amount for reset functionality
-      if (clients.length === 1 && parseFloat(clients[0].amount) === 0) {
+      // Filter clients based on whether they have any payments with amounts > 0
+      const validClients = clients.filter(client => {
+        if (client.payments && client.payments.length > 0) {
+          // New multiple payments structure
+          return client.payments.some(payment => parseFloat(payment.amount) > 0)
+        } else {
+          // Legacy single payment structure
+          return parseFloat(client.amount) > 0
+        }
+      })
+      
+      // Allow saving if we have valid clients, or if it's a single client with 0 amount for reset functionality
+      if (validClients.length > 0) {
+        submitData.clients = validClients
+      } else if (clients.length === 1) {
+        // Reset case - save the empty client
         submitData.clients = clients
       } else {
-        submitData.clients = clients.filter(client => parseFloat(client.amount) > 0)
+        submitData.clients = []
       }
     } else {
       submitData.cashAmount = parseFloat(data.cashAmount) || 0
@@ -687,10 +709,6 @@ const AddEarnings = () => {
     const today = new Date()
     return nextDay <= today
   }
-
-  const cashAmount = parseFloat(watch('cashAmount') || 0)
-  const cardAmount = parseFloat(watch('cardAmount') || 0)
-  const totalEarnings = cashAmount + cardAmount
 
   return (
     <AddEarningsContainer>
