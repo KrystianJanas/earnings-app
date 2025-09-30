@@ -641,15 +641,8 @@ const AddEarnings = () => {
         }
       })
       
-      // Allow saving if we have valid clients, or if it's a single client with 0 amount for reset functionality
-      if (validClients.length > 0) {
-        submitData.clients = validClients
-      } else if (clients.length === 1) {
-        // Reset case - save the empty client
-        submitData.clients = clients
-      } else {
-        submitData.clients = []
-      }
+      // Only send clients that have valid payments
+      submitData.clients = validClients
       
       console.log('🔍 Filtered clients for detailed mode:', {
         originalClients: clients,
