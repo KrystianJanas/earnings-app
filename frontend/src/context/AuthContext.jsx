@@ -73,7 +73,6 @@ export const AuthProvider = ({ children }) => {
         totalEmployees: company.total_employees,
         isSoleOwner: company.is_sole_owner
       }))
-      console.log('🏢 Mapped companies:', mappedCompanies)
       setCompanies(mappedCompanies)
       
       // Get current company

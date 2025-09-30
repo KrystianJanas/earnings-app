@@ -219,11 +219,6 @@ const CompanySelector = ({ onCreateNew }) => {
   const [error, setError] = useState('')
   const [processingInvitations, setProcessingInvitations] = useState({})
 
-  console.log('🔍 CompanySelector render:', { 
-    companies, 
-    companiesLength: companies?.length, 
-    needsCompanySetup 
-  })
 
   const { data: invitations, isLoading: invitationsLoading } = useQuery(
     'myInvitations',
@@ -339,14 +334,7 @@ const CompanySelector = ({ onCreateNew }) => {
         
         {companies.length > 0 && (
           <CompanyList>
-            {companies.map((company) => {
-              console.log('🏢 Company data:', { 
-                name: company.name, 
-                userRole: company.userRole, 
-                roleLabel: getRoleLabel(company.userRole),
-                fullCompany: company 
-              });
-              return (
+            {companies.map((company) => (
                 <CompanyButton
                   key={company.id}
                   onClick={() => handleCompanySelect(company.id)}
@@ -355,8 +343,7 @@ const CompanySelector = ({ onCreateNew }) => {
                   <CompanyName>{company.name}</CompanyName>
                   <CompanyRole>{getRoleLabel(company.userRole)}</CompanyRole>
                 </CompanyButton>
-              );
-            })}
+            ))}
           </CompanyList>
         )}
 

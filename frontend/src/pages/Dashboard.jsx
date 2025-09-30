@@ -252,7 +252,7 @@ const Dashboard = () => {
     () => earningsAPI.getDashboard(selectedPeriod).then(res => res.data),
     {
       refetchOnMount: true,
-      refetchInterval: 60000, // Refresh every minute
+      // refetchInterval: 60000, // Disabled automatic refresh to reduce API calls
     }
   )
 

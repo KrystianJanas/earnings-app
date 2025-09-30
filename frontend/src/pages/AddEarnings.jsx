@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
@@ -12,16 +12,6 @@ import Navigation from '../components/Navigation'
 import ClientEntry from '../components/ClientEntry'
 
 // Debug media queries
-const logMediaQueries = () => {
-  const width = window.innerWidth;
-  console.log(`🖥️ Screen width: ${width}px`);
-  
-  if (width >= 1200) console.log('📱 Active breakpoint: >= 1200px (XL)');
-  else if (width >= 900) console.log('📱 Active breakpoint: >= 900px (LG)');
-  else if (width >= 768) console.log('📱 Active breakpoint: >= 768px (MD)');
-  else if (width >= 640) console.log('📱 Active breakpoint: >= 640px (SM)');
-  else console.log('📱 Active breakpoint: < 640px (XS)');
-}
 
 const AddEarningsContainer = styled.div`
   min-height: 100vh;
@@ -433,17 +423,6 @@ const AddEarnings = () => {
   const [buttonSuccessMessage, setButtonSuccessMessage] = useState('')
   const [entryMode, setEntryMode] = useState('detailed') // 'summary' or 'detailed'
   
-  // Debug media queries on mount and resize
-  useEffect(() => {
-    logMediaQueries();
-    
-    const handleResize = () => {
-      logMediaQueries();
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [])
   const [clients, setClients] = useState([{ 
     amount: 0, 
     paymentMethod: 'cash', 
@@ -475,12 +454,10 @@ const AddEarnings = () => {
       refetchOnMount: true,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
-        console.log('📥 Loaded existing data for date:', selectedDate, data)
         
         setEntryMode(data.entryMode || 'detailed')
         
         if (data.entryMode === 'detailed' && data.clients && data.clients.length > 0) {
-          console.log('📋 Setting clients from loaded data:', data.clients)
           setClients(data.clients)
         } else if (data.entryMode !== 'detailed') {
           setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
@@ -661,27 +638,17 @@ const AddEarnings = () => {
       notes: data.notes || ''
     }
     
-    console.log('🔍 Submitting data:', {
-      entryMode,
-      clientsData: clients,
-      submitData
-    })
 
     if (entryMode === 'detailed') {
       // Send all clients - backend will handle filtering out empty ones
       submitData.clients = clients
       
-      console.log('🔍 Clients for detailed mode:', {
-        clients: clients,
-        finalSubmitData: submitData
-      })
     } else {
       submitData.cashAmount = parseFloat(data.cashAmount) || 0
       submitData.cardAmount = parseFloat(data.cardAmount) || 0
       submitData.clientsCount = parseInt(data.clientsCount) || 0
     }
 
-    console.log('🚀 Final submit data:', submitData)
     mutation.mutate(submitData)
   }
 
