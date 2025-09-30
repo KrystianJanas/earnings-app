@@ -92,15 +92,13 @@ const EarningsGrid = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${({ theme }) => theme.spacing.xl};
-    align-items: start;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: ${({ theme }) => theme.spacing.lg};
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: 1fr 1.2fr;
-    gap: ${({ theme }) => theme.spacing.xl};
-    align-items: start;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: ${({ theme }) => theme.spacing.lg};
   }
 `
 
@@ -172,29 +170,19 @@ const StatsGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.md};
 
-  &.three-columns {
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: ${({ theme }) => theme.spacing.sm};
-  }
-
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
-    
-    &.three-columns {
-      grid-template-columns: repeat(3, 1fr);
-      gap: ${({ theme }) => theme.spacing.lg};
-    }
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: ${({ theme }) => theme.spacing.md};
-    
-    &.three-columns {
-      grid-template-columns: repeat(3, 1fr);
-      gap: ${({ theme }) => theme.spacing.md};
-    }
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(7, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
   }
 `
 
@@ -358,114 +346,108 @@ const Dashboard = () => {
               <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
             </EarningsCard>
 
-            <StatsContainer>
-              <StatsGrid className="three-columns">
-                <StatCard>
-                  <StatAmount color="#10b981">
-                    {(earnings.cashAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    💵
-                    Gotówka
-                  </StatLabel>
-                </StatCard>
+            <StatCard>
+              <StatAmount color="#10b981">
+                {(earnings.cashAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                💵
+                Gotówka
+              </StatLabel>
+            </StatCard>
 
-                <StatCard>
-                  <StatAmount color="#3b82f6">
-                    {(earnings.cardAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    <FiCreditCard />
-                    Karta
-                  </StatLabel>
-                </StatCard>
+            <StatCard>
+              <StatAmount color="#3b82f6">
+                {(earnings.cardAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                <FiCreditCard />
+                Karta
+              </StatLabel>
+            </StatCard>
 
-                <StatCard>
-                  <StatAmount color="#9333ea">
-                    {(earnings.blikAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    📱
-                    BLIK
-                  </StatLabel>
-                </StatCard>
-
-                <StatCard>
-                  <StatAmount color="#ea580c">
-                    {(earnings.prepaidAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    💰
-                    Przedpłata
-                  </StatLabel>
-                </StatCard>
-
-                <StatCard>
-                  <StatAmount color="#0891b2">
-                    {(earnings.transferAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    🏦
-                    Przelew
-                  </StatLabel>
-                </StatCard>
-
-                <StatCard>
-                  <StatAmount color="#dc2626">
-                    {(earnings.freeAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    🎁
-                    Gratis
-                  </StatLabel>
-                </StatCard>
-              </StatsGrid>
-
-              <StatsGrid>
-                <StatCard>
-                  <StatAmount color="#f59e0b">
-                    {(earnings.tipsAmount || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    <FiGift />
-                    Napiwki
-                  </StatLabel>
-                </StatCard>
-
-                <StatCard>
-                  <StatAmount color="#8b5cf6">
-                    {earnings.clientsCount || 0}
-                  </StatAmount>
-                  <StatLabel>
-                    <FiUsers />
-                    Klientek
-                  </StatLabel>
-                </StatCard>
-              </StatsGrid>
-
-              <StatsGrid>
-                <StatCard>
-                  <StatAmount color="#06b6d4">
-                    {(earnings.hoursWorked || 0).toFixed(2)} h
-                  </StatAmount>
-                  <StatLabel>
-                    <FiClock />
-                    Przepracowane godziny
-                  </StatLabel>
-                </StatCard>
-
-                <StatCard>
-                  <StatAmount color="#ef4444">
-                    {(earnings.estimatedEarnings || 0).toFixed(2)} zł
-                  </StatAmount>
-                  <StatLabel>
-                    💰
-                    Szacunkowy zarobek
-                  </StatLabel>
-                </StatCard>
-              </StatsGrid>
-            </StatsContainer>
+            <StatCard>
+              <StatAmount color="#9333ea">
+                {(earnings.blikAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                📱
+                BLIK
+              </StatLabel>
+            </StatCard>
           </EarningsGrid>
+
+          <StatsGrid>
+            <StatCard>
+              <StatAmount color="#ea580c">
+                {(earnings.prepaidAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                💰
+                Przedpłata
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#0891b2">
+                {(earnings.transferAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                🏦
+                Przelew
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#dc2626">
+                {(earnings.freeAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                🎁
+                Gratis
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#f59e0b">
+                {(earnings.tipsAmount || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                <FiGift />
+                Napiwki
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#8b5cf6">
+                {earnings.clientsCount || 0}
+              </StatAmount>
+              <StatLabel>
+                <FiUsers />
+                Klientek
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#06b6d4">
+                {(earnings.hoursWorked || 0).toFixed(2)} h
+              </StatAmount>
+              <StatLabel>
+                <FiClock />
+                Przepracowane godziny
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#ef4444">
+                {(earnings.estimatedEarnings || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                💰
+                Szacunkowy zarobek
+              </StatLabel>
+            </StatCard>
+          </StatsGrid>
         </motion.div>
       </ResponsiveContainer>
       <Navigation />
