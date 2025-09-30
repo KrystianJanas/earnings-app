@@ -15,6 +15,18 @@ const DashboardContainer = styled.div`
   background: ${({ theme }) => theme.colors.background};
 `
 
+const ResponsiveContainer = styled(Container)`
+  @media (min-width: 1024px) {
+    max-width: 1200px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1400px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
+`
+
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   text-align: center;
@@ -128,6 +140,14 @@ const EarningsAmount = styled.div`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 3rem;
+  }
 `
 
 const EarningsLabel = styled.div`
@@ -143,6 +163,26 @@ const StatsGrid = styled.div`
   &.three-columns {
     grid-template-columns: 1fr 1fr 1fr;
     gap: ${({ theme }) => theme.spacing.sm};
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
+    
+    &.three-columns {
+      grid-template-columns: repeat(3, 1fr);
+      gap: ${({ theme }) => theme.spacing.lg};
+    }
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
+    
+    &.three-columns {
+      grid-template-columns: repeat(6, 1fr);
+      gap: ${({ theme }) => theme.spacing.lg};
+    }
   }
 `
 
@@ -259,7 +299,7 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
-      <Container>
+      <ResponsiveContainer>
         <Header>
           <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
           <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
@@ -407,7 +447,7 @@ const Dashboard = () => {
             </StatsGrid>
           </EarningsGrid>
         </motion.div>
-      </Container>
+      </ResponsiveContainer>
       <Navigation />
     </DashboardContainer>
   )

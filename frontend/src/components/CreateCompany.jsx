@@ -193,7 +193,7 @@ const CreateCompany = ({ onBack, onSuccess }) => {
               type="text"
               value={formData.name}
               onChange={handleChange}
-              placeholder="np. Studio Estetic"
+              placeholder="np. Studio Kosmetologiczne"
               disabled={isLoading}
               required
             />

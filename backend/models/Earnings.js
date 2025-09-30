@@ -26,12 +26,22 @@ class Earnings {
       
       const dailyEarnings = result.rows[0];
       
-      // If detailed mode, handle client transactions
+      // If detailed mode, handle client transactions (if tables exist)
       if (entryMode === 'detailed' && clients && clients.length > 0) {
-        await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId);
+        try {
+          await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId);
+        } catch (error) {
+          console.warn('ClientTransaction tables not found, skipping detailed client data:', error.message);
+          // Continue without client transaction details
+        }
       } else if (entryMode === 'summary') {
         // If switching to summary mode, clean up any existing client transactions
-        await ClientTransaction.deleteByDailyEarningsId(dailyEarnings.id);
+        try {
+          await ClientTransaction.deleteByDailyEarningsId(dailyEarnings.id);
+        } catch (error) {
+          console.warn('ClientTransaction tables not found, skipping cleanup:', error.message);
+          // Continue without cleanup
+        }
       }
       
       await db.query('COMMIT');

@@ -15,6 +15,18 @@ const MonthlyContainer = styled.div`
   background: ${({ theme }) => theme.colors.background};
 `
 
+const ResponsiveContainer = styled(Container)`
+  @media (min-width: 1024px) {
+    max-width: 1200px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1400px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
+`
+
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   text-align: center;
@@ -75,6 +87,21 @@ const SummaryGrid = styled.div`
   display: grid;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${({ theme }) => theme.spacing.xl};
+  }
 `
 
 const SummaryCard = styled(Card)`
@@ -300,7 +327,7 @@ const Monthly = () => {
 
   return (
     <MonthlyContainer>
-      <Container>
+      <ResponsiveContainer>
         <Header>
           <Title>Przegląd miesięczny</Title>
         </Header>
@@ -488,7 +515,7 @@ const Monthly = () => {
             </NoDataCard>
           )}
         </motion.div>
-      </Container>
+      </ResponsiveContainer>
       <Navigation />
     </MonthlyContainer>
   )

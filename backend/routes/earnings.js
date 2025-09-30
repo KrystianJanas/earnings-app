@@ -168,6 +168,7 @@ router.post('/day', [
               const amount = parseFloat(payment.amount || 0);
               if (payment.method === 'cash') totalCash += amount;
               else if (payment.method === 'card') totalCard += amount;
+              // Note: other payment methods (blik, prepaid, transfer, free) are handled separately
             });
           }
         } else if (client.amount && parseFloat(client.amount) > 0) {
@@ -215,7 +216,12 @@ router.post('/day', [
     });
   } catch (error) {
     console.error('Save earnings error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 

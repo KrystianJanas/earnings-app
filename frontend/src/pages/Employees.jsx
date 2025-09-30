@@ -1,17 +1,30 @@
 import React, { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiUsers, FiEdit3, FiDollarSign, FiTrendingUp, FiCalendar, FiClock, FiBarChart2 } from 'react-icons/fi'
+import { FiUsers, FiEdit3, FiDollarSign, FiTrendingUp, FiCalendar, FiClock, FiBarChart2, FiMail, FiX, FiSend } from 'react-icons/fi'
 import { companiesAPI, employeesAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import { Container, Card } from '../styles/theme'
+import { Container, Card, Button } from '../styles/theme'
+import Navigation from '../components/Navigation'
 
 const EmployeesContainer = styled.div`
   min-height: 100vh;
   padding: ${({ theme }) => theme.spacing.md} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
+`
+
+const ResponsiveContainer = styled(Container)`
+  @media (min-width: 1024px) {
+    max-width: 1200px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1400px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
 `
 
 const Header = styled.div`
@@ -213,12 +226,128 @@ const LoadingCard = styled(Card)`
   color: ${({ theme }) => theme.colors.text.secondary};
 `
 
+const InvitationSection = styled(Card)`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const SectionTitle = styled.h2`
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: 1.2rem;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const InviteForm = styled.form`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`
+
+const EmailInput = styled.input`
+  flex: 1;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.text.primary};
+  padding: ${({ theme }) => theme.spacing.sm};
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.secondary};
+  }
+`
+
+const InviteButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  white-space: nowrap;
+`
+
+const PendingInvitesList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const PendingInviteCard = styled.div`
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.sm};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const InviteInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const InviteEmail = styled.span`
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: 500;
+`
+
+const InviteDate = styled.span`
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.875rem;
+`
+
+const CancelButton = styled.button`
+  background: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.colors.error};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.error};
+    color: white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
+
+const HelpText = styled.p`
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-size: 0.875rem;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.sm};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-left: 3px solid ${({ theme }) => theme.colors.primary};
+`
+
 const Employees = () => {
   const { currentCompany, user } = useAuth()
+  const queryClient = useQueryClient()
   const [selectedEmployee, setSelectedEmployee] = useState(null)
   const [selectedPeriod, setSelectedPeriod] = useState('month')
   const [hourlyRates, setHourlyRates] = useState({})
   const [savingRates, setSavingRates] = useState({})
+  const [inviteEmail, setInviteEmail] = useState('')
+  const [cancellingInvites, setCancellingInvites] = useState({})
 
   // Check if user is owner
   const isOwner = currentCompany?.userRole === 'owner'
@@ -231,11 +360,44 @@ const Employees = () => {
     }
   )
 
+  const { data: invitations, isLoading: invitationsLoading } = useQuery(
+    ['invitations', currentCompany?.id],
+    () => companiesAPI.getInvitations(currentCompany.id).then(res => res.data),
+    {
+      enabled: !!currentCompany?.id && isOwner,
+    }
+  )
+
   const { data: employeeStats, isLoading: statsLoading } = useQuery(
     ['employeeStats', selectedEmployee?.userId, selectedPeriod],
     () => employeesAPI.getEmployeeStats(selectedEmployee.userId, selectedPeriod).then(res => res.data),
     {
       enabled: !!selectedEmployee && isOwner,
+    }
+  )
+
+  const inviteEmployeeMutation = useMutation(
+    (email) => companiesAPI.createInvitation(currentCompany.id, { email, role: 'employee' }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['invitations', currentCompany?.id])
+        setInviteEmail('')
+      },
+      onError: (error) => {
+        console.error('Failed to send invitation:', error)
+      }
+    }
+  )
+
+  const cancelInvitationMutation = useMutation(
+    (invitationId) => companiesAPI.cancelInvitation(currentCompany.id, invitationId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['invitations', currentCompany?.id])
+      },
+      onError: (error) => {
+        console.error('Failed to cancel invitation:', error)
+      }
     }
   )
 
@@ -280,6 +442,22 @@ const Employees = () => {
       .toUpperCase()
   }
 
+  const handleInviteSubmit = (e) => {
+    e.preventDefault()
+    if (inviteEmail.trim() && !inviteEmployeeMutation.isLoading) {
+      inviteEmployeeMutation.mutate(inviteEmail.trim())
+    }
+  }
+
+  const handleCancelInvitation = (invitationId) => {
+    setCancellingInvites(prev => ({ ...prev, [invitationId]: true }))
+    cancelInvitationMutation.mutate(invitationId, {
+      onSettled: () => {
+        setCancellingInvites(prev => ({ ...prev, [invitationId]: false }))
+      }
+    })
+  }
+
   const calculateProfit = (stats) => {
     if (!stats || !selectedEmployee) return 0
     const totalRevenue = stats.totalEarnings || 0
@@ -292,7 +470,7 @@ const Employees = () => {
   if (!isOwner) {
     return (
       <EmployeesContainer>
-        <Container>
+        <ResponsiveContainer>
           <Header>
             <Title>Zarządzanie pracownikami</Title>
             <Subtitle>Dostęp ograniczony do właścicieli</Subtitle>
@@ -302,7 +480,8 @@ const Employees = () => {
             <FiUsers size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
             <p>Tylko właściciele salonu mają dostęp do zarządzania pracownikami.</p>
           </NoAccessMessage>
-        </Container>
+        </ResponsiveContainer>
+        <Navigation />
       </EmployeesContainer>
     )
   }
@@ -310,7 +489,7 @@ const Employees = () => {
   if (employeesLoading) {
     return (
       <EmployeesContainer>
-        <Container>
+        <ResponsiveContainer>
           <Header>
             <Title>Zarządzanie pracownikami</Title>
           </Header>
@@ -318,7 +497,8 @@ const Employees = () => {
           <LoadingCard>
             Ładowanie pracowników...
           </LoadingCard>
-        </Container>
+        </ResponsiveContainer>
+        <Navigation />
       </EmployeesContainer>
     )
   }
@@ -330,6 +510,64 @@ const Employees = () => {
           <Title>Zarządzanie pracownikami</Title>
           <Subtitle>Zarządzaj stawkami i przeglądaj statystyki</Subtitle>
         </Header>
+
+        <InvitationSection>
+          <SectionTitle>
+            <FiMail size={20} />
+            Zaproś pracownika
+          </SectionTitle>
+          
+          <InviteForm onSubmit={handleInviteSubmit}>
+            <EmailInput
+              type="email"
+              placeholder="Wpisz adres e-mail pracownika..."
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              required
+            />
+            <InviteButton 
+              type="submit"
+              disabled={!inviteEmail.trim() || inviteEmployeeMutation.isLoading}
+            >
+              <FiSend size={16} />
+              {inviteEmployeeMutation.isLoading ? 'Wysyłanie...' : 'Wyślij zaproszenie'}
+            </InviteButton>
+          </InviteForm>
+
+          {invitations && invitations.length > 0 && (
+            <>
+              <SectionTitle style={{ marginTop: '1.5rem' }}>
+                Oczekujące zaproszenia
+              </SectionTitle>
+              <PendingInvitesList>
+                {invitations.map((invitation) => (
+                  <PendingInviteCard key={invitation.id}>
+                    <InviteInfo>
+                      <FiMail size={16} color="#6366f1" />
+                      <div>
+                        <InviteEmail>{invitation.email}</InviteEmail>
+                        <InviteDate>
+                          Wysłane {new Date(invitation.createdAt).toLocaleDateString('pl-PL')}
+                        </InviteDate>
+                      </div>
+                    </InviteInfo>
+                    <CancelButton
+                      onClick={() => handleCancelInvitation(invitation.id)}
+                      disabled={cancellingInvites[invitation.id]}
+                    >
+                      <FiX size={12} />
+                      {cancellingInvites[invitation.id] ? 'Anulowanie...' : 'Anuluj'}
+                    </CancelButton>
+                  </PendingInviteCard>
+                ))}
+              </PendingInvitesList>
+            </>
+          )}
+        </InvitationSection>
+
+        <HelpText>
+          💡 Naciśnij na pracownika, aby zobaczyć jego szczegółowy obrót i statystyki
+        </HelpText>
 
         <EmployeeList>
           {employees?.map((employee) => (
@@ -487,6 +725,7 @@ const Employees = () => {
           ))}
         </EmployeeList>
       </Container>
+      <Navigation />
     </EmployeesContainer>
   )
 }

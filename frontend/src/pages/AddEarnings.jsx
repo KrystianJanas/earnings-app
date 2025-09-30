@@ -28,6 +28,16 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 0 ${({ theme }) => theme.spacing.md};
   width: 100%;
+
+  @media (min-width: 1024px) {
+    max-width: 600px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 700px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
+  }
   box-sizing: border-box;
 
   @media (max-width: 480px) {
