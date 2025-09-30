@@ -86,10 +86,15 @@ const SelectWrapper = styled.div`
   }
 `
 
-const EarningsGrid = styled.div`
+const AllCardsGrid = styled.div`
   display: grid;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  grid-template-columns: 1fr 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(4, 1fr);
@@ -105,8 +110,19 @@ const EarningsGrid = styled.div`
 const EarningsCard = styled(Card)`
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    grid-column: span 2;
+  }
 
   @media (min-width: 1024px) {
+    grid-column: span 2;
+  }
+
+  @media (min-width: 1280px) {
     grid-column: span 2;
   }
 
@@ -336,7 +352,7 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <EarningsGrid>
+          <AllCardsGrid>
             <EarningsCard color="#6366f1">
               <EarningsHeader>
                 <EarningsTitle>Łączny obrót</EarningsTitle>
@@ -379,9 +395,7 @@ const Dashboard = () => {
                 BLIK
               </StatLabel>
             </StatCard>
-          </EarningsGrid>
 
-          <StatsGrid>
             <StatCard>
               <StatAmount color="#ea580c">
                 {(earnings.prepaidAmount || 0).toFixed(2)} zł
@@ -451,7 +465,7 @@ const Dashboard = () => {
                 Szacunkowy zarobek
               </StatLabel>
             </StatCard>
-          </StatsGrid>
+          </AllCardsGrid>
         </motion.div>
       </ResponsiveContainer>
       <Navigation />
