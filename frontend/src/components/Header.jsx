@@ -217,15 +217,22 @@ const Header = () => {
                   {companies.length > 1 && (
                     <DropdownSection>
                       <SectionTitle>Przełącz salon</SectionTitle>
-                      {companies.map((company) => (
-                        <CompanyMenuItem
-                          key={company.id}
-                          onClick={() => handleCompanySwitch(company.id)}
-                        >
-                          <CompanyMenuName>{company.name}</CompanyMenuName>
-                          <CompanyMenuRole>{getRoleLabel(company.userRole)}</CompanyMenuRole>
-                        </CompanyMenuItem>
-                      ))}
+                      {companies.map((company) => {
+                        console.log('🏢 Header company:', { 
+                          name: company.name, 
+                          userRole: company.userRole, 
+                          roleLabel: getRoleLabel(company.userRole) 
+                        });
+                        return (
+                          <CompanyMenuItem
+                            key={company.id}
+                            onClick={() => handleCompanySwitch(company.id)}
+                          >
+                            <CompanyMenuName>{company.name}</CompanyMenuName>
+                            <CompanyMenuRole>{getRoleLabel(company.userRole)}</CompanyMenuRole>
+                          </CompanyMenuItem>
+                        );
+                      })}
                     </DropdownSection>
                   )}
 

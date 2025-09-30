@@ -40,7 +40,14 @@ router.get('/current', async (req, res) => {
 router.post('/switch/:companyId', async (req, res) => {
   try {
     const { companyId } = req.params;
-    await Company.switchUserCompany(req.user.userId, parseInt(companyId));
+    const parsedCompanyId = parseInt(companyId);
+    
+    if (isNaN(parsedCompanyId)) {
+      return res.status(400).json({ error: 'Invalid company ID' });
+    }
+    
+    console.log('Switch company request:', { userId: req.user.userId, companyId: parsedCompanyId });
+    await Company.switchUserCompany(req.user.userId, parsedCompanyId);
     
     res.json({ message: 'Company switched successfully' });
   } catch (error) {
