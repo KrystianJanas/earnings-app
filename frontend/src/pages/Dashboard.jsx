@@ -86,7 +86,23 @@ const SelectWrapper = styled.div`
   }
 `
 
-const AllCardsGrid = styled.div`
+const MainStatsGrid = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  grid-template-columns: 1fr 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
+`
+
+const PaymentMethodsGrid = styled.div`
   display: grid;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
@@ -102,7 +118,7 @@ const AllCardsGrid = styled.div`
   }
 
   @media (min-width: 1280px) {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: ${({ theme }) => theme.spacing.lg};
   }
 `
@@ -110,21 +126,6 @@ const AllCardsGrid = styled.div`
 const EarningsCard = styled(Card)`
   position: relative;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  @media (min-width: 768px) {
-    grid-column: span 2;
-  }
-
-  @media (min-width: 1024px) {
-    grid-column: span 2;
-  }
-
-  @media (min-width: 1280px) {
-    grid-column: span 2;
-  }
 
   &::before {
     content: '';
@@ -352,7 +353,8 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <AllCardsGrid>
+          {/* Główne statystyki */}
+          <MainStatsGrid>
             <EarningsCard color="#6366f1">
               <EarningsHeader>
                 <EarningsTitle>Łączny obrót</EarningsTitle>
@@ -366,6 +368,39 @@ const Dashboard = () => {
               <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
             </EarningsCard>
 
+            <StatCard>
+              <StatAmount color="#06b6d4">
+                {(earnings.hoursWorked || 0).toFixed(2)} h
+              </StatAmount>
+              <StatLabel>
+                <FiClock />
+                Przepracowane godziny
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#ef4444">
+                {(earnings.estimatedEarnings || 0).toFixed(2)} zł
+              </StatAmount>
+              <StatLabel>
+                💰
+                Szacunkowy zarobek
+              </StatLabel>
+            </StatCard>
+
+            <StatCard>
+              <StatAmount color="#8b5cf6">
+                {earnings.clientsCount || 0}
+              </StatAmount>
+              <StatLabel>
+                <FiUsers />
+                Klientek
+              </StatLabel>
+            </StatCard>
+          </MainStatsGrid>
+
+          {/* Metody płatności */}
+          <PaymentMethodsGrid>
             <StatCard>
               <StatAmount color="#10b981">
                 {(earnings.cashAmount || 0).toFixed(2)} zł
@@ -435,37 +470,7 @@ const Dashboard = () => {
                 Napiwki
               </StatLabel>
             </StatCard>
-
-            <StatCard>
-              <StatAmount color="#8b5cf6">
-                {earnings.clientsCount || 0}
-              </StatAmount>
-              <StatLabel>
-                <FiUsers />
-                Klientek
-              </StatLabel>
-            </StatCard>
-
-            <StatCard>
-              <StatAmount color="#06b6d4">
-                {(earnings.hoursWorked || 0).toFixed(2)} h
-              </StatAmount>
-              <StatLabel>
-                <FiClock />
-                Przepracowane godziny
-              </StatLabel>
-            </StatCard>
-
-            <StatCard>
-              <StatAmount color="#ef4444">
-                {(earnings.estimatedEarnings || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                💰
-                Szacunkowy zarobek
-              </StatLabel>
-            </StatCard>
-          </AllCardsGrid>
+          </PaymentMethodsGrid>
         </motion.div>
       </ResponsiveContainer>
       <Navigation />
