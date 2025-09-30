@@ -40,12 +40,12 @@ const Container = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1600px;
+    max-width: 1750px;
     padding: 0;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1800px;
+    max-width: 1950px;
     padding: 0;
   }
 `
@@ -86,11 +86,11 @@ const FormCard = styled(Card)`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1200px;
+    max-width: 1350px;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1400px;
+    max-width: 1550px;
   }
 `
 
@@ -247,11 +247,11 @@ const SuccessMessage = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1200px;
+    max-width: 1350px;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1400px;
+    max-width: 1550px;
   }
 `;
 
@@ -437,9 +437,12 @@ const AddEarnings = () => {
       refetchOnMount: true,
       refetchOnWindowFocus: false,
       onSuccess: (data) => {
+        console.log('📥 Loaded existing data for date:', selectedDate, data)
+        
         setEntryMode(data.entryMode || 'detailed')
         
         if (data.entryMode === 'detailed' && data.clients && data.clients.length > 0) {
+          console.log('📋 Setting clients from loaded data:', data.clients)
           setClients(data.clients)
         } else if (data.entryMode !== 'detailed') {
           setClients([{ amount: 0, paymentMethod: 'cash', notes: '' }])
@@ -619,6 +622,12 @@ const AddEarnings = () => {
       hoursWorked: parseFloat(data.hoursWorked) || 0,
       notes: data.notes || ''
     }
+    
+    console.log('🔍 Submitting data:', {
+      entryMode,
+      clientsData: clients,
+      submitData
+    })
 
     if (entryMode === 'detailed') {
       // Filter clients based on whether they have any payments with amounts > 0
@@ -641,12 +650,19 @@ const AddEarnings = () => {
       } else {
         submitData.clients = []
       }
+      
+      console.log('🔍 Filtered clients for detailed mode:', {
+        originalClients: clients,
+        validClients,
+        finalSubmitData: submitData
+      })
     } else {
       submitData.cashAmount = parseFloat(data.cashAmount) || 0
       submitData.cardAmount = parseFloat(data.cardAmount) || 0
       submitData.clientsCount = parseInt(data.clientsCount) || 0
     }
 
+    console.log('🚀 Final submit data:', submitData)
     mutation.mutate(submitData)
   }
 
