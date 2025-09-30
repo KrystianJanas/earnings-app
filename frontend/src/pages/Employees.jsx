@@ -230,6 +230,10 @@ const InvitationSection = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 
+const EmployeesCountSection = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
 const SectionTitle = styled.h2`
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: 1.2rem;
@@ -241,16 +245,13 @@ const SectionTitle = styled.h2`
 
 const InviteForm = styled.form`
   display: flex;
+  flex-direction: column;
   gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
 `
 
 const EmailInput = styled.input`
-  flex: 1;
+  width: 100%;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -273,6 +274,7 @@ const InviteButton = styled(Button)`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
   white-space: nowrap;
+  align-self: flex-start;
 `
 
 const PendingInvitesList = styled.div`
@@ -357,8 +359,16 @@ const BreakdownTitle = styled.h4`
 
 const PaymentMethodsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: ${({ theme }) => theme.spacing.sm};
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 `
 
 const PaymentMethodItem = styled.div`
@@ -622,6 +632,13 @@ const Employees = () => {
             </>
           )}
         </InvitationSection>
+
+        <EmployeesCountSection>
+          <SectionTitle>
+            <FiUsers size={20} />
+            Pracownicy ({employees?.length || 0})
+          </SectionTitle>
+        </EmployeesCountSection>
 
         <HelpText>
           💡 Naciśnij na pracownika, aby zobaczyć jego szczegółowy obrót i statystyki

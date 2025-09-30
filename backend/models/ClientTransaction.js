@@ -12,7 +12,7 @@ class ClientTransaction {
         // New multiple payments structure
         const totalAmount = payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
         const hasMultiplePayments = payments.length > 1;
-        const paymentMethod = hasMultiplePayments ? 'multiple' : (payments[0].method || 'cash');
+        const paymentMethod = payments[0].method || 'cash';
         
         const transactionResult = await client.query(`
           INSERT INTO client_transactions (daily_earnings_id, amount, payment_method, total_amount, has_multiple_payments, client_order, notes)
@@ -84,7 +84,7 @@ class ClientTransaction {
           // New multiple payments structure
           const totalAmount = clientData.payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
           const hasMultiplePayments = clientData.payments.length > 1;
-          const paymentMethod = hasMultiplePayments ? 'multiple' : (clientData.payments[0].method || 'cash');
+          const paymentMethod = clientData.payments[0].method || 'cash';
           
           const transactionResult = await client.query(`
             INSERT INTO client_transactions (daily_earnings_id, client_id, amount, payment_method, total_amount, has_multiple_payments, client_order, notes)
