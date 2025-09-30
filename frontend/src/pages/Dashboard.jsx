@@ -94,11 +94,13 @@ const EarningsGrid = styled.div`
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 1fr;
     gap: ${({ theme }) => theme.spacing.xl};
+    align-items: start;
   }
 
   @media (min-width: 1280px) {
     grid-template-columns: 1fr 1.2fr;
     gap: ${({ theme }) => theme.spacing.xl};
+    align-items: start;
   }
 `
 
@@ -186,12 +188,12 @@ const StatsGrid = styled.div`
   }
 
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${({ theme }) => theme.spacing.md};
     
     &.three-columns {
-      grid-template-columns: repeat(6, 1fr);
-      gap: ${({ theme }) => theme.spacing.lg};
+      grid-template-columns: repeat(3, 1fr);
+      gap: ${({ theme }) => theme.spacing.md};
     }
   }
 `
