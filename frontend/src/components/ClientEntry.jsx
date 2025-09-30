@@ -99,6 +99,10 @@ const PaymentButtons = styled.div`
     grid-template-columns: repeat(3, 1fr);
     margin-top: ${({ theme }) => theme.spacing.xs};
   }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
 `
 
 const PaymentButton = styled.button`
