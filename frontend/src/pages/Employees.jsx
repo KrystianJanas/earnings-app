@@ -339,6 +339,51 @@ const HelpText = styled.p`
   border-left: 3px solid ${({ theme }) => theme.colors.primary};
 `
 
+const PaymentBreakdown = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`
+
+const BreakdownTitle = styled.h4`
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+`
+
+const PaymentMethodsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const PaymentMethodItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.sm};
+  background: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border}50;
+`
+
+const PaymentMethodLabel = styled.div`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  text-align: center;
+`
+
+const PaymentMethodAmount = styled.div`
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+`
+
 const Employees = () => {
   const { currentCompany, user } = useAuth()
   const queryClient = useQueryClient()
@@ -348,6 +393,7 @@ const Employees = () => {
   const [savingRates, setSavingRates] = useState({})
   const [inviteEmail, setInviteEmail] = useState('')
   const [cancellingInvites, setCancellingInvites] = useState({})
+  const [expandedStats, setExpandedStats] = useState(false)
 
   // Check if user is owner
   const isOwner = currentCompany?.userRole === 'owner'
@@ -669,14 +715,27 @@ const Employees = () => {
                       </div>
                     ) : (
                       <StatsGrid>
-                        <StatItem>
+                        <StatItem 
+                          onClick={() => setExpandedStats(!expandedStats)}
+                          style={{ cursor: 'pointer', position: 'relative' }}
+                        >
                           <StatValue color="#6366f1">
                             {(employeeStats?.totalEarnings || 0).toFixed(2)} zł
                           </StatValue>
                           <StatLabel>
                             <FiDollarSign />
-                            Łączny obrót
+                            Łączny obrót {expandedStats ? '▼' : '▶'}
                           </StatLabel>
+                          {employeeStats?.freeAmount > 0 && (
+                            <div style={{ 
+                              fontSize: '0.7rem', 
+                              color: '#dc2626', 
+                              marginTop: '0.25rem',
+                              opacity: 0.8 
+                            }}>
+                              w tym gratis: {employeeStats.freeAmount.toFixed(2)} zł
+                            </div>
+                          )}
                         </StatItem>
 
                         <StatItem>
@@ -729,6 +788,57 @@ const Employees = () => {
                           </StatLabel>
                         </StatItem>
                       </StatsGrid>
+                      
+                      {expandedStats && employeeStats && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <PaymentBreakdown>
+                            <BreakdownTitle>Szczegółowy podział płatności</BreakdownTitle>
+                            <PaymentMethodsGrid>
+                              {employeeStats.cashAmount > 0 && (
+                                <PaymentMethodItem>
+                                  <PaymentMethodLabel>💵 Gotówka</PaymentMethodLabel>
+                                  <PaymentMethodAmount>{employeeStats.cashAmount.toFixed(2)} zł</PaymentMethodAmount>
+                                </PaymentMethodItem>
+                              )}
+                              {employeeStats.cardAmount > 0 && (
+                                <PaymentMethodItem>
+                                  <PaymentMethodLabel>💳 Karta</PaymentMethodLabel>
+                                  <PaymentMethodAmount>{employeeStats.cardAmount.toFixed(2)} zł</PaymentMethodAmount>
+                                </PaymentMethodItem>
+                              )}
+                              {employeeStats.blikAmount > 0 && (
+                                <PaymentMethodItem>
+                                  <PaymentMethodLabel>📱 BLIK</PaymentMethodLabel>
+                                  <PaymentMethodAmount>{employeeStats.blikAmount.toFixed(2)} zł</PaymentMethodAmount>
+                                </PaymentMethodItem>
+                              )}
+                              {employeeStats.prepaidAmount > 0 && (
+                                <PaymentMethodItem>
+                                  <PaymentMethodLabel>💰 Przedpłata</PaymentMethodLabel>
+                                  <PaymentMethodAmount>{employeeStats.prepaidAmount.toFixed(2)} zł</PaymentMethodAmount>
+                                </PaymentMethodItem>
+                              )}
+                              {employeeStats.transferAmount > 0 && (
+                                <PaymentMethodItem>
+                                  <PaymentMethodLabel>🏦 Przelew</PaymentMethodLabel>
+                                  <PaymentMethodAmount>{employeeStats.transferAmount.toFixed(2)} zł</PaymentMethodAmount>
+                                </PaymentMethodItem>
+                              )}
+                              {employeeStats.freeAmount > 0 && (
+                                <PaymentMethodItem>
+                                  <PaymentMethodLabel>🎁 Gratis</PaymentMethodLabel>
+                                  <PaymentMethodAmount style={{ color: '#dc2626' }}>{employeeStats.freeAmount.toFixed(2)} zł</PaymentMethodAmount>
+                                </PaymentMethodItem>
+                              )}
+                            </PaymentMethodsGrid>
+                          </PaymentBreakdown>
+                        </motion.div>
+                      )}
                     )}
                   </StatsSection>
                 )}

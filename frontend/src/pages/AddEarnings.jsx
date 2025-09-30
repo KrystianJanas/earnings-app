@@ -40,12 +40,12 @@ const Container = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1750px;
+    max-width: 90vw;
     padding: 0;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1950px;
+    max-width: 90vw;
     padding: 0;
   }
 `
@@ -86,11 +86,11 @@ const FormCard = styled(Card)`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1350px;
+    max-width: 85vw;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1550px;
+    max-width: 85vw;
   }
 `
 
@@ -247,11 +247,11 @@ const SuccessMessage = styled.div`
   }
 
   @media (min-width: 1024px) {
-    max-width: 1350px;
+    max-width: 85vw;
   }
 
   @media (min-width: 1280px) {
-    max-width: 1550px;
+    max-width: 85vw;
   }
 `;
 
@@ -919,6 +919,11 @@ const AddEarnings = () => {
                           </div>
                           <div style={{ textAlign: 'center' }}>
                             <strong>Łączny obrót: {clientTotals.total.toFixed(2)} zł</strong>
+                            {clientTotals.free > 0 && (
+                              <div style={{ fontSize: '0.75rem', opacity: 0.7, marginTop: '0.25rem', color: '#dc2626' }}>
+                                w tym usługa 'gratis': {clientTotals.free.toFixed(2)} zł
+                              </div>
+                            )}
                             <div style={{ fontSize: '0.8rem', opacity: 0.8, marginTop: '0.25rem' }}>
                               {[
                                 clientTotals.cash > 0 && `Gotówka: ${clientTotals.cash.toFixed(2)} zł`,

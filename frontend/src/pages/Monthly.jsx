@@ -87,16 +87,9 @@ const SummaryGrid = styled.div`
   display: grid;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
-
-  @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${({ theme }) => theme.spacing.xl};
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: 1fr 1.2fr;
-    gap: ${({ theme }) => theme.spacing.xl};
-  }
+  grid-template-columns: 1fr;
+  max-width: 800px;
+  margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
 `
 
 const MainStatsCard = styled(Card)`

@@ -99,7 +99,7 @@ class Earnings {
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 
         AND EXTRACT(YEAR FROM date) = $2 
@@ -118,7 +118,7 @@ class Earnings {
         tips_amount,
         effective_clients_count as clients_count,
         hours_worked,
-        (effective_cash_amount + effective_card_amount) as total_daily,
+        (effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount) as total_daily,
         notes
       FROM daily_earnings_complete 
       WHERE company_id = $1 
@@ -146,7 +146,7 @@ class Earnings {
         COALESCE(tips_amount, 0) as total_tips,
         COALESCE(effective_clients_count, 0) as total_clients,
         COALESCE(hours_worked, 0) as total_hours,
-        COALESCE(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount, 0) as total_earnings
+        COALESCE(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount, 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 AND date = $2
     `, [companyId, date]);
@@ -165,7 +165,7 @@ class Earnings {
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 AND date >= $2 AND date <= $3
     `, [companyId, startDate, endDate]);
@@ -184,7 +184,7 @@ class Earnings {
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1 AND EXTRACT(YEAR FROM date) = $2
     `, [companyId, year]);
@@ -203,7 +203,7 @@ class Earnings {
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE company_id = $1
     `, [companyId]);
@@ -223,7 +223,7 @@ class Earnings {
         COALESCE(tips_amount, 0) as total_tips,
         COALESCE(effective_clients_count, 0) as total_clients,
         COALESCE(hours_worked, 0) as total_hours,
-        COALESCE(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount, 0) as total_earnings
+        COALESCE(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount, 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE user_id = $1 AND company_id = $2 AND date = $3
     `, [userId, companyId, date]);
@@ -242,7 +242,7 @@ class Earnings {
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE user_id = $1 AND company_id = $2 AND date >= $3 AND date <= $4
     `, [userId, companyId, startDate, endDate]);
@@ -266,7 +266,7 @@ class Earnings {
         COALESCE(SUM(tips_amount), 0) as total_tips,
         COALESCE(SUM(effective_clients_count), 0) as total_clients,
         COALESCE(SUM(hours_worked), 0) as total_hours,
-        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount), 0) as total_earnings
+        COALESCE(SUM(effective_cash_amount + effective_card_amount + effective_blik_amount + effective_prepaid_amount + effective_transfer_amount + effective_free_amount), 0) as total_earnings
       FROM daily_earnings_complete 
       WHERE user_id = $1 AND company_id = $2 
         AND EXTRACT(YEAR FROM date) = $3 
