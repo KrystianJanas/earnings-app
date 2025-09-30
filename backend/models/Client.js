@@ -40,32 +40,64 @@ class Client {
 
   static async search({ companyId, query, limit = 10 }) {
     const searchTerm = `%${query}%`;
-    const result = await db.query(`
-      SELECT 
-        id,
-        full_name,
-        phone,
-        email,
-        last_visit_date,
-        total_visits,
-        total_spent
-      FROM clients_with_recent_activity
-      WHERE company_id = $1 
-        AND (
-          full_name ILIKE $2 
-          OR phone ILIKE $2
-          OR email ILIKE $2
-        )
-      ORDER BY 
-        -- Prioritize exact name matches
-        CASE WHEN full_name ILIKE $2 THEN 1 ELSE 2 END,
-        -- Then by recent activity
-        last_activity_date DESC NULLS LAST,
-        -- Then by total visits
-        total_visits DESC
-      LIMIT $3
-    `, [companyId, searchTerm, limit]);
-    return result.rows;
+    
+    // Try the view first, fall back to base table if needed
+    try {
+      const result = await db.query(`
+        SELECT 
+          id,
+          full_name,
+          phone,
+          email,
+          last_visit_date,
+          total_visits,
+          total_spent
+        FROM clients_with_recent_activity
+        WHERE company_id = $1 
+          AND (
+            full_name ILIKE $2 
+            OR phone ILIKE $2
+            OR email ILIKE $2
+          )
+        ORDER BY 
+          -- Prioritize exact name matches
+          CASE WHEN full_name ILIKE $2 THEN 1 ELSE 2 END,
+          -- Then by recent activity
+          last_activity_date DESC NULLS LAST,
+          -- Then by total visits
+          total_visits DESC
+        LIMIT $3
+      `, [companyId, searchTerm, limit]);
+      return result.rows;
+    } catch (error) {
+      console.warn('View clients_with_recent_activity not found or missing columns, using base table:', error.message);
+      
+      // Fallback to base clients table
+      const result = await db.query(`
+        SELECT 
+          id,
+          full_name,
+          phone,
+          email,
+          created_at,
+          0 as total_visits,
+          0.00 as total_spent,
+          NULL as last_visit_date
+        FROM clients
+        WHERE company_id = $1 
+          AND (
+            full_name ILIKE $2 
+            OR phone ILIKE $2
+            OR email ILIKE $2
+          )
+        ORDER BY 
+          -- Prioritize exact name matches
+          CASE WHEN full_name ILIKE $2 THEN 1 ELSE 2 END,
+          created_at DESC
+        LIMIT $3
+      `, [companyId, searchTerm, limit]);
+      return result.rows;
+    }
   }
 
   static async getById(id) {

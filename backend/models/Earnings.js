@@ -29,10 +29,17 @@ class Earnings {
       // If detailed mode, handle client transactions (if tables exist)
       if (entryMode === 'detailed' && clients && clients.length > 0) {
         try {
+          console.log('💾 Attempting to save client transactions:', { 
+            dailyEarningsId: dailyEarnings.id, 
+            clientsCount: clients.length,
+            clients: clients
+          });
           await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId);
+          console.log('✅ Client transactions saved successfully');
         } catch (error) {
-          console.warn('ClientTransaction tables not found, skipping detailed client data:', error.message);
-          // Continue without client transaction details
+          console.error('❌ ClientTransaction error:', error);
+          console.warn('ClientTransaction tables not found or error occurred, skipping detailed client data:', error.message);
+          // Continue without client transaction details - the daily earnings are still saved
         }
       } else if (entryMode === 'summary') {
         // If switching to summary mode, clean up any existing client transactions
@@ -64,10 +71,17 @@ class Earnings {
     const dailyEarnings = await this.getByDate(userId, companyId, date);
     if (!dailyEarnings) return null;
     
-    // If detailed mode, get client transactions
+    // If detailed mode, try to get client transactions
     if (dailyEarnings.entry_mode === 'detailed') {
-      const clients = await ClientTransaction.getByDailyEarningsId(dailyEarnings.id);
-      return { ...dailyEarnings, clients };
+      try {
+        console.log('📋 Loading client transactions for daily earnings:', dailyEarnings.id);
+        const clients = await ClientTransaction.getByDailyEarningsId(dailyEarnings.id);
+        console.log('📋 Loaded clients:', clients);
+        return { ...dailyEarnings, clients };
+      } catch (error) {
+        console.warn('❌ Could not load client transactions:', error.message);
+        return { ...dailyEarnings, clients: [] };
+      }
     }
     
     return { ...dailyEarnings, clients: [] };

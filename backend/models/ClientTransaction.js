@@ -13,8 +13,8 @@ class ClientTransaction {
         const totalAmount = payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
         
         const transactionResult = await client.query(`
-          INSERT INTO client_transactions (daily_earnings_id, total_amount, has_multiple_payments, client_order, notes)
-          VALUES ($1, $2, TRUE, $3, $4)
+          INSERT INTO client_transactions (daily_earnings_id, amount, total_amount, has_multiple_payments, client_order, notes)
+          VALUES ($1, $2, $2, TRUE, $3, $4)
           RETURNING *
         `, [dailyEarningsId, totalAmount, clientOrder, notes]);
         
@@ -83,8 +83,8 @@ class ClientTransaction {
           const totalAmount = clientData.payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
           
           const transactionResult = await client.query(`
-            INSERT INTO client_transactions (daily_earnings_id, client_id, total_amount, has_multiple_payments, client_order, notes)
-            VALUES ($1, $2, $3, TRUE, $4, $5)
+            INSERT INTO client_transactions (daily_earnings_id, client_id, amount, total_amount, has_multiple_payments, client_order, notes)
+            VALUES ($1, $2, $3, $3, TRUE, $4, $5)
             RETURNING *
           `, [dailyEarningsId, clientId, totalAmount, i + 1, clientData.notes || null]);
           
