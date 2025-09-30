@@ -75,8 +75,8 @@ const PaymentEntry = styled.div`
 `
 
 const AmountInputWrapper = styled.div`
-  flex: 1;
-  min-width: 100px;
+  flex: 0 0 120px;
+  min-width: 120px;
 `
 
 const AmountInput = styled(Input)`
@@ -86,7 +86,8 @@ const AmountInput = styled(Input)`
 `
 
 const PaymentMethodWrapper = styled.div`
-  flex: 2;
+  flex: 1;
+  min-width: 300px;
 `
 
 const PaymentButtons = styled.div`
