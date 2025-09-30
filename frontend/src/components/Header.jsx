@@ -49,7 +49,7 @@ const CompanyButton = styled.button`
   svg {
     font-size: 1rem;
     transition: transform 0.2s ease;
-    transform: ${({ isOpen }) => isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+    transform: ${({ $isOpen }) => $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
   }
 `
 
@@ -201,7 +201,7 @@ const Header = () => {
           <div style={{ position: 'relative' }}>
             <CompanyButton
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              isOpen={isDropdownOpen}
+              $isOpen={isDropdownOpen}
             >
               <div>
                 <CompanyName>{currentCompany.name}</CompanyName>
