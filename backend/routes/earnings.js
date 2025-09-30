@@ -133,7 +133,17 @@ router.post('/day', [
   body('notes').optional().isString(),
   body('clients').optional().isArray(),
   body('clients.*.amount').optional().isFloat({ min: 0 }),
-  body('clients.*.paymentMethod').optional().isIn(['cash', 'card', 'blik', 'prepaid', 'transfer', 'free']),
+  body('clients.*.paymentMethod').optional().custom((value, { req, path }) => {
+    // Allow null/undefined when client has payments array instead
+    if (value === null || value === undefined) {
+      const clientIndex = path.split('[')[1].split(']')[0];
+      const client = req.body.clients[clientIndex];
+      if (client && client.payments && Array.isArray(client.payments)) {
+        return true; // Allow null paymentMethod when using payments array
+      }
+    }
+    return ['cash', 'card', 'blik', 'prepaid', 'transfer', 'free'].includes(value);
+  }),
   body('clients.*.payments').optional().isArray(),
   body('clients.*.payments.*.amount').optional().isFloat({ min: 0 }),
   body('clients.*.payments.*.method').optional().isIn(['cash', 'card', 'blik', 'prepaid', 'transfer', 'free']),

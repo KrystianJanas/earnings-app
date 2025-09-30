@@ -632,9 +632,9 @@ const AddEarnings = () => {
     if (entryMode === 'detailed') {
       // Filter clients based on whether they have any payments with amounts > 0
       const validClients = clients.filter(client => {
-        if (client.payments && client.payments.length > 0) {
-          // New multiple payments structure
-          return client.payments.some(payment => parseFloat(payment.amount) > 0)
+        if (client.payments) {
+          // New multiple payments structure - check if there are any payments with amount > 0
+          return client.payments.length > 0 && client.payments.some(payment => parseFloat(payment.amount) > 0)
         } else {
           // Legacy single payment structure
           return parseFloat(client.amount) > 0
