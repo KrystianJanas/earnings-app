@@ -493,7 +493,14 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                     active={payment.method === method.value}
                     onClick={() => handlePaymentChange(paymentIndex, 'method', method.value)}
                   >
-                    {method.icon} {method.value === 'free' ? 'Gratis' : method.label.split(' ')[1]}
+                    {method.icon} {
+                      method.value === 'cash' ? 'Gotów' :
+                      method.value === 'card' ? 'Karta' :
+                      method.value === 'blik' ? 'BLIK' :
+                      method.value === 'prepaid' ? 'Przedp' :
+                      method.value === 'transfer' ? 'Przele' :
+                      method.value === 'free' ? 'Gratis' : method.label.split(' ')[1]
+                    }
                   </PaymentButton>
                 ))}
               </PaymentButtons>
