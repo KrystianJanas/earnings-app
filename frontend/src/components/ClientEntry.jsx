@@ -108,13 +108,13 @@ const PaymentButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 4px 2px;
+  gap: 3px;
+  padding: 8px 4px;
   border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
   color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -124,9 +124,14 @@ const PaymentButton = styled.button`
   text-overflow: ellipsis;
 
   @media (min-width: 640px) {
-    padding: 6px 4px;
-    font-size: 0.7rem;
-    gap: 3px;
+    padding: 10px 6px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  @media (min-width: 768px) {
+    padding: 12px 8px;
+    font-size: 0.8rem;
   }
 
   &:hover {
