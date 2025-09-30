@@ -44,13 +44,13 @@ const Container = styled.div`
   }
 
   @media (min-width: 900px) {
-    max-width: 80vw !important;
-    padding: 0 ${({ theme }) => theme.spacing.sm};
+    max-width: 800px;
+    padding: 0 ${({ theme }) => theme.spacing.md};
   }
 
   @media (min-width: 1200px) {
-    max-width: 85vw !important;
-    padding: 0 ${({ theme }) => theme.spacing.md};
+    max-width: 1000px;
+    padding: 0 ${({ theme }) => theme.spacing.lg};
   }
 `
 
@@ -90,12 +90,12 @@ const FormCard = styled(Card)`
   }
 
   @media (min-width: 900px) {
-    max-width: 75vw !important;
+    max-width: 750px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
   }
 
   @media (min-width: 1200px) {
-    max-width: 80vw !important;
+    max-width: 950px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
   }
 `

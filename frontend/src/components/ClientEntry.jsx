@@ -486,11 +486,11 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                     onClick={() => handlePaymentChange(paymentIndex, 'method', method.value)}
                   >
                     {method.icon} {
-                      method.value === 'cash' ? 'Gotów' :
+                      method.value === 'cash' ? 'Gotówka' :
                       method.value === 'card' ? 'Karta' :
                       method.value === 'blik' ? 'BLIK' :
-                      method.value === 'prepaid' ? 'Przedp' :
-                      method.value === 'transfer' ? 'Przele' :
+                      method.value === 'prepaid' ? 'Przedpłata' :
+                      method.value === 'transfer' ? 'Przelew' :
                       method.value === 'free' ? 'Gratis' : method.label.split(' ')[1]
                     }
                   </PaymentButton>
