@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut } from 'react-icons/fi'
+import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { media } from '../styles/theme'
 import CreateCompany from './CreateCompany'
@@ -274,6 +274,11 @@ const Sidebar = () => {
         <NavItem to="/monthly">
           <FiBarChart />
           <span>Podsumowanie</span>
+        </NavItem>
+
+        <NavItem to="/clients">
+          <FiUserCheck />
+          <span>Klientki</span>
         </NavItem>
 
         {isOwner && (

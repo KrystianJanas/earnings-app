@@ -10,6 +10,7 @@ import AddEarnings from './pages/AddEarnings'
 import Monthly from './pages/Monthly'
 import Settings from './pages/Settings'
 import Employees from './pages/Employees'
+import Clients from './pages/Clients'
 
 function App() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -68,6 +69,16 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <Monthly />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clients"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Clients />
             </Layout>
           </ProtectedRoute>
         }
