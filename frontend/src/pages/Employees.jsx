@@ -138,14 +138,22 @@ const HourlyRateInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   color: ${({ theme }) => theme.colors.text.primary};
-  padding: 0.5rem;
-  font-size: 0.875rem;
-  width: 80px;
+  padding: 8px;
+  font-size: 0.8rem;
+  width: 70px;
   text-align: right;
+  height: 32px;
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  @media (min-width: 640px) {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    width: 80px;
+    height: 36px;
   }
 `
 
@@ -274,8 +282,9 @@ const EmailInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
-  padding: ${({ theme }) => theme.spacing.sm};
-  font-size: 1rem;
+  padding: 10px;
+  font-size: 0.9rem;
+  height: 36px;
 
   &:focus {
     outline: none;
@@ -284,6 +293,12 @@ const EmailInput = styled.input`
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.text.secondary};
+  }
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: 1rem;
+    height: 40px;
   }
 `
 

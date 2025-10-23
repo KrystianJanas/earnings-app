@@ -601,11 +601,24 @@ const Monthly = () => {
                       })}
                     </DayDate>
                     <DayBreakdown>
-                      Gotówka: {day.cashAmount.toFixed(2)} zł | 
-                      Karta: {day.cardAmount.toFixed(2)} zł
-                      {day.clientsCount > 0 && ` | Klientek: ${day.clientsCount}`}
-                      {day.hoursWorked > 0 && ` | Godzin: ${day.hoursWorked.toFixed(2)} h`}
-                      {day.tipsAmount > 0 && ` | Napiwki: ${day.tipsAmount.toFixed(2)} zł`}
+                      {[
+                        day.cashAmount > 0 && `Gotówka: ${day.cashAmount.toFixed(2)} zł`,
+                        day.cardAmount > 0 && `Karta: ${day.cardAmount.toFixed(2)} zł`,
+                        day.blikAmount > 0 && `BLIK: ${day.blikAmount.toFixed(2)} zł`,
+                        day.prepaidAmount > 0 && `Przedpłata: ${day.prepaidAmount.toFixed(2)} zł`,
+                        day.transferAmount > 0 && `Przelew: ${day.transferAmount.toFixed(2)} zł`,
+                        day.freeAmount > 0 && `Gratis: ${day.freeAmount.toFixed(2)} zł`
+                      ].filter(Boolean).join(' | ')}
+                      {(day.clientsCount > 0 || day.hoursWorked > 0 || day.tipsAmount > 0) && (
+                        <>
+                          <br />
+                          {[
+                            day.clientsCount > 0 && `Klientek: ${day.clientsCount}`,
+                            day.hoursWorked > 0 && `Godzin: ${day.hoursWorked.toFixed(2)} h`,
+                            day.tipsAmount > 0 && `Napiwki: ${day.tipsAmount.toFixed(2)} zł`
+                          ].filter(Boolean).join(', ')}
+                        </>
+                      )}
                     </DayBreakdown>
                   </DayInfo>
                   <DayTotal>

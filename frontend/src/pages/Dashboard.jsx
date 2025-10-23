@@ -53,9 +53,9 @@ const DashboardHeaderContent = styled.div`
 
   ${media.lg`
     flex-direction: row;
-    text-align: left;
+    justify-content: space-between;
     align-items: flex-start;
-    gap: 0;
+    gap: ${({ theme }) => theme.spacing.md};
   `}
 `
 

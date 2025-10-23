@@ -174,18 +174,25 @@ export const Button = styled.button`
 
 export const Input = styled.input`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 10px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 1rem;
+  font-size: 0.9rem;
+  height: 36px;
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
+
+  ${media.md`
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: 1rem;
+    height: 40px;
+  `}
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.text.muted};
