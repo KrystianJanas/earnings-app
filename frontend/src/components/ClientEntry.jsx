@@ -5,7 +5,7 @@ import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch } from 'react
 import { Input, Label, Button } from '../styles/theme'
 
 const ClientCard = styled.div`
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 10px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -20,7 +20,7 @@ const ClientHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 8px;
 
   @media (min-width: 640px) {
     margin-bottom: ${({ theme }) => theme.spacing.sm};
@@ -59,12 +59,18 @@ const PaymentsSection = styled.div`
 const PaymentEntry = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.sm};
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 10px;
   background: ${({ theme }) => theme.colors.background}80;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border: 1px solid ${({ theme }) => theme.colors.border}50;
+
+  @media (min-width: 640px) {
+    gap: ${({ theme }) => theme.spacing.sm};
+    padding: ${({ theme }) => theme.spacing.sm};
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
+  }
 `
 
 const AmountInputWrapper = styled.div`
@@ -73,8 +79,14 @@ const AmountInputWrapper = styled.div`
 
 const AmountInput = styled(Input)`
   width: 100%;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
+  height: 36px;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;
+    height: 40px;
+  }
 `
 
 const PaymentMethodWrapper = styled.div`
@@ -108,17 +120,17 @@ const PaymentButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 10px 6px;
+  padding: 8px 6px;
   border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
   color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 38px;
   overflow: hidden;
   text-overflow: ellipsis;
 
@@ -179,26 +191,42 @@ const TotalAmountDisplay = styled.div`
 
 const ClientSearchWrapper = styled.div`
   position: relative;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: 8px;
+
+  @media (min-width: 640px) {
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
+  }
 `
 
 const ClientSearchInput = styled(Input)`
   padding-left: 2.5rem;
   font-weight: 500;
+  height: 36px;
+  font-size: 0.9rem;
+
+  @media (min-width: 640px) {
+    height: 40px;
+    font-size: 1rem;
+  }
 `
 
 const SearchIcon = styled.div`
   position: absolute;
-  left: ${({ theme }) => theme.spacing.sm};
+  left: 10px;
   top: 50%;
-  transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.muted};
-  font-size: 1rem;
+  font-size: 0.9rem;
   pointer-events: none;
   display: flex;
   align-items: center;
-  height: 40px;
-  margin-top: 10px;
+  justify-content: center;
+  height: 100%;
+  padding-top: 20px;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;
+    left: ${({ theme }) => theme.spacing.sm};
+  }
 `
 
 const SearchResults = styled.div`

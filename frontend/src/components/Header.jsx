@@ -27,6 +27,7 @@ const HeaderContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
 
   ${media.sm`
     max-width: 640px;
@@ -39,6 +40,38 @@ const HeaderContent = styled.div`
 
 const CompanyInfo = styled.div`
   flex: 1;
+  min-width: 0;
+`
+
+const PeriodSelectorWrapper = styled.div`
+  flex-shrink: 0;
+`
+
+const PeriodSelect = styled.select`
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.text.primary};
+  padding: 6px 24px 6px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  appearance: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.cardBg};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  }
 `
 
 const CompanyButton = styled.button`
@@ -161,7 +194,7 @@ const Overlay = styled.div`
   z-index: 999;
 `
 
-const Header = () => {
+const Header = ({ periodSelector }) => {
   const { currentCompany, companies, switchCompany, logout } = useAuth()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [showCreateCompany, setShowCreateCompany] = useState(false)
@@ -260,6 +293,12 @@ const Header = () => {
             )}
           </div>
         </CompanyInfo>
+
+        {periodSelector && (
+          <PeriodSelectorWrapper>
+            {periodSelector}
+          </PeriodSelectorWrapper>
+        )}
       </HeaderContent>
     </HeaderContainer>
   )

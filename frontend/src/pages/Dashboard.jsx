@@ -7,6 +7,7 @@ import { earningsAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import { Container, Card, media } from '../styles/theme'
 import Navigation from '../components/Navigation'
+import Header from '../components/Header'
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -85,10 +86,11 @@ const SubText = styled.p`
 `
 
 const PeriodSelector = styled.div`
-  display: flex;
-  justify-content: center;
+  display: none;
 
   ${media.lg`
+    display: flex;
+    justify-content: center;
     margin-bottom: 0;
   `}
 `
@@ -99,12 +101,15 @@ const PeriodSelect = styled.select`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
   padding: 6px 28px 6px 10px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   cursor: pointer;
   appearance: none;
   position: relative;
   transition: all 0.2s ease;
   font-weight: 500;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -114,7 +119,7 @@ const PeriodSelect = styled.select`
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
   }
 
   ${media.lg`
@@ -123,24 +128,6 @@ const PeriodSelect = styled.select`
     background: ${({ theme }) => theme.colors.cardBg};
     border: 1px solid ${({ theme }) => theme.colors.border};
   `}
-`
-
-const SelectWrapper = styled.div`
-  position: relative;
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid ${({ theme }) => theme.colors.text.secondary};
-    pointer-events: none;
-  }
 `
 
 const AllCardsGrid = styled.div`
@@ -171,8 +158,8 @@ const EarningsCard = styled(Card)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 80px;
-  padding: ${({ theme }) => theme.spacing.md};
+  min-height: 70px;
+  padding: ${({ theme }) => theme.spacing.sm};
 
   ${media.lg`
     min-height: 80px;
@@ -239,13 +226,13 @@ const IconWrapper = styled.div`
 `
 
 const EarningsAmount = styled.div`
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: 2px;
 
   ${media.md`
-    font-size: 2rem;
+    font-size: 1.75rem;
   `}
 
   ${media.lg`
@@ -264,8 +251,8 @@ const EarningsLabel = styled.div`
 `
 
 const Section = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  padding-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding-bottom: ${({ theme }) => theme.spacing.sm};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
   &:last-child {
@@ -283,7 +270,7 @@ const Section = styled.div`
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: 8px;
 
   ${media.md`
     gap: ${({ theme }) => theme.spacing.md};
@@ -328,8 +315,8 @@ const StatCard = styled(Card)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 85px;
-  padding: ${({ theme }) => theme.spacing.sm};
+  min-height: 75px;
+  padding: 10px;
 
   ${media.lg`
     min-height: 85px;
@@ -348,10 +335,14 @@ const StatsContainer = styled.div`
 `
 
 const StatAmount = styled.div`
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: ${({ color, theme }) => color || theme.colors.text.primary};
   margin-bottom: 4px;
+
+  ${media.md`
+    font-size: 1.25rem;
+  `}
 
   ${media.lg`
     font-size: 1.25rem;
@@ -476,10 +467,26 @@ const Dashboard = () => {
 
   const earnings = dashboardData?.data || {}
 
+  // Period selector component to pass to Header
+  const periodSelectorElement = (
+    <PeriodSelect
+      value={selectedPeriod}
+      onChange={(e) => setSelectedPeriod(e.target.value)}
+    >
+      <option value="day">Dzisiaj</option>
+      <option value="week">Ten tydzień</option>
+      <option value="month">Ten miesiąc</option>
+      <option value="prev-month">Poprzedni miesiąc</option>
+      <option value="year">Ten rok</option>
+      <option value="all">Od początku</option>
+    </PeriodSelect>
+  )
+
   return (
     <DashboardContainer>
+      <Header periodSelector={periodSelectorElement} />
       <ResponsiveContainer>
-        <Header>
+        <div style={{ marginBottom: '1rem' }}>
           <HeaderContent>
             <HeaderTextContent>
               <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
@@ -487,22 +494,10 @@ const Dashboard = () => {
             </HeaderTextContent>
 
             <PeriodSelector>
-              <SelectWrapper>
-                <PeriodSelect
-                  value={selectedPeriod}
-                  onChange={(e) => setSelectedPeriod(e.target.value)}
-                >
-                  <option value="day">Dzisiaj</option>
-                  <option value="week">Ten tydzień</option>
-                  <option value="month">Ten miesiąc</option>
-                  <option value="prev-month">Poprzedni miesiąc</option>
-                  <option value="year">Ten rok</option>
-                  <option value="all">Od początku</option>
-                </PeriodSelect>
-              </SelectWrapper>
+              {periodSelectorElement}
             </PeriodSelector>
           </HeaderContent>
-        </Header>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

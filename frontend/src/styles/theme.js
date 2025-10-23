@@ -197,4 +197,9 @@ export const Label = styled.label`
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text.secondary};
   font-weight: 500;
+  font-size: 0.85rem;
+
+  ${media.md`
+    font-size: 1rem;
+  `}
 `

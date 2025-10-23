@@ -248,15 +248,15 @@ const AmountInput = styled(Input)`
 
 const TextArea = styled.textarea`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 10px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-family: inherit;
   resize: vertical;
-  min-height: 100px;
+  min-height: 70px;
 
   &:focus {
     outline: none;
@@ -267,6 +267,12 @@ const TextArea = styled.textarea`
   &::placeholder {
     color: ${({ theme }) => theme.colors.text.muted};
   }
+
+  ${media.md`
+    min-height: 100px;
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: 1rem;
+  `}
 `
 
 const ErrorMessage = styled.div`
