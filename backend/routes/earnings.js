@@ -123,7 +123,7 @@ router.get('/day/:date', async (req, res) => {
 });
 
 router.post('/day', [
-  body('date').isISO8601().toDate(),
+  body('date').isISO8601(),
   body('entryMode').optional().isIn(['summary', 'detailed']),
   body('cashAmount').optional().isFloat({ min: 0 }),
   body('cardAmount').optional().isFloat({ min: 0 }),

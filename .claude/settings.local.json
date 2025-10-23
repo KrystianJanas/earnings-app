@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(docker-compose exec:*)",
-      "WebFetch(domain:moje.studiopaulinka.pl)"
+      "WebFetch(domain:moje.studiopaulinka.pl)",
+      "Read(//Users/krystianjanas/Downloads/**)"
     ],
     "deny": [],
     "ask": []
