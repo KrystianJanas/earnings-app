@@ -319,15 +319,18 @@ const ModeToggle = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
 
-  @media (min-width: 640px) {
+  ${media.sm`
     gap: ${({ theme }) => theme.spacing.md};
     padding: ${({ theme }) => theme.spacing.md};
-  }
+  `}
 
-  @media (min-width: 640px) {
-    flex-direction: column;
-    max-width: none;
-  }
+  ${media.lg`
+    flex-direction: row;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const ModeButton = styled.button`
@@ -335,41 +338,37 @@ const ModeButton = styled.button`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
   padding: ${({ theme }) => theme.spacing.sm};
-  border: 1px solid ${({ active, disabled, theme }) => 
-    disabled ? theme.colors.border + '50' : 
+  border: 1px solid ${({ active, disabled, theme }) =>
+    disabled ? theme.colors.border + '50' :
     active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  background: ${({ active, disabled, theme }) => 
-    disabled ? theme.colors.surface + '50' : 
+  background: ${({ active, disabled, theme }) =>
+    disabled ? theme.colors.surface + '50' :
     active ? theme.colors.primary : 'transparent'};
-  color: ${({ active, disabled, theme }) => 
-    disabled ? theme.colors.text.muted : 
+  color: ${({ active, disabled, theme }) =>
+    disabled ? theme.colors.text.muted :
     active ? 'white' : theme.colors.text.primary};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   flex: 1;
   justify-content: center;
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
-  min-height: 48px;
+  min-height: 44px;
   width: 100%;
 
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
-    padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
-    min-height: 44px;
-  }
-
-  @media (min-width: 640px) {
-    width: auto;
-    min-width: 200px;
-  }
-
-  @media (min-width: 640px) {
+  ${media.sm`
+    font-size: 0.9rem;
     padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+    min-height: 48px;
+  `}
+
+  ${media.lg`
+    width: auto;
+    min-width: 180px;
     font-size: 0.95rem;
-  }
+  `}
 
   &:hover:not(:disabled) {
     background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};

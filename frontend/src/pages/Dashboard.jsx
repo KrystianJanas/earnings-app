@@ -125,6 +125,11 @@ const AllCardsGrid = styled.div`
     max-width: 100%;
     margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
     gap: ${({ theme }) => theme.spacing.sm};
+    grid-template-columns: 1fr;
+  `}
+
+  ${media.xl`
+    grid-template-columns: repeat(2, 1fr);
   `}
 `
 
@@ -233,7 +238,7 @@ const StatsGrid = styled.div`
   `}
 
   ${media.lg`
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: ${({ theme }) => theme.spacing.sm};
   `}
 
