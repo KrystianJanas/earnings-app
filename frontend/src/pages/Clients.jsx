@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiUsers, FiSearch, FiX, FiCalendar, FiDollarSign, FiPhone, FiMail, FiFileText } from 'react-icons/fi'
+import { FiUsers, FiSearch, FiX, FiCalendar, FiDollarSign, FiPhone, FiMail, FiFileText, FiPlus, FiEdit3, FiTrash2, FiSave } from 'react-icons/fi'
 import { clientsAPI } from '../services/api'
-import { Container, Card, media } from '../styles/theme'
+import { Container, Card, Button, Input, Label, media } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import Header from '../components/Header'
 
@@ -65,6 +65,24 @@ const Subtitle = styled.p`
   ${media.lg`
     font-size: 0.95rem;
   `}
+`
+
+const HeaderActions = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
+const AddClientButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.colors.success};
+  border-color: ${({ theme }) => theme.colors.success};
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.success}dd;
+  }
 `
 
 const SearchWrapper = styled.div`
@@ -394,9 +412,123 @@ const TransactionNotes = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.border}50;
 `
 
+const FormGroup = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: 0.9rem;
+  min-height: 80px;
+  font-family: inherit;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.muted};
+  }
+
+  ${media.md`
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: 1rem;
+    min-height: 100px;
+  `}
+`
+
+const ModalActions = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  justify-content: flex-end;
+  padding: ${({ theme }) => theme.spacing.md};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  position: sticky;
+  bottom: 0;
+  background: ${({ theme }) => theme.colors.cardBg};
+`
+
+const EditButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.colors.primary};
+  border-color: ${({ theme }) => theme.colors.primary};
+
+  svg {
+    font-size: 0.9rem;
+  }
+`
+
+const DeleteButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.colors.error};
+  border-color: ${({ theme }) => theme.colors.error};
+
+  svg {
+    font-size: 0.9rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.error}dd;
+  }
+`
+
+const SaveButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.colors.success};
+  border-color: ${({ theme }) => theme.colors.success};
+
+  svg {
+    font-size: 0.9rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.success}dd;
+  }
+`
+
+const CancelButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: transparent;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  border-color: ${({ theme }) => theme.colors.border};
+
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
+`
+
 const Clients = () => {
+  const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedClient, setSelectedClient] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    email: '',
+    notes: ''
+  })
 
   const { data: clients, isLoading, error } = useQuery(
     ['clients'],
@@ -421,6 +553,94 @@ const Clients = () => {
       enabled: !!selectedClient,
     }
   )
+
+  // Mutations
+  const createClientMutation = useMutation(
+    (data) => clientsAPI.createClient(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['clients'])
+        setShowAddModal(false)
+        setFormData({ fullName: '', phone: '', email: '', notes: '' })
+      },
+    }
+  )
+
+  const updateClientMutation = useMutation(
+    ({ id, data }) => clientsAPI.updateClient(id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['clients'])
+        queryClient.invalidateQueries(['client', selectedClient?.id])
+        setIsEditing(false)
+      },
+    }
+  )
+
+  const deleteClientMutation = useMutation(
+    (id) => clientsAPI.deleteClient(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['clients'])
+        setSelectedClient(null)
+        setShowDeleteConfirm(false)
+      },
+    }
+  )
+
+  // Handlers
+  const handleAddClient = () => {
+    setFormData({ fullName: '', phone: '', email: '', notes: '' })
+    setShowAddModal(true)
+  }
+
+  const handleEditClient = () => {
+    setFormData({
+      fullName: clientDetails?.full_name || '',
+      phone: clientDetails?.phone || '',
+      email: clientDetails?.email || '',
+      notes: clientDetails?.notes || ''
+    })
+    setIsEditing(true)
+  }
+
+  const handleSaveClient = () => {
+    if (selectedClient) {
+      updateClientMutation.mutate({
+        id: selectedClient.id,
+        data: formData
+      })
+    }
+  }
+
+  const handleCreateClient = (e) => {
+    e.preventDefault()
+    if (formData.fullName.trim()) {
+      createClientMutation.mutate(formData)
+    }
+  }
+
+  const handleDeleteClient = () => {
+    if (selectedClient) {
+      deleteClientMutation.mutate(selectedClient.id)
+    }
+  }
+
+  const handleCloseModal = () => {
+    setSelectedClient(null)
+    setIsEditing(false)
+    setShowDeleteConfirm(false)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
+    setFormData({
+      fullName: clientDetails?.full_name || '',
+      phone: clientDetails?.phone || '',
+      email: clientDetails?.email || '',
+      notes: clientDetails?.notes || ''
+    })
+  }
 
   const filteredClients = clients?.filter(client =>
     client.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -507,6 +727,13 @@ const Clients = () => {
           </Title>
           <Subtitle>Masz {clients?.length || 0} klientek w bazie</Subtitle>
         </PageHeader>
+
+        <HeaderActions>
+          <AddClientButton onClick={handleAddClient}>
+            <FiPlus />
+            Dodaj klientkę
+          </AddClientButton>
+        </HeaderActions>
 
         <SearchWrapper>
           <SearchIcon>
@@ -621,24 +848,71 @@ const Clients = () => {
                       <FiFileText />
                       Informacje
                     </SectionTitle>
-                    <ClientContact>
-                      {clientDetails.phone && (
-                        <ContactItem>
-                          <FiPhone />
-                          {clientDetails.phone}
-                        </ContactItem>
-                      )}
-                      {clientDetails.email && (
-                        <ContactItem>
-                          <FiMail />
-                          {clientDetails.email}
-                        </ContactItem>
-                      )}
-                    </ClientContact>
-                    {clientDetails.notes && (
-                      <div style={{ marginTop: '12px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                        <strong>Notatki:</strong> {clientDetails.notes}
-                      </div>
+
+                    {isEditing ? (
+                      <>
+                        <FormGroup>
+                          <Label>Imię i nazwisko</Label>
+                          <Input
+                            type="text"
+                            value={formData.fullName}
+                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                            placeholder="Wpisz imię i nazwisko..."
+                            required
+                          />
+                        </FormGroup>
+
+                        <FormGroup>
+                          <Label>Telefon</Label>
+                          <Input
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="Wpisz numer telefonu..."
+                          />
+                        </FormGroup>
+
+                        <FormGroup>
+                          <Label>Email</Label>
+                          <Input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="Wpisz adres email..."
+                          />
+                        </FormGroup>
+
+                        <FormGroup>
+                          <Label>Notatki</Label>
+                          <TextArea
+                            value={formData.notes}
+                            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                            placeholder="Dodaj notatki o klientce..."
+                          />
+                        </FormGroup>
+                      </>
+                    ) : (
+                      <>
+                        <ClientContact>
+                          {clientDetails.phone && (
+                            <ContactItem>
+                              <FiPhone />
+                              {clientDetails.phone}
+                            </ContactItem>
+                          )}
+                          {clientDetails.email && (
+                            <ContactItem>
+                              <FiMail />
+                              {clientDetails.email}
+                            </ContactItem>
+                          )}
+                        </ClientContact>
+                        {clientDetails.notes && (
+                          <div style={{ marginTop: '12px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                            <strong>Notatki:</strong> {clientDetails.notes}
+                          </div>
+                        )}
+                      </>
                     )}
                   </Section>
                 )}
@@ -722,6 +996,166 @@ const Clients = () => {
                   )}
                 </Section>
               </ModalContent>
+
+              <ModalActions>
+                {isEditing ? (
+                  <>
+                    <CancelButton onClick={handleCancelEdit}>
+                      <FiX />
+                      Anuluj
+                    </CancelButton>
+                    <SaveButton
+                      onClick={handleSaveClient}
+                      disabled={updateClientMutation.isLoading || !formData.fullName.trim()}
+                    >
+                      <FiSave />
+                      {updateClientMutation.isLoading ? 'Zapisywanie...' : 'Zapisz'}
+                    </SaveButton>
+                  </>
+                ) : (
+                  <>
+                    <DeleteButton onClick={() => setShowDeleteConfirm(true)}>
+                      <FiTrash2 />
+                      Usuń
+                    </DeleteButton>
+                    <EditButton onClick={handleEditClient}>
+                      <FiEdit3 />
+                      Edytuj
+                    </EditButton>
+                  </>
+                )}
+              </ModalActions>
+            </Modal>
+          </ModalOverlay>
+        )}
+
+        {/* Add Client Modal */}
+        {showAddModal && (
+          <ModalOverlay
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowAddModal(false)}
+          >
+            <Modal
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ModalHeader>
+                <ModalTitle>Dodaj nową klientkę</ModalTitle>
+                <CloseButton onClick={() => setShowAddModal(false)}>
+                  <FiX />
+                </CloseButton>
+              </ModalHeader>
+
+              <form onSubmit={handleCreateClient}>
+                <ModalContent>
+                  <FormGroup>
+                    <Label>Imię i nazwisko *</Label>
+                    <Input
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      placeholder="Wpisz imię i nazwisko..."
+                      required
+                      autoFocus
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>Telefon</Label>
+                    <Input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="Wpisz numer telefonu..."
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>Email</Label>
+                    <Input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="Wpisz adres email..."
+                    />
+                  </FormGroup>
+
+                  <FormGroup>
+                    <Label>Notatki</Label>
+                    <TextArea
+                      value={formData.notes}
+                      onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                      placeholder="Dodaj notatki o klientce..."
+                    />
+                  </FormGroup>
+                </ModalContent>
+
+                <ModalActions>
+                  <CancelButton type="button" onClick={() => setShowAddModal(false)}>
+                    <FiX />
+                    Anuluj
+                  </CancelButton>
+                  <SaveButton
+                    type="submit"
+                    disabled={createClientMutation.isLoading || !formData.fullName.trim()}
+                  >
+                    <FiPlus />
+                    {createClientMutation.isLoading ? 'Dodawanie...' : 'Dodaj klientkę'}
+                  </SaveButton>
+                </ModalActions>
+              </form>
+            </Modal>
+          </ModalOverlay>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && (
+          <ModalOverlay
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDeleteConfirm(false)}
+          >
+            <Modal
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ maxWidth: '400px' }}
+            >
+              <ModalHeader>
+                <ModalTitle>Potwierdź usunięcie</ModalTitle>
+                <CloseButton onClick={() => setShowDeleteConfirm(false)}>
+                  <FiX />
+                </CloseButton>
+              </ModalHeader>
+
+              <ModalContent>
+                <p style={{ marginBottom: '1rem' }}>
+                  Czy na pewno chcesz usunąć klientkę <strong>{selectedClient?.full_name}</strong>?
+                </p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                  Historia wizyt zostanie zachowana, ale klientka zostanie usunięta z bazy.
+                </p>
+              </ModalContent>
+
+              <ModalActions>
+                <CancelButton onClick={() => setShowDeleteConfirm(false)}>
+                  <FiX />
+                  Anuluj
+                </CancelButton>
+                <DeleteButton
+                  onClick={handleDeleteClient}
+                  disabled={deleteClientMutation.isLoading}
+                >
+                  <FiTrash2 />
+                  {deleteClientMutation.isLoading ? 'Usuwanie...' : 'Usuń klientkę'}
+                </DeleteButton>
+              </ModalActions>
             </Modal>
           </ModalOverlay>
         )}
