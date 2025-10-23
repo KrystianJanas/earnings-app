@@ -53,8 +53,10 @@ class Earnings {
           // Continue without cleanup
         }
       }
-      
+
+      console.log('🔄 About to COMMIT transaction...');
       await db.query('COMMIT');
+      console.log('✅ Transaction COMMITTED successfully');
       return dailyEarnings;
     } catch (error) {
       await db.query('ROLLBACK');

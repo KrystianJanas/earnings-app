@@ -54,13 +54,12 @@ class ClientTransaction {
   }
 
   static async createMultiple(dailyEarningsId, clients, userId, companyId) {
-    const client = await db.getClient();
-    
+    // NOTE: This function is called within a transaction started by Earnings.createOrUpdate
+    // Do NOT start a new transaction here - use the existing connection
+
     try {
-      await client.query('BEGIN');
-      
       // First, delete existing client transactions for this day (this will cascade delete payment methods too)
-      await client.query('DELETE FROM client_transactions WHERE daily_earnings_id = $1', [dailyEarningsId]);
+      await db.query('DELETE FROM client_transactions WHERE daily_earnings_id = $1', [dailyEarningsId]);
       
       // Then insert new ones
       const results = [];
@@ -95,58 +94,54 @@ class ClientTransaction {
           const totalAmount = clientData.payments.reduce((sum, payment) => sum + parseFloat(payment.amount || 0), 0);
           const hasMultiplePayments = clientData.payments.length > 1;
           const paymentMethod = clientData.payments[0].method || 'cash';
-          
-          const transactionResult = await client.query(`
+
+          const transactionResult = await db.query(`
             INSERT INTO client_transactions (daily_earnings_id, client_id, amount, payment_method, total_amount, has_multiple_payments, client_order, notes)
             VALUES ($1, $2, $3, $4, $3, $5, $6, $7)
             RETURNING *
           `, [dailyEarningsId, clientId, totalAmount, paymentMethod, hasMultiplePayments, i + 1, clientData.notes || null]);
-          
+
           const transaction = transactionResult.rows[0];
-          
+
           // Insert individual payments
           for (const payment of clientData.payments) {
             if (parseFloat(payment.amount || 0) > 0) {
-              await client.query(`
+              await db.query(`
                 INSERT INTO client_payment_methods (client_transaction_id, amount, payment_method)
                 VALUES ($1, $2, $3)
               `, [transaction.id, payment.amount, payment.method]);
             }
           }
-          
+
           // Update client stats if we have a client and actual spending
           if (clientId && totalAmount > 0) {
-            const visitDate = await client.query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
+            const visitDate = await db.query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
             await Client.updateStats(clientId, visitDate.rows[0].date, totalAmount);
           }
-          
+
           results.push(transaction);
         } else {
           // Legacy single payment structure (backward compatibility)
           const amount = parseFloat(clientData.amount || 0);
-          const result = await client.query(`
+          const result = await db.query(`
             INSERT INTO client_transactions (daily_earnings_id, client_id, amount, payment_method, client_order, notes, has_multiple_payments)
             VALUES ($1, $2, $3, $4, $5, $6, FALSE)
             RETURNING *
           `, [dailyEarningsId, clientId, amount, clientData.paymentMethod || 'cash', i + 1, clientData.notes || null]);
-          
+
           // Update client stats if we have a client and actual spending
           if (clientId && amount > 0) {
-            const visitDate = await client.query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
+            const visitDate = await db.query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
             await Client.updateStats(clientId, visitDate.rows[0].date, amount);
           }
-          
+
           results.push(result.rows[0]);
         }
       }
-      
-      await client.query('COMMIT');
+
       return results;
     } catch (error) {
-      await client.query('ROLLBACK');
       throw error;
-    } finally {
-      client.release();
     }
   }
 
