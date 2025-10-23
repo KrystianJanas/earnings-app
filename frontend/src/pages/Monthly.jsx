@@ -122,6 +122,7 @@ const SummaryGrid = styled.div`
 const MainStatsCard = styled(Card)`
   position: relative;
   overflow: hidden;
+  padding: ${({ theme }) => theme.spacing.sm};
 
   &::before {
     content: '';
@@ -131,6 +132,10 @@ const MainStatsCard = styled(Card)`
     right: 0;
     height: 4px;
     background: #6366f1;
+  }
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.md};
   }
 `
 
@@ -147,6 +152,7 @@ const DetailedStatsContainer = styled.div`
 const SummaryCard = styled(Card)`
   position: relative;
   overflow: hidden;
+  padding: ${({ theme }) => theme.spacing.sm};
 
   &::before {
     content: '';
@@ -157,74 +163,125 @@ const SummaryCard = styled(Card)`
     height: 4px;
     background: ${({ color }) => color};
   }
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.md};
+  }
 `
 
 const SummaryHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+
+  @media (min-width: 640px) {
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  }
 `
 
 const SummaryTitle = styled.h3`
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text.primary};
+
+  @media (min-width: 640px) {
+    font-size: 1.1rem;
+  }
 `
 
 const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: ${({ color, theme }) => color}20;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${({ color }) => color};
+  font-size: 1rem;
 
   svg {
+    font-size: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    width: 40px;
+    height: 40px;
     font-size: 1.2rem;
+
+    svg {
+      font-size: 1.2rem;
+    }
   }
 `
 
 const SummaryAmount = styled.div`
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 4px;
+
+  @media (min-width: 640px) {
+    font-size: 1.8rem;
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
+  }
 `
 
 const StatsRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.md};
+  gap: 8px;
+  margin-top: ${({ theme }) => theme.spacing.sm};
+
+  @media (min-width: 640px) {
+    gap: ${({ theme }) => theme.spacing.md};
+    margin-top: ${({ theme }) => theme.spacing.md};
+  }
 `
 
 const StatItem = styled.div`
   text-align: center;
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 8px;
   background: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.borderRadius.md};
+
+  @media (min-width: 640px) {
+    padding: ${({ theme }) => theme.spacing.sm};
+  }
 `
 
 const StatAmount = styled.div`
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: ${({ color, theme }) => color || theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 2px;
+
+  @media (min-width: 640px) {
+    font-size: 1.2rem;
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
+  }
 `
 
 const StatLabel = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.875rem;
+  font-size: 0.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: 2px;
 
   svg {
+    font-size: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
     font-size: 0.875rem;
+    gap: ${({ theme }) => theme.spacing.xs};
+
+    svg {
+      font-size: 0.875rem;
+    }
   }
 `
 

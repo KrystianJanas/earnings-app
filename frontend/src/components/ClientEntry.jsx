@@ -213,19 +213,19 @@ const ClientSearchInput = styled(Input)`
 const SearchIcon = styled.div`
   position: absolute;
   left: 10px;
-  top: 50%;
+  top: 20px;
   color: ${({ theme }) => theme.colors.text.muted};
   font-size: 0.9rem;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding-top: 20px;
+  height: 36px;
 
   @media (min-width: 640px) {
     font-size: 1rem;
     left: ${({ theme }) => theme.spacing.sm};
+    height: 40px;
   }
 `
 
@@ -280,6 +280,12 @@ const NoResults = styled.div`
 
 const NotesInput = styled(Input)`
   font-size: 0.9rem;
+  height: 36px;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;
+    height: 40px;
+  }
 `
 
 const PAYMENT_METHODS = [
