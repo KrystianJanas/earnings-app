@@ -437,7 +437,9 @@ const Dashboard = () => {
               </EarningsAmount>
               <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
             </EarningsCard>
+          </AllCardsGrid>
 
+          <StatsGrid>
             <StatCard>
               <StatAmount color="#10b981">
                 {(earnings.cashAmount || 0).toFixed(2)} zł
@@ -537,7 +539,7 @@ const Dashboard = () => {
                 Szacunkowy zarobek
               </StatLabel>
             </StatCard>
-          </AllCardsGrid>
+          </StatsGrid>
         </motion.div>
       </ResponsiveContainer>
       <Navigation />
