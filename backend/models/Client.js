@@ -22,15 +22,15 @@ class Client {
       // Update existing client with new info if provided
       const client = existingClient.rows[0];
       const updatedClient = await db.query(`
-        UPDATE clients 
-        SET 
-          phone = COALESCE($3, phone),
-          email = COALESCE($4, email), 
-          notes = COALESCE($5, notes),
+        UPDATE clients
+        SET
+          phone = COALESCE($2, phone),
+          email = COALESCE($3, email),
+          notes = COALESCE($4, notes),
           updated_at = CURRENT_TIMESTAMP
         WHERE id = $1
         RETURNING *
-      `, [client.id, phone, email, notes]);
+      `, [client.id, phone || null, email || null, notes || null]);
       return updatedClient.rows[0];
     } else {
       // Create new client
