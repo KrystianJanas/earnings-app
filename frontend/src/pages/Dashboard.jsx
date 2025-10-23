@@ -127,10 +127,6 @@ const AllCardsGrid = styled.div`
     gap: ${({ theme }) => theme.spacing.sm};
     grid-template-columns: 1fr;
   `}
-
-  ${media.xl`
-    grid-template-columns: repeat(2, 1fr);
-  `}
 `
 
 const EarningsCard = styled(Card)`
