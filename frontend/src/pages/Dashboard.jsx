@@ -276,17 +276,32 @@ const StatsGrid = styled.div`
   `}
 
   ${media.lg`
-    grid-template-columns: ${({ columns }) => columns ? `repeat(${columns}, 1fr)` : 'repeat(3, 1fr)'};
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: ${({ columns }) => columns === 4 ? 'center' : 'flex-start'};
     gap: ${({ theme }) => theme.spacing.sm};
-    justify-items: ${({ columns }) => columns === 4 ? 'center' : 'stretch'};
 
     & > * {
-      ${({ columns }) => columns === 4 ? 'width: 100%; max-width: 250px;' : ''}
+      flex: 0 0 ${({ columns }) => {
+        if (columns === 4) return 'calc(25% - 12px)';
+        if (columns === 3) return 'calc(33.333% - 12px)';
+        return 'calc(50% - 12px)';
+      }};
+      min-width: ${({ columns }) => columns === 4 ? '200px' : 'auto'};
+      max-width: ${({ columns }) => columns === 4 ? '280px' : 'none'};
     }
   `}
 
   ${media.xl`
     gap: ${({ theme }) => theme.spacing.md};
+
+    & > * {
+      flex: 0 0 ${({ columns }) => {
+        if (columns === 4) return 'calc(25% - 18px)';
+        if (columns === 3) return 'calc(33.333% - 18px)';
+        return 'calc(50% - 18px)';
+      }};
+    }
   `}
 `
 
