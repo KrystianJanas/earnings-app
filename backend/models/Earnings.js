@@ -3,8 +3,10 @@ const ClientTransaction = require('./ClientTransaction');
 
 class Earnings {
   static async createOrUpdate({ userId, companyId, date, cashAmount, cardAmount, tipsAmount, clientsCount, hoursWorked, notes, entryMode = 'summary', clients = [] }) {
+    console.log('🔵 Earnings.createOrUpdate called with:', { userId, companyId, date, entryMode, clientsCount: clients?.length });
+
     await db.query('BEGIN');
-    
+
     try {
       // Create or update the daily earnings record
       const result = await db.query(`
@@ -23,8 +25,9 @@ class Earnings {
           updated_at = CURRENT_TIMESTAMP
         RETURNING *
       `, [userId, companyId, date, cashAmount || 0, cardAmount || 0, tipsAmount || 0, clientsCount || 0, hoursWorked || 0, notes, entryMode]);
-      
+
       const dailyEarnings = result.rows[0];
+      console.log('💾 Database saved/updated record:', { id: dailyEarnings.id, date: dailyEarnings.date, entry_mode: dailyEarnings.entry_mode });
       
       // If detailed mode, handle client transactions (if tables exist)
       if (entryMode === 'detailed' && clients && clients.length > 0) {
@@ -60,10 +63,12 @@ class Earnings {
   }
 
   static async getByDate(userId, companyId, date) {
+    console.log('🔍 Earnings.getByDate called with:', { userId, companyId, date });
     const result = await db.query(
       'SELECT * FROM daily_earnings WHERE user_id = $1 AND company_id = $2 AND date = $3',
       [userId, companyId, date]
     );
+    console.log('🔍 Query result:', result.rows[0] ? { found: true, id: result.rows[0].id, date: result.rows[0].date } : { found: false });
     return result.rows[0];
   }
 

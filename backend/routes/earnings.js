@@ -75,9 +75,11 @@ router.get('/dashboard', async (req, res) => {
 router.get('/day/:date', async (req, res) => {
   try {
     const { date } = req.params;
+    console.log('📖 GET /day/:date called for date:', date, 'userId:', req.user.userId);
     const earnings = await Earnings.getByDateWithClients(req.user.userId, req.user.companyId, date);
-    
+
     if (!earnings) {
+      console.log('📭 No earnings found for date:', date);
       return res.json({
         date,
         entryMode: 'detailed', // Default to detailed for new entries
@@ -152,10 +154,17 @@ router.post('/day', [
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.error('❌ Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { date, entryMode, cashAmount, cardAmount, tipsAmount, clientsCount, hoursWorked, notes, clients } = req.body;
+
+    console.log('📅 Saving earnings for date:', date, '(type:', typeof date, ')');
+    console.log('👤 User ID:', req.user.userId);
+    console.log('🏢 Company ID:', req.user.companyId);
+    console.log('📊 Entry mode:', entryMode);
+    console.log('👥 Clients count:', clients?.length || 0);
 
     // For detailed mode, calculate amounts from clients if not provided
     let finalCashAmount = cashAmount;
@@ -210,6 +219,8 @@ router.post('/day', [
       notes,
       clients: clients || []
     });
+
+    console.log('✅ Earnings saved successfully. ID:', earnings.id, 'Date stored:', earnings.date);
 
     res.json({
       message: 'Earnings saved successfully',
