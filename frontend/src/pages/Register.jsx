@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { authAPI } from '../services/api'
-import { Container, Card, Button, Input, Label } from '../styles/theme'
+import { Container, Card, Button, Input, Label, media } from '../styles/theme'
 
 const RegisterContainer = styled.div`
   min-height: 100vh;
@@ -14,11 +14,24 @@ const RegisterContainer = styled.div`
   justify-content: center;
   padding: ${({ theme }) => theme.spacing.sm};
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+
+  ${media.md`
+    padding: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const RegisterCard = styled(Card)`
   width: 100%;
   max-width: 400px;
+
+  ${media.md`
+    max-width: 480px;
+    padding: ${({ theme }) => theme.spacing.xl};
+  `}
+
+  ${media.lg`
+    max-width: 520px;
+  `}
 `
 
 const Title = styled.h1`

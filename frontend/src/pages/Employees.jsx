@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { FiUsers, FiEdit3, FiDollarSign, FiTrendingUp, FiCalendar, FiClock, FiBarChart2, FiMail, FiX, FiSend } from 'react-icons/fi'
 import { companiesAPI, employeesAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import { Container, Card, Button } from '../styles/theme'
+import { Container, Card, Button, media } from '../styles/theme'
 import Navigation from '../components/Navigation'
 
 const EmployeesContainer = styled.div`
@@ -13,23 +13,33 @@ const EmployeesContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.md} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
+
+  ${media.lg`
+    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding-bottom: ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const ResponsiveContainer = styled(Container)`
-  @media (min-width: 1024px) {
-    max-width: 1200px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
-  }
+  ${media.lg`
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.md};
+  `}
 
-  @media (min-width: 1280px) {
+  ${media.xl`
     max-width: 1400px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
-  }
+    padding: 0 ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   text-align: center;
+
+  ${media.lg`
+    text-align: left;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const Title = styled.h1`
@@ -37,11 +47,19 @@ const Title = styled.h1`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  ${media.lg`
+    font-size: 1.75rem;
+  `}
 `
 
 const Subtitle = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 1rem;
+
+  ${media.lg`
+    font-size: 0.95rem;
+  `}
 `
 
 const EmployeeList = styled.div`

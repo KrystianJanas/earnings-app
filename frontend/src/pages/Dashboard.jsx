@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { FiCreditCard, FiGift, FiUsers, FiClock, FiChevronDown } from 'react-icons/fi'
 import { earningsAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import { Container, Card } from '../styles/theme'
+import { Container, Card, media } from '../styles/theme'
 import Navigation from '../components/Navigation'
 
 const DashboardContainer = styled.div`
@@ -13,23 +13,33 @@ const DashboardContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.md} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
+
+  ${media.lg`
+    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding-bottom: ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const ResponsiveContainer = styled(Container)`
-  @media (min-width: 1024px) {
-    max-width: 1200px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
-  }
+  ${media.lg`
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.md};
+  `}
 
-  @media (min-width: 1280px) {
+  ${media.xl`
     max-width: 1400px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
-  }
+    padding: 0 ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   text-align: center;
+
+  ${media.lg`
+    text-align: left;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const WelcomeText = styled.h1`
@@ -37,17 +47,30 @@ const WelcomeText = styled.h1`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  ${media.lg`
+    font-size: 1.75rem;
+  `}
 `
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 1rem;
+
+  ${media.lg`
+    font-size: 0.95rem;
+  `}
 `
 
 const PeriodSelector = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   display: flex;
   justify-content: center;
+
+  ${media.lg`
+    justify-content: flex-start;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const PeriodSelect = styled.select`
@@ -94,9 +117,15 @@ const AllCardsGrid = styled.div`
   max-width: 600px;
   margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
 
-  @media (min-width: 768px) {
-    gap: ${({ theme }) => theme.spacing.lg};
-  }
+  ${media.md`
+    gap: ${({ theme }) => theme.spacing.md};
+  `}
+
+  ${media.lg`
+    max-width: 100%;
+    margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
+    gap: ${({ theme }) => theme.spacing.sm};
+  `}
 `
 
 const EarningsCard = styled(Card)`
@@ -107,9 +136,10 @@ const EarningsCard = styled(Card)`
   justify-content: center;
   min-height: 100px;
 
-  @media (min-width: 1024px) {
-    min-height: 120px;
-  }
+  ${media.lg`
+    min-height: 90px;
+    padding: ${({ theme }) => theme.spacing.md};
+  `}
 
   &::before {
     content: '';
@@ -127,12 +157,20 @@ const EarningsHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: ${({ theme }) => theme.spacing.md};
+
+  ${media.lg`
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
+  `}
 `
 
 const EarningsTitle = styled.h3`
   font-size: 1.1rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text.primary};
+
+  ${media.lg`
+    font-size: 0.95rem;
+  `}
 `
 
 const IconWrapper = styled.div`
@@ -148,6 +186,15 @@ const IconWrapper = styled.div`
   svg {
     font-size: 1.2rem;
   }
+
+  ${media.lg`
+    width: 36px;
+    height: 36px;
+
+    svg {
+      font-size: 1.1rem;
+    }
+  `}
 `
 
 const EarningsAmount = styled.div`
@@ -156,18 +203,23 @@ const EarningsAmount = styled.div`
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
 
-  @media (min-width: 768px) {
+  ${media.md`
     font-size: 2.5rem;
-  }
+  `}
 
-  @media (min-width: 1024px) {
-    font-size: 3rem;
-  }
+  ${media.lg`
+    font-size: 2rem;
+    margin-bottom: 4px;
+  `}
 `
 
 const EarningsLabel = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 0.875rem;
+
+  ${media.lg`
+    font-size: 0.8rem;
+  `}
 `
 
 const StatsGrid = styled.div`
@@ -175,20 +227,19 @@ const StatsGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.md};
 
-  @media (min-width: 768px) {
+  ${media.md`
     grid-template-columns: repeat(3, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
-  }
+    gap: ${({ theme }) => theme.spacing.md};
+  `}
 
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
-  }
-
-  @media (min-width: 1280px) {
+  ${media.lg`
     grid-template-columns: repeat(5, 1fr);
-    gap: ${({ theme }) => theme.spacing.lg};
-  }
+    gap: ${({ theme }) => theme.spacing.sm};
+  `}
+
+  ${media.xl`
+    gap: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const StatCard = styled(Card)`
@@ -198,9 +249,14 @@ const StatCard = styled(Card)`
   justify-content: center;
   min-height: 100px;
 
-  @media (min-width: 1024px) {
-    min-height: 120px;
-  }
+  ${media.lg`
+    min-height: 85px;
+    padding: ${({ theme }) => theme.spacing.sm};
+  `}
+
+  ${media.xl`
+    padding: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const StatsContainer = styled.div`
@@ -214,6 +270,15 @@ const StatAmount = styled.div`
   font-weight: 600;
   color: ${({ color, theme }) => color || theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
+
+  ${media.lg`
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+  `}
+
+  ${media.xl`
+    font-size: 1.5rem;
+  `}
 `
 
 const StatLabel = styled.div`
@@ -227,6 +292,19 @@ const StatLabel = styled.div`
   svg {
     font-size: 1rem;
   }
+
+  ${media.lg`
+    font-size: 0.75rem;
+    gap: 4px;
+
+    svg {
+      font-size: 0.9rem;
+    }
+  `}
+
+  ${media.xl`
+    font-size: 0.875rem;
+  `}
 `
 
 const LoadingCard = styled(Card)`

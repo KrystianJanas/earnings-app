@@ -7,11 +7,9 @@ import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCirc
 import { format, addDays, subDays } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import { earningsAPI } from '../services/api'
-import { Card, Button, Input, Label } from '../styles/theme'
+import { Card, Button, Input, Label, media } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import ClientEntry from '../components/ClientEntry'
-
-// Debug media queries
 
 const AddEarningsContainer = styled.div`
   min-height: 100vh;
@@ -22,63 +20,80 @@ const AddEarningsContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
 
-  @media (min-width: 768px) {
+  ${media.md`
     padding: ${({ theme }) => theme.spacing.lg} 0;
     padding-bottom: 100px;
-  }
+  `}
+
+  ${media.lg`
+    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding-bottom: ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const Container = styled.div`
   max-width: 428px;
   margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.spacing.md};
+  padding: 0 ${({ theme }) => theme.spacing.sm};
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
 
-  @media (max-width: 480px) {
-    padding: 0 ${({ theme }) => theme.spacing.sm};
-  }
-
-  @media (min-width: 768px) {
-    max-width: 900px;
+  ${media.sm`
+    max-width: 640px;
     padding: 0 ${({ theme }) => theme.spacing.md};
-  }
+  `}
 
-  @media (min-width: 900px) {
+  ${media.md`
+    max-width: 768px;
+  `}
+
+  ${media.lg`
+    max-width: 1200px;
+    padding: 0 ${({ theme }) => theme.spacing.md};
+  `}
+
+  ${media.xl`
     max-width: 1300px;
-    padding: 0 ${({ theme }) => theme.spacing.md};
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1500px;
     padding: 0 ${({ theme }) => theme.spacing.lg};
-  }
+  `}
 `
 
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   text-align: center;
+
+  ${media.lg`
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const Title = styled.h1`
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
 
-  @media (max-width: 480px) {
+  ${media.md`
+    font-size: 1.75rem;
+  `}
+
+  ${media.lg`
     font-size: 1.5rem;
-  }
+  `}
 `
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 1.1rem;
+  font-size: 1rem;
 
-  @media (max-width: 480px) {
-    font-size: 1rem;
-  }
+  ${media.md`
+    font-size: 1.1rem;
+  `}
+
+  ${media.lg`
+    font-size: 0.95rem;
+  `}
 `
 
 const FormCard = styled(Card)`
@@ -86,20 +101,16 @@ const FormCard = styled(Card)`
   width: 100%;
   box-sizing: border-box;
 
-  @media (min-width: 768px) {
+  ${media.md`
     max-width: 700px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
-  }
+  `}
 
-  @media (min-width: 900px) {
-    max-width: 1200px;
-    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1400px;
-    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
-  }
+  ${media.lg`
+    max-width: 100%;
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
+    padding: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const FormGroup = styled.div`

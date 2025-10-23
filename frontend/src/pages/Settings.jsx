@@ -5,7 +5,7 @@ import { FiSettings, FiUsers, FiArrowRight, FiMail, FiLock, FiUser, FiSave, FiEy
 import { useMutation } from 'react-query';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Container as ThemeContainer, Card, Button, Input, Label } from '../styles/theme';
+import { Container as ThemeContainer, Card, Button, Input, Label, media } from '../styles/theme';
 import Navigation from '../components/Navigation';
 
 const SettingsContainer = styled.div`
@@ -13,11 +13,21 @@ const SettingsContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.md} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
+
+  ${media.lg`
+    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding-bottom: ${({ theme }) => theme.spacing.lg};
+  `}
 `;
 
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   text-align: center;
+
+  ${media.lg`
+    text-align: left;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `;
 
 const Title = styled.h1`
@@ -29,6 +39,11 @@ const Title = styled.h1`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
+
+  ${media.lg`
+    font-size: 1.75rem;
+    justify-content: flex-start;
+  `}
 `;
 
 const InfoCard = styled(Card)`
