@@ -147,20 +147,21 @@ export const Card = styled.div`
 `
 
 export const Button = styled.button`
-  background: ${({ variant, theme }) => 
+  background: ${({ variant, theme }) =>
     variant === 'outline' ? 'transparent' : theme.colors.primary};
-  color: ${({ variant, theme }) => 
+  color: ${({ variant, theme }) =>
     variant === 'outline' ? theme.colors.primary : theme.colors.text.primary};
   border: 2px solid ${({ theme }) => theme.colors.primary};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  padding: 8px 12px;
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.85rem;
   transition: all 0.2s ease;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
+  min-height: 36px;
 
   &:hover:not(:disabled) {
-    background: ${({ variant, theme }) => 
+    background: ${({ variant, theme }) =>
       variant === 'outline' ? theme.colors.primary : theme.colors.primaryHover};
     color: ${({ theme }) => theme.colors.text.primary};
     transform: translateY(-1px);
@@ -170,6 +171,12 @@ export const Button = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  ${media.md`
+    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+    font-size: 1rem;
+    min-height: 40px;
+  `}
 `
 
 export const Input = styled.input`

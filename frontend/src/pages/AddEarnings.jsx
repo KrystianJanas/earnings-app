@@ -394,7 +394,7 @@ const ModeButton = styled.button`
   ${media.sm`
     font-size: 0.9rem;
     padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-    min-height: 48px;
+    min-height: 40px;
   `}
 
   ${media.lg`
