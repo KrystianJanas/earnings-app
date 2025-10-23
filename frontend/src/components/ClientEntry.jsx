@@ -81,6 +81,13 @@ const PaymentMethodWrapper = styled.div`
   width: 100%;
 `
 
+const PaymentMethodHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+`
+
 const PaymentButtons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -138,12 +145,12 @@ const PaymentControlButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid ${({ theme, variant }) => 
+  width: 24px;
+  height: 24px;
+  border: 1px solid ${({ theme, variant }) =>
     variant === 'add' ? theme.colors.success : theme.colors.error};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  background: ${({ theme, variant }) => 
+  background: ${({ theme, variant }) =>
     variant === 'add' ? theme.colors.success : theme.colors.error};
   color: white;
   cursor: pointer;
@@ -154,7 +161,7 @@ const PaymentControlButton = styled.button`
   }
 
   svg {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 `
 
@@ -183,11 +190,15 @@ const ClientSearchInput = styled(Input)`
 const SearchIcon = styled.div`
   position: absolute;
   left: ${({ theme }) => theme.spacing.sm};
-  top: calc(50% + 10px);
+  top: 50%;
   transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.muted};
   font-size: 1rem;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-top: 10px;
 `
 
 const SearchResults = styled.div`
@@ -476,7 +487,29 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
             </AmountInputWrapper>
 
             <PaymentMethodWrapper>
-              <Label>Metoda płatności</Label>
+              <PaymentMethodHeader>
+                <Label style={{ marginBottom: 0 }}>Metoda płatności</Label>
+                <PaymentControlsWrapper>
+                  <PaymentControlButton
+                    type="button"
+                    variant="add"
+                    onClick={addPayment}
+                    title="Dodaj płatność"
+                  >
+                    <FiPlus />
+                  </PaymentControlButton>
+                  {payments.length > 1 && (
+                    <PaymentControlButton
+                      type="button"
+                      variant="remove"
+                      onClick={() => removePayment(paymentIndex)}
+                      title="Usuń płatność"
+                    >
+                      <FiMinus />
+                    </PaymentControlButton>
+                  )}
+                </PaymentControlsWrapper>
+              </PaymentMethodHeader>
               <PaymentButtons>
                 {PAYMENT_METHODS.map((method) => (
                   <PaymentButton
@@ -497,27 +530,6 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                 ))}
               </PaymentButtons>
             </PaymentMethodWrapper>
-
-            <PaymentControlsWrapper>
-              <PaymentControlButton
-                type="button"
-                variant="add"
-                onClick={addPayment}
-                title="Dodaj płatność"
-              >
-                <FiPlus />
-              </PaymentControlButton>
-              {payments.length > 1 && (
-                <PaymentControlButton
-                  type="button"
-                  variant="remove"
-                  onClick={() => removePayment(paymentIndex)}
-                  title="Usuń płatność"
-                >
-                  <FiMinus />
-                </PaymentControlButton>
-              )}
-            </PaymentControlsWrapper>
           </PaymentEntry>
         ))}
       </PaymentsSection>

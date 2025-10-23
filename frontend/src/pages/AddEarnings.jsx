@@ -100,11 +100,12 @@ const FormCard = styled(Card)`
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   box-sizing: border-box;
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.sm};
 
   ${media.md`
     max-width: 700px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+    padding: ${({ theme }) => theme.spacing.md};
   `}
 
   ${media.lg`
@@ -127,7 +128,7 @@ const FormGroup = styled.div`
 const DateSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: 8px;
 `
 
 const DateNavigation = styled.div`
@@ -141,8 +142,8 @@ const DateButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -162,20 +163,29 @@ const DateButton = styled.button`
   }
 
   svg {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
+
+  ${media.lg`
+    width: 40px;
+    height: 40px;
+    svg {
+      font-size: 1.1rem;
+    }
+  `}
 `
 
 const DateDisplay = styled.div`
   flex: 1;
   text-align: center;
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 8px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 500;
-  min-height: 40px;
+  font-size: 0.9rem;
+  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,6 +197,12 @@ const DateDisplay = styled.div`
     background: ${({ theme }) => theme.colors.primary}10;
     border-color: ${({ theme }) => theme.colors.primary}50;
   }
+
+  ${media.lg`
+    min-height: 40px;
+    padding: ${({ theme }) => theme.spacing.sm};
+    font-size: 1rem;
+  `}
 `
 
 const DateInputWrapper = styled.div`
@@ -317,16 +333,16 @@ const ModeToggle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  padding: ${({ theme }) => theme.spacing.sm};
+  gap: 8px;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: 8px;
   background: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
 
   ${media.sm`
-    gap: ${({ theme }) => theme.spacing.md};
-    padding: ${({ theme }) => theme.spacing.md};
+    gap: ${({ theme }) => theme.spacing.sm};
+    padding: ${({ theme }) => theme.spacing.sm};
   `}
 
   ${media.lg`
@@ -335,6 +351,7 @@ const ModeToggle = styled.div`
     margin-left: auto;
     margin-right: auto;
     margin-bottom: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.sm};
   `}
 `
 
@@ -342,7 +359,7 @@ const ModeButton = styled.button`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding: 8px 12px;
   border: 1px solid ${({ active, disabled, theme }) =>
     disabled ? theme.colors.border + '50' :
     active ? theme.colors.primary : theme.colors.border};
@@ -360,8 +377,13 @@ const ModeButton = styled.button`
   flex: 1;
   justify-content: center;
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
-  min-height: 44px;
+  min-height: 36px;
   width: 100%;
+
+  ${media.lg`
+    min-height: 44px;
+    padding: ${({ theme }) => theme.spacing.sm};
+  `}
 
   ${media.sm`
     font-size: 0.9rem;

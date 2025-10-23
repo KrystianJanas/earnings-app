@@ -33,7 +33,7 @@ const ResponsiveContainer = styled(Container)`
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   text-align: center;
 
   ${media.lg`
@@ -45,6 +45,20 @@ const Header = styled.div`
 `
 
 const HeaderContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+
+  ${media.lg`
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    gap: 0;
+  `}
+`
+
+const HeaderTextContent = styled.div`
   ${media.lg`
     text-align: left;
   `}
@@ -71,7 +85,6 @@ const SubText = styled.p`
 `
 
 const PeriodSelector = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
   display: flex;
   justify-content: center;
 
@@ -85,8 +98,8 @@ const PeriodSelect = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
-  padding: 8px 32px 8px 12px;
-  font-size: 0.9rem;
+  padding: 6px 28px 6px 10px;
+  font-size: 0.8rem;
   cursor: pointer;
   appearance: none;
   position: relative;
@@ -268,26 +281,16 @@ const Section = styled.div`
 `
 
 const StatsGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.sm};
-
-  & > * {
-    flex: 0 0 calc(50% - 6px);
-    min-width: 0;
-  }
 
   ${media.md`
     gap: ${({ theme }) => theme.spacing.md};
-    justify-content: ${({ columns }) => columns === 3 ? 'flex-start' : 'center'};
-
-    & > * {
-      flex: 0 0 ${({ columns }) => {
-        if (columns === 3) return 'calc(33.333% - 16px)';
-        return 'calc(50% - 12px)';
-      }};
-    }
+    grid-template-columns: ${({ columns }) => {
+      if (columns === 3) return 'repeat(3, 1fr)';
+      return '1fr 1fr';
+    }};
   `}
 
   ${media.lg`
@@ -478,25 +481,27 @@ const Dashboard = () => {
       <ResponsiveContainer>
         <Header>
           <HeaderContent>
-            <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
-            <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
-          </HeaderContent>
+            <HeaderTextContent>
+              <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
+              <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
+            </HeaderTextContent>
 
-          <PeriodSelector>
-            <SelectWrapper>
-              <PeriodSelect
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value)}
-              >
-                <option value="day">Dzisiaj</option>
-                <option value="week">Ten tydzień</option>
-                <option value="month">Ten miesiąc</option>
-                <option value="prev-month">Poprzedni miesiąc</option>
-                <option value="year">Ten rok</option>
-                <option value="all">Od początku</option>
-              </PeriodSelect>
-            </SelectWrapper>
-          </PeriodSelector>
+            <PeriodSelector>
+              <SelectWrapper>
+                <PeriodSelect
+                  value={selectedPeriod}
+                  onChange={(e) => setSelectedPeriod(e.target.value)}
+                >
+                  <option value="day">Dzisiaj</option>
+                  <option value="week">Ten tydzień</option>
+                  <option value="month">Ten miesiąc</option>
+                  <option value="prev-month">Poprzedni miesiąc</option>
+                  <option value="year">Ten rok</option>
+                  <option value="all">Od początku</option>
+                </PeriodSelect>
+              </SelectWrapper>
+            </PeriodSelector>
+          </HeaderContent>
         </Header>
 
         <motion.div
