@@ -33,7 +33,7 @@ const ResponsiveContainer = styled(Container)`
   `}
 `
 
-const Header = styled.div`
+const DashboardHeader = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   text-align: center;
 
@@ -45,7 +45,7 @@ const Header = styled.div`
   `}
 `
 
-const HeaderContent = styled.div`
+const DashboardHeaderContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -487,7 +487,7 @@ const Dashboard = () => {
       <Header periodSelector={periodSelectorElement} />
       <ResponsiveContainer>
         <div style={{ marginBottom: '1rem' }}>
-          <HeaderContent>
+          <DashboardHeaderContent>
             <HeaderTextContent>
               <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
               <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
@@ -496,7 +496,7 @@ const Dashboard = () => {
             <PeriodSelector>
               {periodSelectorElement}
             </PeriodSelector>
-          </HeaderContent>
+          </DashboardHeaderContent>
         </div>
 
         <motion.div
