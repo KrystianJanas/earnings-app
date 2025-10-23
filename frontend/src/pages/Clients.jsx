@@ -564,7 +564,7 @@ const Clients = () => {
                     </StatItem>
                     <StatItem>
                       <StatValue color="#10b981">
-                        {(client.total_spent || 0).toFixed(2)} zł
+                        {(parseFloat(client.total_spent) || 0).toFixed(2)} zł
                       </StatValue>
                       <StatLabel>Wydała</StatLabel>
                     </StatItem>
@@ -657,14 +657,14 @@ const Clients = () => {
                     </StatItem>
                     <StatItem>
                       <StatValue color="#10b981">
-                        {(selectedClient.total_spent || 0).toFixed(2)} zł
+                        {(parseFloat(selectedClient.total_spent) || 0).toFixed(2)} zł
                       </StatValue>
                       <StatLabel>Łącznie wydała</StatLabel>
                     </StatItem>
                     <StatItem>
                       <StatValue color="#8b5cf6">
                         {selectedClient.total_visits > 0
-                          ? ((selectedClient.total_spent || 0) / selectedClient.total_visits).toFixed(2)
+                          ? ((parseFloat(selectedClient.total_spent) || 0) / selectedClient.total_visits).toFixed(2)
                           : '0.00'} zł
                       </StatValue>
                       <StatLabel>Średnio za wizytę</StatLabel>
@@ -692,7 +692,7 @@ const Clients = () => {
                               {formatDate(transaction.date)}
                             </TransactionDate>
                             <TransactionAmount>
-                              {(transaction.amount || 0).toFixed(2)} zł
+                              {(parseFloat(transaction.amount) || 0).toFixed(2)} zł
                             </TransactionAmount>
                           </TransactionHeader>
 
@@ -700,7 +700,7 @@ const Clients = () => {
                             <PaymentMethods>
                               {transaction.payments.map((payment, idx) => (
                                 <span key={idx}>
-                                  {getPaymentMethodLabel(payment.method)}: {payment.amount.toFixed(2)} zł
+                                  {getPaymentMethodLabel(payment.method)}: {(parseFloat(payment.amount) || 0).toFixed(2)} zł
                                   {idx < transaction.payments.length - 1 && ' | '}
                                 </span>
                               ))}
