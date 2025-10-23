@@ -135,11 +135,13 @@ const EarningsCard = styled(Card)`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  text-align: center;
   min-height: 100px;
 
   ${media.lg`
-    min-height: 90px;
-    padding: ${({ theme }) => theme.spacing.md};
+    min-height: 120px;
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 
   &::before {
@@ -156,8 +158,10 @@ const EarningsCard = styled(Card)`
 const EarningsHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  width: 100%;
 
   ${media.lg`
     margin-bottom: ${({ theme }) => theme.spacing.sm};
@@ -170,7 +174,7 @@ const EarningsTitle = styled.h3`
   color: ${({ theme }) => theme.colors.text.primary};
 
   ${media.lg`
-    font-size: 0.95rem;
+    font-size: 1rem;
   `}
 `
 
@@ -223,6 +227,23 @@ const EarningsLabel = styled.div`
   `}
 `
 
+const Section = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.lg};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  ${media.lg`
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    padding-bottom: ${({ theme }) => theme.spacing.md};
+  `}
+`
+
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -234,7 +255,7 @@ const StatsGrid = styled.div`
   `}
 
   ${media.lg`
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: ${({ columns }) => columns ? `repeat(${columns}, 1fr)` : 'repeat(3, 1fr)'};
     gap: ${({ theme }) => theme.spacing.sm};
   `}
 
@@ -424,122 +445,133 @@ const Dashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <AllCardsGrid>
-            <EarningsCard color="#6366f1">
-              <EarningsHeader>
-                <EarningsTitle>Łączny obrót</EarningsTitle>
-                <IconWrapper color="#6366f1">
+          {/* Sekcja 1: Łączny obrót */}
+          <Section>
+            <AllCardsGrid>
+              <EarningsCard color="#6366f1">
+                <EarningsHeader>
+                  <IconWrapper color="#6366f1">
+                    💰
+                  </IconWrapper>
+                  <EarningsTitle>Łączny obrót</EarningsTitle>
+                </EarningsHeader>
+                <EarningsAmount>
+                  {(earnings.totalEarnings || 0).toFixed(2)} zł
+                </EarningsAmount>
+                <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
+              </EarningsCard>
+            </AllCardsGrid>
+          </Section>
+
+          {/* Sekcja 2: Statystyki pracy */}
+          <Section>
+            <StatsGrid columns={3}>
+              <StatCard>
+                <StatAmount color="#06b6d4">
+                  {(earnings.hoursWorked || 0).toFixed(2)} h
+                </StatAmount>
+                <StatLabel>
+                  <FiClock />
+                  Przepracowane godziny
+                </StatLabel>
+              </StatCard>
+
+              <StatCard>
+                <StatAmount color="#8b5cf6">
+                  {earnings.clientsCount || 0}
+                </StatAmount>
+                <StatLabel>
+                  <FiUsers />
+                  Klientek
+                </StatLabel>
+              </StatCard>
+
+              <StatCard>
+                <StatAmount color="#ef4444">
+                  {(earnings.estimatedEarnings || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
                   💰
-                </IconWrapper>
-              </EarningsHeader>
-              <EarningsAmount>
-                {(earnings.totalEarnings || 0).toFixed(2)} zł
-              </EarningsAmount>
-              <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
-            </EarningsCard>
-          </AllCardsGrid>
+                  Prognozowana wypłata
+                </StatLabel>
+              </StatCard>
+            </StatsGrid>
+          </Section>
 
-          <StatsGrid>
-            <StatCard>
-              <StatAmount color="#10b981">
-                {(earnings.cashAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                💵
-                Gotówka
-              </StatLabel>
-            </StatCard>
+          {/* Sekcja 3: Metody płatności */}
+          <Section>
+            <StatsGrid columns={4}>
+              <StatCard>
+                <StatAmount color="#10b981">
+                  {(earnings.cashAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  💵
+                  Gotówka
+                </StatLabel>
+              </StatCard>
 
-            <StatCard>
-              <StatAmount color="#3b82f6">
-                {(earnings.cardAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                <FiCreditCard />
-                Karta
-              </StatLabel>
-            </StatCard>
+              <StatCard>
+                <StatAmount color="#3b82f6">
+                  {(earnings.cardAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  <FiCreditCard />
+                  Karta
+                </StatLabel>
+              </StatCard>
 
-            <StatCard>
-              <StatAmount color="#9333ea">
-                {(earnings.blikAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                📱
-                BLIK
-              </StatLabel>
-            </StatCard>
+              <StatCard>
+                <StatAmount color="#9333ea">
+                  {(earnings.blikAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  📱
+                  BLIK
+                </StatLabel>
+              </StatCard>
 
-            <StatCard>
-              <StatAmount color="#ea580c">
-                {(earnings.prepaidAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                💰
-                Przedpłata
-              </StatLabel>
-            </StatCard>
+              <StatCard>
+                <StatAmount color="#ea580c">
+                  {(earnings.prepaidAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  💰
+                  Przedpłata
+                </StatLabel>
+              </StatCard>
 
-            <StatCard>
-              <StatAmount color="#0891b2">
-                {(earnings.transferAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                🏦
-                Przelew
-              </StatLabel>
-            </StatCard>
+              <StatCard>
+                <StatAmount color="#0891b2">
+                  {(earnings.transferAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  🏦
+                  Przelew
+                </StatLabel>
+              </StatCard>
 
-            <StatCard>
-              <StatAmount color="#dc2626">
-                {(earnings.freeAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                🎁
-                Gratis
-              </StatLabel>
-            </StatCard>
+              <StatCard>
+                <StatAmount color="#dc2626">
+                  {(earnings.freeAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  🎁
+                  Gratis
+                </StatLabel>
+              </StatCard>
 
-            <StatCard>
-              <StatAmount color="#f59e0b">
-                {(earnings.tipsAmount || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                <FiGift />
-                Napiwki
-              </StatLabel>
-            </StatCard>
-
-            <StatCard>
-              <StatAmount color="#8b5cf6">
-                {earnings.clientsCount || 0}
-              </StatAmount>
-              <StatLabel>
-                <FiUsers />
-                Klientek
-              </StatLabel>
-            </StatCard>
-
-            <StatCard>
-              <StatAmount color="#06b6d4">
-                {(earnings.hoursWorked || 0).toFixed(2)} h
-              </StatAmount>
-              <StatLabel>
-                <FiClock />
-                Przepracowane godziny
-              </StatLabel>
-            </StatCard>
-
-            <StatCard>
-              <StatAmount color="#ef4444">
-                {(earnings.estimatedEarnings || 0).toFixed(2)} zł
-              </StatAmount>
-              <StatLabel>
-                💰
-                Szacunkowy zarobek
-              </StatLabel>
-            </StatCard>
-          </StatsGrid>
+              <StatCard>
+                <StatAmount color="#f59e0b">
+                  {(earnings.tipsAmount || 0).toFixed(2)} zł
+                </StatAmount>
+                <StatLabel>
+                  <FiGift />
+                  Napiwki
+                </StatLabel>
+              </StatCard>
+            </StatsGrid>
+          </Section>
         </motion.div>
       </ResponsiveContainer>
       <Navigation />
