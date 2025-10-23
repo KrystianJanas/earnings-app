@@ -13,7 +13,7 @@ import ClientEntry from '../components/ClientEntry'
 
 const AddEarningsContainer = styled.div`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.md} 0;
+  padding: ${({ theme }) => theme.spacing.sm} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
   overflow-x: hidden;
@@ -21,7 +21,7 @@ const AddEarningsContainer = styled.div`
   box-sizing: border-box;
 
   ${media.md`
-    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding: ${({ theme }) => theme.spacing.md} 0;
     padding-bottom: 100px;
   `}
 
@@ -60,7 +60,7 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   text-align: center;
 
   ${media.lg`
@@ -69,13 +69,13 @@ const Header = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 4px;
 
   ${media.md`
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   `}
 
   ${media.lg`
@@ -85,10 +85,10 @@ const Title = styled.h1`
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 1rem;
+  font-size: 0.875rem;
 
   ${media.md`
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   `}
 
   ${media.lg`
@@ -97,9 +97,10 @@ const SubText = styled.p`
 `
 
 const FormCard = styled(Card)`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   box-sizing: border-box;
+  padding: ${({ theme }) => theme.spacing.md};
 
   ${media.md`
     max-width: 700px;
@@ -114,9 +115,13 @@ const FormCard = styled(Card)`
 `
 
 const FormGroup = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   box-sizing: border-box;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
 
 const DateSection = styled.div`

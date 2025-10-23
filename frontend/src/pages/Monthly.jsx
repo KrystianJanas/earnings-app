@@ -10,7 +10,7 @@ import Navigation from '../components/Navigation'
 
 const MonthlyContainer = styled.div`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.md} 0;
+  padding: ${({ theme }) => theme.spacing.sm} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
 
@@ -33,7 +33,7 @@ const ResponsiveContainer = styled(Container)`
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   text-align: center;
 
   ${media.lg`
@@ -43,10 +43,10 @@ const Header = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 4px;
 
   ${media.lg`
     font-size: 1.75rem;
@@ -57,8 +57,12 @@ const MonthSelector = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+
+  ${media.lg`
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const MonthButton = styled.button`
@@ -90,20 +94,29 @@ const MonthButton = styled.button`
 `
 
 const CurrentMonth = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text.primary};
-  min-width: 180px;
+  min-width: 160px;
   text-align: center;
+
+  ${media.lg`
+    font-size: 1.2rem;
+    min-width: 180px;
+  `}
 `
 
 const SummaryGrid = styled.div`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   grid-template-columns: 1fr;
   max-width: 800px;
-  margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
+  margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+
+  ${media.lg`
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const MainStatsCard = styled(Card)`
@@ -124,7 +137,11 @@ const MainStatsCard = styled(Card)`
 const DetailedStatsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.sm};
+
+  ${media.lg`
+    gap: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const SummaryCard = styled(Card)`

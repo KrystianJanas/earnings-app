@@ -10,7 +10,7 @@ import Navigation from '../components/Navigation'
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.md} 0;
+  padding: ${({ theme }) => theme.spacing.sm} 0;
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
 
@@ -33,7 +33,7 @@ const ResponsiveContainer = styled(Container)`
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   text-align: center;
 
   ${media.lg`
@@ -51,10 +51,10 @@ const HeaderContent = styled.div`
 `
 
 const WelcomeText = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 4px;
 
   ${media.lg`
     font-size: 1.75rem;
@@ -63,7 +63,7 @@ const WelcomeText = styled.h1`
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 1rem;
+  font-size: 0.875rem;
 
   ${media.lg`
     font-size: 0.95rem;
@@ -71,7 +71,7 @@ const SubText = styled.p`
 `
 
 const PeriodSelector = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   display: flex;
   justify-content: center;
 
@@ -85,8 +85,8 @@ const PeriodSelect = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ theme }) => theme.colors.text.primary};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-  font-size: 1rem;
+  padding: 8px 32px 8px 12px;
+  font-size: 0.9rem;
   cursor: pointer;
   appearance: none;
   position: relative;
@@ -132,11 +132,11 @@ const SelectWrapper = styled.div`
 
 const AllCardsGrid = styled.div`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   grid-template-columns: 1fr;
   max-width: 600px;
-  margin: 0 auto ${({ theme }) => theme.spacing.lg} auto;
+  margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
 
   ${media.md`
     gap: ${({ theme }) => theme.spacing.md};
@@ -158,7 +158,8 @@ const EarningsCard = styled(Card)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100px;
+  min-height: 80px;
+  padding: ${({ theme }) => theme.spacing.md};
 
   ${media.lg`
     min-height: 80px;
@@ -180,8 +181,8 @@ const EarningsHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
   width: 100%;
 
   ${media.lg`
@@ -190,7 +191,7 @@ const EarningsHeader = styled.div`
 `
 
 const EarningsTitle = styled.h3`
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text.primary};
 
@@ -200,17 +201,18 @@ const EarningsTitle = styled.h3`
 `
 
 const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: ${({ color, theme }) => color}20;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${({ color }) => color};
+  font-size: 1rem;
 
   svg {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   ${media.lg`
@@ -224,13 +226,13 @@ const IconWrapper = styled.div`
 `
 
 const EarningsAmount = styled.div`
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 2px;
 
   ${media.md`
-    font-size: 2.5rem;
+    font-size: 2rem;
   `}
 
   ${media.lg`
@@ -241,7 +243,7 @@ const EarningsAmount = styled.div`
 
 const EarningsLabel = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 
   ${media.lg`
     font-size: 0.8rem;
@@ -249,8 +251,8 @@ const EarningsLabel = styled.div`
 `
 
 const Section = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  padding-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding-bottom: ${({ theme }) => theme.spacing.md};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
   &:last-child {
@@ -266,13 +268,26 @@ const Section = styled.div`
 `
 
 const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+
+  & > * {
+    flex: 0 0 calc(50% - 6px);
+    min-width: 0;
+  }
 
   ${media.md`
-    grid-template-columns: repeat(3, 1fr);
     gap: ${({ theme }) => theme.spacing.md};
+    justify-content: ${({ columns }) => columns === 3 ? 'flex-start' : 'center'};
+
+    & > * {
+      flex: 0 0 ${({ columns }) => {
+        if (columns === 3) return 'calc(33.333% - 16px)';
+        return 'calc(50% - 12px)';
+      }};
+    }
   `}
 
   ${media.lg`
@@ -310,7 +325,8 @@ const StatCard = styled(Card)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100px;
+  min-height: 85px;
+  padding: ${({ theme }) => theme.spacing.sm};
 
   ${media.lg`
     min-height: 85px;
@@ -329,10 +345,10 @@ const StatsContainer = styled.div`
 `
 
 const StatAmount = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: ${({ color, theme }) => color || theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 4px;
 
   ${media.lg`
     font-size: 1.25rem;
@@ -346,14 +362,14 @@ const StatAmount = styled.div`
 
 const StatLabel = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: 4px;
 
   svg {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   ${media.lg`
