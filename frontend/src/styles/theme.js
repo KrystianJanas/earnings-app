@@ -1,4 +1,23 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle, css } from 'styled-components'
+
+// Breakpoints for responsive design
+export const breakpoints = {
+  xs: 0,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  '2xl': 1536
+}
+
+// Media query helpers
+export const media = {
+  sm: (...args) => css`@media (min-width: ${breakpoints.sm}px) { ${css(...args)} }`,
+  md: (...args) => css`@media (min-width: ${breakpoints.md}px) { ${css(...args)} }`,
+  lg: (...args) => css`@media (min-width: ${breakpoints.lg}px) { ${css(...args)} }`,
+  xl: (...args) => css`@media (min-width: ${breakpoints.xl}px) { ${css(...args)} }`,
+  '2xl': (...args) => css`@media (min-width: ${breakpoints['2xl']}px) { ${css(...args)} }`
+}
 
 export const theme = {
   colors: {
@@ -35,7 +54,9 @@ export const theme = {
     sm: '0 1px 2px 0 rgba(0, 0, 0, 0.5)',
     md: '0 4px 6px -1px rgba(0, 0, 0, 0.5)',
     lg: '0 10px 15px -3px rgba(0, 0, 0, 0.5)'
-  }
+  },
+  breakpoints,
+  media
 }
 
 export const GlobalStyles = createGlobalStyle`
@@ -97,6 +118,24 @@ export const Container = styled.div`
   margin: 0 auto;
   padding: 0 ${({ theme }) => theme.spacing.sm};
   width: 100%;
+
+  ${media.sm`
+    max-width: 640px;
+  `}
+
+  ${media.md`
+    max-width: 768px;
+    padding: 0 ${({ theme }) => theme.spacing.md};
+  `}
+
+  ${media.lg`
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.lg};
+  `}
+
+  ${media.xl`
+    max-width: 1280px;
+  `}
 `
 
 export const Card = styled.div`

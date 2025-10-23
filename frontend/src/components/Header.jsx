@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { FiChevronDown, FiUsers, FiLogOut, FiPlus } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import CreateCompany from './CreateCompany'
+import { media } from '../styles/theme'
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -14,6 +15,10 @@ const HeaderContainer = styled.header`
   padding: 1rem;
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  ${media.lg`
+    display: none;
+  `}
 `
 
 const HeaderContent = styled.div`
@@ -22,6 +27,14 @@ const HeaderContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  ${media.sm`
+    max-width: 640px;
+  `}
+
+  ${media.md`
+    max-width: 768px;
+  `}
 `
 
 const CompanyInfo = styled.div`

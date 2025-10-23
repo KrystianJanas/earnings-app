@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
+import { media } from '../styles/theme'
 
 const NavContainer = styled.nav`
   position: fixed;
@@ -13,6 +14,10 @@ const NavContainer = styled.nav`
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   padding: 8px ${({ theme }) => theme.spacing.sm};
   z-index: 100;
+
+  ${media.lg`
+    display: none;
+  `}
 `
 
 const NavContent = styled.div`
