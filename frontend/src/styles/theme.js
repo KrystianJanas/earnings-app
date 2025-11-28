@@ -293,7 +293,9 @@ export const GradientText = styled.span`
   background-clip: text;
 `
 
-export const Button = styled.button`
+export const Button = styled.button.attrs(({ fullWidth }) => ({
+  // Remove fullWidth from DOM to prevent React warning
+}))`
   display: inline-flex;
   align-items: center;
   justify-content: center;
