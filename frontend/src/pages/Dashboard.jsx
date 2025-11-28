@@ -7,7 +7,6 @@ import { earningsAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import { Container, Card, GlassCard, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
-import Header from '../components/Header'
 
 const DashboardContainer = styled(motion.div)`
   min-height: 100vh;
@@ -497,10 +496,10 @@ const Dashboard = () => {
     return (
       <DashboardContainer>
         <Container>
-          <Header>
+          <DashboardHeader>
             <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
             <SubText>Oto przegląd Twoich zarobków</SubText>
-          </Header>
+          </DashboardHeader>
           
           <LoadingCard>
             Ładowanie Twoich zarobków...
@@ -515,10 +514,10 @@ const Dashboard = () => {
     return (
       <DashboardContainer>
         <Container>
-          <Header>
+          <DashboardHeader>
             <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
             <SubText>Oto przegląd Twoich zarobków</SubText>
-          </Header>
+          </DashboardHeader>
           
           <ErrorCard>
             <p>Nie udało się załadować danych o zarobkach</p>
