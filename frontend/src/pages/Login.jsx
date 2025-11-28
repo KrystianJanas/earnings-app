@@ -27,12 +27,16 @@ const BackgroundDecor = styled.div`
 
 const LoginCard = styled(GlassCard)`
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   position: relative;
   z-index: 1;
 
   ${media.md`
-    max-width: 460px;
+    max-width: 560px;
+  `}
+
+  ${media.lg`
+    max-width: 600px;
   `}
 `
 
