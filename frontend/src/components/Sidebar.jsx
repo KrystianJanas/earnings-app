@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck } from 'react-icons/fi'
+import { motion } from 'framer-motion'
+import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck, FiArrowRight } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { media } from '../styles/theme'
 import CreateCompany from './CreateCompany'
@@ -16,34 +17,39 @@ const SidebarContainer = styled.aside`
     left: 0;
     top: 0;
     bottom: 0;
-    width: 280px;
-    background: ${({ theme }) => theme.colors.cardBg};
-    backdrop-filter: ${({ theme }) => theme.blur.sm};
-    -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
+    width: 300px;
+    background: linear-gradient(180deg, ${({ theme }) => theme.colors.cardBg} 0%, ${({ theme }) => theme.colors.backgroundSecondary} 100%);
+    backdrop-filter: ${({ theme }) => theme.blur.md};
+    -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
     border-right: 1px solid ${({ theme }) => theme.colors.borderLight};
-    padding: ${({ theme }) => theme.spacing.lg} 0;
+    padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.md};
     z-index: 100;
-    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 12px 0 48px rgba(0, 0, 0, 0.25);
   `}
 `
 
 const Logo = styled.div`
-  padding: 0 ${({ theme }) => theme.spacing.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.lg};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
 
   h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary} 0%, ${({ theme }) => theme.colors.secondary} 100%);
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: ${({ theme }) => theme.colors.gradient.primary};
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: -0.5px;
   }
 
   p {
-    font-size: 0.875rem;
-    color: ${({ theme }) => theme.colors.text.secondary};
-    margin-top: 4px;
+    font-size: 0.8rem;
+    color: ${({ theme }) => theme.colors.text.muted};
+    margin-top: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 `
 
@@ -146,36 +152,87 @@ const Overlay = styled.div`
 const NavList = styled.nav`
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 0 ${({ theme }) => theme.spacing.md};
+  gap: 8px;
   flex: 1;
 `
 
-const NavItem = styled(NavLink)`
+const NavSection = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  &:first-child {
+    margin-top: 0;
+  }
+`
+
+const NavSectionTitle = styled.div`
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: ${({ theme }) => theme.spacing.md} 0;
+  padding-left: ${({ theme }) => theme.spacing.sm};
+`
+
+const NavItem = styled(motion(NavLink))`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: 14px 16px;
   color: ${({ theme }) => theme.colors.text.secondary};
   text-decoration: none;
-  transition: all 0.2s ease;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-weight: 500;
   font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: ${({ theme }) => theme.colors.gradient.primary};
+    transform: scaleY(0);
+    transition: transform ${({ theme }) => theme.transitions.normal};
+  }
 
   &.active {
-    background: ${({ theme }) => theme.colors.surface};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%);
     color: ${({ theme }) => theme.colors.primary};
+    box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.15);
+
+    &::before {
+      transform: scaleY(1);
+    }
+
+    svg {
+      color: ${({ theme }) => theme.colors.secondary};
+    }
   }
 
   &:hover {
-    background: ${({ theme }) => theme.colors.surface};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
     color: ${({ theme }) => theme.colors.text.primary};
+    transform: translateX(4px);
+
+    svg {
+      color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   svg {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     min-width: 24px;
+    transition: all ${({ theme }) => theme.transitions.normal};
+    color: ${({ theme }) => theme.colors.text.muted};
+  }
+
+  span {
+    transition: all ${({ theme }) => theme.transitions.normal};
   }
 `
 
@@ -269,37 +326,47 @@ const Sidebar = () => {
       </CompanySelector>
 
       <NavList>
-        <NavItem to="/" end>
-          <FiHome />
-          <span>Strona główna</span>
-        </NavItem>
+        <NavSection>
+          <NavItem to="/" end whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+            <FiHome />
+            <span>Strona główna</span>
+          </NavItem>
+        </NavSection>
 
-        <NavItem to="/add-earnings">
-          <FiPlus />
-          <span>Dodaj obrót</span>
-        </NavItem>
+        <NavSection>
+          <NavSectionTitle>Zarządzanie</NavSectionTitle>
+          <NavItem to="/add-earnings" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+            <FiPlus />
+            <span>Dodaj obrót</span>
+          </NavItem>
 
-        <NavItem to="/monthly">
-          <FiBarChart />
-          <span>Podsumowanie</span>
-        </NavItem>
+          <NavItem to="/monthly" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+            <FiBarChart />
+            <span>Podsumowanie</span>
+          </NavItem>
 
-        <NavItem to="/clients">
-          <FiUserCheck />
-          <span>Klientki</span>
-        </NavItem>
+          <NavItem to="/clients" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+            <FiUserCheck />
+            <span>Klientki</span>
+          </NavItem>
+        </NavSection>
 
         {isOwner && (
-          <NavItem to="/employees">
-            <FiUsers />
-            <span>Pracownicy</span>
-          </NavItem>
+          <NavSection>
+            <NavSectionTitle>Admin</NavSectionTitle>
+            <NavItem to="/employees" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+              <FiUsers />
+              <span>Pracownicy</span>
+            </NavItem>
+          </NavSection>
         )}
 
-        <NavItem to="/settings">
-          <FiSettings />
-          <span>Ustawienia</span>
-        </NavItem>
+        <NavSection style={{ marginTop: 'auto', marginBottom: 0 }}>
+          <NavItem to="/settings" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+            <FiSettings />
+            <span>Ustawienia</span>
+          </NavItem>
+        </NavSection>
       </NavList>
     </SidebarContainer>
   )
