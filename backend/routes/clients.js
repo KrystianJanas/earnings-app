@@ -73,13 +73,15 @@ router.get('/:id', async (req, res) => {
 // Create new client
 router.post('/', [
   body('fullName').isString().isLength({ min: 2, max: 255 }).trim(),
-  body('phone').optional().isString().isLength({ max: 20 }).trim(),
-  body('email').optional().isEmail().normalizeEmail(),
-  body('notes').optional().isString().isLength({ max: 1000 }).trim()
+  body('phone').optional({ checkFalsy: true }).isString().isLength({ max: 20 }).trim(),
+  body('email').optional({ checkFalsy: true }).isEmail().normalizeEmail(),
+  body('notes').optional({ checkFalsy: true }).isString().isLength({ max: 1000 }).trim()
 ], async (req, res) => {
   try {
+    console.log('📥 Creating client, received data:', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.error('❌ Client validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
