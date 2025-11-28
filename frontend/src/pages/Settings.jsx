@@ -5,7 +5,7 @@ import { FiSettings, FiUsers, FiArrowRight, FiMail, FiLock, FiUser, FiSave, FiEy
 import { useMutation } from 'react-query';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Container as ThemeContainer, Card, Button, Input, Label, media } from '../styles/theme';
+import { Container as ThemeContainer, Card, GlassCard, Button, Input, Label, media, GradientText } from '../styles/theme';
 import Navigation from '../components/Navigation';
 
 const SettingsContainer = styled.div`
@@ -33,7 +33,10 @@ const Header = styled.div`
 const Title = styled.h1`
   font-size: 1.5rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   display: flex;
   align-items: center;
@@ -46,10 +49,11 @@ const Title = styled.h1`
   `}
 `;
 
-const InfoCard = styled(Card)`
+const InfoCard = styled(GlassCard)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
   text-align: center;
   padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
 `;
 
 const InfoText = styled.p`
@@ -78,8 +82,9 @@ const FormGroup = styled.div`
   gap: ${({ theme }) => theme.spacing.xs};
 `;
 
-const SectionCard = styled(Card)`
+const SectionCard = styled(GlassCard)`
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
 `;
 
 const SectionTitle = styled.h2`

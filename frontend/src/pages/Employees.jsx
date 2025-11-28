@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { FiUsers, FiEdit3, FiDollarSign, FiTrendingUp, FiCalendar, FiClock, FiBarChart2, FiMail, FiX, FiSend } from 'react-icons/fi'
 import { companiesAPI, employeesAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import { Container, Card, Button, media } from '../styles/theme'
+import { Container, Card, GlassCard, Button, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
 
 const EmployeesContainer = styled.div`
@@ -45,7 +45,10 @@ const Header = styled.div`
 const Title = styled.h1`
   font-size: 1.5rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: ${({ theme }) => theme.spacing.xs};
 
   ${media.lg`
@@ -69,19 +72,21 @@ const EmployeeList = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 
-const EmployeeCard = styled(Card)`
+const EmployeeCard = styled(GlassCard)`
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
   position: relative;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: ${({ theme }) => theme.shadows.glow};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
   }
 
-  ${({ isSelected }) => isSelected && `
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  ${({ isSelected, theme }) => isSelected && `
+    border-color: ${theme.colors.primary};
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
   `}
 `
 
