@@ -13,7 +13,7 @@ import ClientEntry from '../components/ClientEntry'
 
 const AddEarningsContainer = styled(motion.div)`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.sm} 0;
+  padding: 0;
   padding-bottom: 100px;
   background: linear-gradient(135deg, ${({ theme }) => theme.colors.background} 0%, ${({ theme }) => theme.colors.backgroundSecondary} 100%);
   overflow-x: hidden;
@@ -33,19 +33,15 @@ const AddEarningsContainer = styled(motion.div)`
 
 const Container = styled.div`
   max-width: 100%;
-  margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.spacing.sm};
+  margin: 0;
+  padding: 0;
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
 
-  ${media.sm`
-    max-width: 100%;
-    padding: 0 ${({ theme }) => theme.spacing.md};
-  `}
-
   ${media.md`
     max-width: 768px;
+    margin: 0 auto;
     padding: 0 ${({ theme }) => theme.spacing.lg};
   `}
 
@@ -103,27 +99,32 @@ const SubText = styled.p`
 `
 
 const FormCard = styled(motion(GlassCard))`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  margin: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: ${({ theme }) => theme.spacing.xl};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
-  transition: all ${({ theme }) => theme.transitions.normal};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
-
-  &:hover {
-    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.12) 100%);
-  }
+  padding: ${({ theme }) => theme.spacing.sm};
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 
   ${media.md`
     max-width: 750px;
     margin: 0 auto ${({ theme }) => theme.spacing.xl} auto;
     padding: ${({ theme }) => theme.spacing.xl};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+    backdrop-filter: ${({ theme }) => theme.blur.md};
+    -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+    border: 1px solid ${({ theme }) => theme.colors.borderLight};
+    border-radius: ${({ theme }) => theme.borderRadius.xl};
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+    
+    &:hover {
+      box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.12) 100%);
+    }
   `}
 
   ${media.lg`
