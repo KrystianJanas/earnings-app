@@ -18,9 +18,12 @@ const SidebarContainer = styled.aside`
     bottom: 0;
     width: 280px;
     background: ${({ theme }) => theme.colors.cardBg};
-    border-right: 1px solid ${({ theme }) => theme.colors.border};
+    backdrop-filter: ${({ theme }) => theme.blur.sm};
+    -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
+    border-right: 1px solid ${({ theme }) => theme.colors.borderLight};
     padding: ${({ theme }) => theme.spacing.lg} 0;
     z-index: 100;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.15);
   `}
 `
 
@@ -56,15 +59,17 @@ const CompanyButton = styled.button`
   align-items: center;
   justify-content: space-between;
   padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.background};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.12) 100%);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    transform: translateY(-2px);
   }
 `
 
@@ -90,10 +95,12 @@ const Dropdown = styled.div`
   left: ${({ theme }) => theme.spacing.md};
   right: ${({ theme }) => theme.spacing.md};
   background: ${({ theme }) => theme.colors.cardBg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  box-shadow: ${({ theme }) => theme.shadows.lg};
-  margin-top: 8px;
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  margin-top: 12px;
   overflow: hidden;
   z-index: 1000;
 `
@@ -105,24 +112,25 @@ const DropdownItem = styled.button`
   gap: ${({ theme }) => theme.spacing.sm};
   padding: ${({ theme }) => theme.spacing.md};
   border: none;
-  background: ${({ theme }) => theme.colors.cardBg};
+  background: transparent;
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
   text-align: left;
   font-size: 0.9rem;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.surface};
+    background: rgba(139, 92, 246, 0.15);
+    padding-left: calc(${({ theme }) => theme.spacing.md} + 4px);
   }
 
   &:not(:last-child) {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
   }
 
   svg {
     font-size: 1rem;
-    color: ${({ theme }) => theme.colors.text.muted};
+    color: ${({ theme }) => theme.colors.primary};
   }
 `
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
 import { FiChevronDown, FiUsers, FiLogOut, FiPlus } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import CreateCompany from './CreateCompany'
@@ -11,10 +12,12 @@ const HeaderContainer = styled.header`
   left: 0;
   right: 0;
   background: ${({ theme }) => theme.colors.cardBg};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
   padding: 1rem;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 
   ${media.lg`
     display: none;
@@ -74,22 +77,24 @@ const PeriodSelect = styled.select`
   }
 `
 
-const CompanyButton = styled.button`
+const CompanyButton = styled(motion.button)`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: none;
-  border: none;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.5rem;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
+  padding: 0.75rem;
+  border-radius: 12px;
+  transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.background};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    transform: translateY(-2px);
   }
 
   svg {
@@ -111,44 +116,47 @@ const UserRole = styled.div`
   color: ${({ theme }) => theme.colors.text.muted};
 `
 
-const Dropdown = styled.div`
+const Dropdown = styled(motion.div)`
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   background: ${({ theme }) => theme.colors.cardBg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  margin-top: 0.5rem;
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  margin-top: 0.75rem;
   overflow: hidden;
   z-index: 1000;
 `
 
-const DropdownItem = styled.button`
+const DropdownItem = styled(motion.button)`
   width: 100%;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
   border: none;
-  background: ${({ theme }) => theme.colors.cardBg};
+  background: transparent;
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
   text-align: left;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.surface};
+    background: rgba(139, 92, 246, 0.15);
+    padding-left: 1.25rem;
   }
 
   &:not(:last-child) {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
   }
 
   svg {
     font-size: 1.125rem;
-    color: ${({ theme }) => theme.colors.text.muted};
+    color: ${({ theme }) => theme.colors.primary};
   }
 `
 

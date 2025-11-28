@@ -9,11 +9,11 @@ import { Container, Card, GlassCard, media, GradientText } from '../styles/theme
 import Navigation from '../components/Navigation'
 import Header from '../components/Header'
 
-const DashboardContainer = styled.div`
+const DashboardContainer = styled(motion.div)`
   min-height: 100vh;
   padding: ${({ theme }) => theme.spacing.sm} 0;
   padding-bottom: 100px;
-  background: ${({ theme }) => theme.colors.background};
+  background: linear-gradient(135deg, ${({ theme }) => theme.colors.background} 0%, ${({ theme }) => theme.colors.backgroundSecondary} 100%);
 
   ${media.lg`
     padding: ${({ theme }) => theme.spacing.lg} 0;
@@ -153,7 +153,7 @@ const AllCardsGrid = styled.div`
   `}
 `
 
-const EarningsCard = styled(GlassCard)`
+const EarningsCard = styled(motion(GlassCard))`
   position: relative;
   overflow: hidden;
   display: flex;
@@ -163,7 +163,13 @@ const EarningsCard = styled(GlassCard)`
   text-align: center;
   min-height: 70px;
   padding: ${({ theme }) => theme.spacing.sm};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+  }
 
   ${media.lg`
     min-height: 80px;
