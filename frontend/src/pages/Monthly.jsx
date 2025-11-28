@@ -79,6 +79,22 @@ const MonthNavigationButtons = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
 `
 
+const YearNavigation = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.md};
+  width: 100%;
+  justify-content: center;
+`
+
+const YearHint = styled.div`
+  text-align: center;
+  font-size: 0.75rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-style: italic;
+`
+
 const MonthButton = styled(motion.button)`
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
   border: 2px solid ${({ theme }) => theme.colors.borderLight};
@@ -461,19 +477,18 @@ const Monthly = () => {
     }
   )
 
-  const goToPreviousMonth = () => {
-    setSelectedDate(prev => subMonths(prev, 1))
+  const goToPreviousYear = () => {
+    setSelectedDate(prev => new Date(prev.getFullYear() - 1, prev.getMonth(), 1))
   }
 
-  const goToNextMonth = () => {
-    setSelectedDate(prev => addMonths(prev, 1))
+  const goToNextYear = () => {
+    setSelectedDate(prev => new Date(prev.getFullYear() + 1, prev.getMonth(), 1))
   }
 
-  const isCurrentMonth = selectedDate.getMonth() === new Date().getMonth() && 
-                        selectedDate.getFullYear() === new Date().getFullYear()
+  const isCurrentYear = selectedDate.getFullYear() === new Date().getFullYear()
 
   const monthNames = ['styczeń', 'luty', 'marzec', 'kwiecień', 'maj', 'czerwiec', 'lipiec', 'sierpień', 'wrzesień', 'październik', 'listopad', 'grudzień']
-  const monthName = `${monthNames[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`
+  const displayYear = selectedDate.getFullYear()
 
   if (isLoading) {
     return (
@@ -523,20 +538,22 @@ const Monthly = () => {
 
         <MonthSelector>
           <MonthSelectorHeader>
-            <CurrentMonth>{monthName}</CurrentMonth>
-            <MonthNavigationButtons>
-              <MonthButton onClick={goToPreviousMonth} title="Poprzedni miesiąc">
+            <YearNavigation>
+              <MonthButton onClick={goToPreviousYear} title="Poprzedni rok">
                 <FiChevronLeft />
               </MonthButton>
+              <CurrentMonth>{displayYear}</CurrentMonth>
               <MonthButton 
-                onClick={goToNextMonth}
-                disabled={isCurrentMonth}
-                title="Następny miesiąc"
+                onClick={goToNextYear}
+                disabled={isCurrentYear}
+                title="Następny rok"
               >
                 <FiChevronRight />
               </MonthButton>
-            </MonthNavigationButtons>
+            </YearNavigation>
           </MonthSelectorHeader>
+          
+          <YearHint>Użyj strzałek aby zmienić rok</YearHint>
           
           <MonthsGrid>
             {monthNames.map((month, index) => {
