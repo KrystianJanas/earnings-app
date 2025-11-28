@@ -53,13 +53,13 @@ class ClientTransaction {
     }
   }
 
-  static async createMultiple(dailyEarningsId, clients, userId, companyId) {
-    // NOTE: This function is called within a transaction started by Earnings.createOrUpdate
-    // Do NOT start a new transaction here - use the existing connection
+  static async createMultiple(dailyEarningsId, clients, userId, companyId, txClient = null) {
+    // Use provided transaction client or fall back to db.query
+    const query = txClient ? txClient.query.bind(txClient) : db.query;
 
     try {
       // First, delete existing client transactions for this day (this will cascade delete payment methods too)
-      await db.query('DELETE FROM client_transactions WHERE daily_earnings_id = $1', [dailyEarningsId]);
+      await query('DELETE FROM client_transactions WHERE daily_earnings_id = $1', [dailyEarningsId]);
       
       // Then insert new ones
       const results = [];
@@ -95,7 +95,7 @@ class ClientTransaction {
           const hasMultiplePayments = clientData.payments.length > 1;
           const paymentMethod = clientData.payments[0].method || 'cash';
 
-          const transactionResult = await db.query(`
+          const transactionResult = await query(`
             INSERT INTO client_transactions (daily_earnings_id, client_id, amount, payment_method, total_amount, has_multiple_payments, client_order, notes)
             VALUES ($1, $2, $3, $4, $3, $5, $6, $7)
             RETURNING *
@@ -106,24 +106,30 @@ class ClientTransaction {
           // Insert individual payments
           for (const payment of clientData.payments) {
             if (parseFloat(payment.amount || 0) > 0) {
-              await db.query(`
+              await query(`
                 INSERT INTO client_payment_methods (client_transaction_id, amount, payment_method)
                 VALUES ($1, $2, $3)
               `, [transaction.id, payment.amount, payment.method]);
             }
           }
 
-          // Update client stats if we have a client and actual spending
+          // Update client stats if we have a client and actual spending (outside transaction is ok)
           if (clientId && totalAmount > 0) {
-            const visitDate = await db.query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
-            await Client.updateStats(clientId, visitDate.rows[0].date, totalAmount);
+            try {
+              const visitDateResult = await query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
+              if (visitDateResult.rows[0]) {
+                await Client.updateStats(clientId, visitDateResult.rows[0].date, totalAmount);
+              }
+            } catch (err) {
+              console.warn('Could not update client stats:', err.message);
+            }
           }
 
           results.push(transaction);
         } else {
           // Legacy single payment structure (backward compatibility)
           const amount = parseFloat(clientData.amount || 0);
-          const result = await db.query(`
+          const result = await query(`
             INSERT INTO client_transactions (daily_earnings_id, client_id, amount, payment_method, client_order, notes, has_multiple_payments)
             VALUES ($1, $2, $3, $4, $5, $6, FALSE)
             RETURNING *
@@ -131,8 +137,14 @@ class ClientTransaction {
 
           // Update client stats if we have a client and actual spending
           if (clientId && amount > 0) {
-            const visitDate = await db.query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
-            await Client.updateStats(clientId, visitDate.rows[0].date, amount);
+            try {
+              const visitDateResult = await query('SELECT date FROM daily_earnings WHERE id = $1', [dailyEarningsId]);
+              if (visitDateResult.rows[0]) {
+                await Client.updateStats(clientId, visitDateResult.rows[0].date, amount);
+              }
+            } catch (err) {
+              console.warn('Could not update client stats:', err.message);
+            }
           }
 
           results.push(result.rows[0]);

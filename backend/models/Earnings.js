@@ -40,7 +40,8 @@ class Earnings {
             clientsCount: clients.length,
             clients: clients
           });
-          await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId);
+          // Pass the transaction client to use the same connection
+          await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId, client);
           console.log('✅ Client transactions saved successfully');
         } catch (error) {
           console.error('❌ ClientTransaction error:', error);
@@ -50,7 +51,7 @@ class Earnings {
       } else if (entryMode === 'summary') {
         // If switching to summary mode, clean up any existing client transactions
         try {
-          await ClientTransaction.deleteByDailyEarningsId(dailyEarnings.id);
+          await client.query('DELETE FROM client_transactions WHERE daily_earnings_id = $1', [dailyEarnings.id]);
         } catch (error) {
           console.warn('ClientTransaction tables not found, skipping cleanup:', error.message);
           // Continue without cleanup
