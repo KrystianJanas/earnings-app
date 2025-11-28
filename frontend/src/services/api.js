@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-// Use production domain in production, localhost in development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.PROD ? 'https://moje.studiopaulinka.pl/api' : 'http://localhost:5100/api')
+// Use configured API URL or relative path (proxy handles routing in dev)
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 // Ensure we have the correct URL
 const baseURL = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`

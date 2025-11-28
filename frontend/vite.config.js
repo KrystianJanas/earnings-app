@@ -1,34 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Detect if running in Docker container
-const isDocker = process.env.DOCKER_ENV || process.env.HOST === '0.0.0.0' || 
-                 require('fs').existsSync('/.dockerenv')
-
 export default defineConfig({
   plugins: [react()],
   server: {
-    // Host configuration - different for Docker vs local development
-    host: isDocker ? '0.0.0.0' : '127.0.0.1',
-    port: parseInt(process.env.FRONTEND_PORT) || 3000,
-    strictPort: false, // Allow fallback to different port if occupied
-    open: !isDocker, // Only auto-open browser when NOT in Docker
+    host: '0.0.0.0',
+    port: 5000,
+    strictPort: false,
+    open: false,
     cors: true,
-    // Allow external hosts for production deployment
-    allowedHosts: process.env.VITE_ALLOWED_HOSTS ? 
-      process.env.VITE_ALLOWED_HOSTS.split(',').map(host => host.trim()) : 
-      ['localhost', '127.0.0.1'],
-    // Additional network fixes for macOS (only for local development)
-    hmr: process.env.NODE_ENV === 'production' ? false : (isDocker ? {
-      // For Docker: use port only, let Docker handle host mapping
-      port: 3002,
-    } : {
-      // For local development: use explicit host
-      host: '127.0.0.1',
-      port: 3002,
-    }),
-    // Force HTTP to avoid HTTPS redirect issues in Chrome
+    hmr: {
+      port: 5000,
+    },
     https: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      }
+    },
   },
   // Resolve issues with dependencies
   resolve: {
