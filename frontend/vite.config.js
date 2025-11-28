@@ -9,8 +9,7 @@ export default defineConfig({
     strictPort: false,
     open: false,
     cors: true,
-    allowedHosts: ['.'],
-    middlewareMode: false,
+    allowedHosts: ['**', 'localhost', '127.0.0.1', '0.0.0.0', '.picard.replit.dev'],
     https: false,
     proxy: {
       '/api': {
