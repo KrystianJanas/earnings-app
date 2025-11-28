@@ -9,12 +9,8 @@ export default defineConfig({
     strictPort: false,
     open: false,
     cors: true,
-    allowedHosts: 'all',
-    hmr: {
-      host: '0.0.0.0',
-      port: 5000,
-      protocol: 'ws'
-    },
+    allowedHosts: ['.'],
+    middlewareMode: false,
     https: false,
     proxy: {
       '/api': {
