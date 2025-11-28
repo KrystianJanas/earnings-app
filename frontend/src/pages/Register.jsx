@@ -26,17 +26,17 @@ const BackgroundDecor = styled.div`
 `
 
 const RegisterCard = styled(GlassCard)`
-  width: 100%;
-  max-width: 550px;
+  width: 100% !important;
+  max-width: 600px !important;
   position: relative;
   z-index: 1;
 
   ${media.md`
-    max-width: 640px;
+    max-width: 750px !important;
   `}
 
   ${media.lg`
-    max-width: 720px;
+    max-width: 850px !important;
   `}
 `
 
