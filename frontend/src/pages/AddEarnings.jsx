@@ -69,54 +69,58 @@ const Header = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   background: ${({ theme }) => theme.colors.gradient.primary};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 
   ${media.md`
-    font-size: 1.5rem;
+    font-size: 2rem;
   `}
 
   ${media.lg`
-    font-size: 1.5rem;
+    font-size: 2rem;
   `}
 `
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 
   ${media.md`
-    font-size: 0.95rem;
+    font-size: 1rem;
   `}
 
   ${media.lg`
-    font-size: 0.95rem;
+    font-size: 1rem;
   `}
 `
 
 const FormCard = styled(motion(GlassCard))`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   width: 100%;
   box-sizing: border-box;
-  padding: ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
-  backdrop-filter: ${({ theme }) => theme.blur.sm};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
+  padding: ${({ theme }) => theme.spacing.xl};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
   transition: all ${({ theme }) => theme.transitions.normal};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
 
   &:hover {
-    box-shadow: 0 20px 50px rgba(139, 92, 246, 0.2);
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.12) 100%);
   }
 
   ${media.md`
-    max-width: 700px;
+    max-width: 750px;
     margin: 0 auto ${({ theme }) => theme.spacing.xl} auto;
     padding: ${({ theme }) => theme.spacing.xl};
   `}
@@ -124,7 +128,7 @@ const FormCard = styled(motion(GlassCard))`
   ${media.lg`
     max-width: 100%;
     margin-bottom: ${({ theme }) => theme.spacing.xl};
-    padding: ${({ theme }) => theme.spacing.xl};
+    padding: 40px;
   `}
 `
 
@@ -141,7 +145,11 @@ const FormGroup = styled.div`
 const DateSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
+  padding: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
 `
 
 const DateNavigation = styled.div`
@@ -155,37 +163,38 @@ const DateButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%);
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.primary};
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
+  font-weight: 600;
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.primary};
     border-color: ${({ theme }) => theme.colors.primary};
     color: white;
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+    transform: translateY(-3px);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
   svg {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   ${media.lg`
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     svg {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
   `}
 `
@@ -193,14 +202,14 @@ const DateButton = styled(motion.button)`
 const DateDisplay = styled.div`
   flex: 1;
   text-align: center;
-  padding: 12px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-weight: 600;
-  font-size: 0.95rem;
-  min-height: 40px;
+  font-weight: 700;
+  font-size: 1rem;
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,13 +220,13 @@ const DateDisplay = styled.div`
   &:hover {
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
   }
 
   ${media.lg`
-    min-height: 44px;
-    padding: ${({ theme }) => theme.spacing.md};
-    font-size: 1rem;
+    min-height: 52px;
+    padding: 16px 24px;
+    font-size: 1.05rem;
   `}
 `
 
@@ -359,24 +368,25 @@ const LoadingText = styled.div`
 const ModeToggle = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: ${({ theme }) => theme.spacing.xl};
   padding: ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
   transition: all ${({ theme }) => theme.transitions.normal};
 
   ${media.sm`
-    gap: ${({ theme }) => theme.spacing.lg};
+    gap: 12px;
     padding: ${({ theme }) => theme.spacing.lg};
   `}
 
   ${media.lg`
     flex-direction: row;
-    max-width: 600px;
+    gap: 12px;
+    max-width: none;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: ${({ theme }) => theme.spacing.xl};
@@ -387,46 +397,46 @@ const ModeToggle = styled.div`
 const ModeButton = styled(motion.button)`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  padding: 12px 16px;
-  border: 1px solid ${({ active, disabled, theme }) =>
-    disabled ? theme.colors.borderLight + '50' :
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: 14px 20px;
+  border: 2px solid ${({ active, disabled, theme }) =>
+    disabled ? theme.colors.borderLight + '40' :
     active ? theme.colors.primary : theme.colors.borderLight};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   background: ${({ active, disabled, theme }) =>
     disabled ? 'transparent' :
-    active ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` : 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)'};
+    active ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` : 'rgba(255, 255, 255, 0.02)'};
   color: ${({ active, disabled, theme }) =>
     disabled ? theme.colors.text.muted :
     active ? 'white' : theme.colors.text.primary};
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   transition: all ${({ theme }) => theme.transitions.normal};
   flex: 1;
-  justify-content: center;
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
-  min-height: 44px;
+  min-height: 48px;
   width: 100%;
 
   ${media.sm`
     font-size: 0.95rem;
-    padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.md};
-    min-height: 44px;
+    padding: 14px 20px;
+    min-height: 48px;
   `}
 
   ${media.lg`
-    width: auto;
-    min-width: 160px;
+    flex: 1;
+    min-width: 180px;
     font-size: 0.95rem;
-    padding: 12px 24px;
+    padding: 14px 28px;
   `}
 
   &:hover:not(:disabled) {
-    background: ${({ active, theme }) => active ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` : 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%)'};
+    background: ${({ active, theme }) => active ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` : 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)'};
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: ${({ active, theme }) => active ? `0 0 20px ${theme.colors.primary}40` : '0 0 15px rgba(139, 92, 246, 0.2)'};
-    transform: translateY(-2px);
+    box-shadow: ${({ active, theme }) => active ? `0 8px 24px ${theme.colors.primary}50` : '0 8px 24px rgba(139, 92, 246, 0.2)'};
+    transform: translateY(-3px);
   }
 `
 
