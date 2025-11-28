@@ -788,15 +788,25 @@ const AddEarnings = () => {
     
 
     if (entryMode === 'detailed') {
-      // Send all clients - backend will handle filtering out empty ones
-      submitData.clients = clients
-      
+      // Clean up clients data before sending
+      const cleanedClients = clients.map(client => ({
+        ...client,
+        amount: parseFloat(client.amount) || 0,
+        paymentMethod: client.paymentMethod || null,
+        payments: (client.payments || []).map(p => ({
+          amount: parseFloat(p.amount) || 0,
+          method: p.method || 'cash'
+        })).filter(p => p.amount > 0 || client.payments?.length === 1)
+      }))
+      submitData.clients = cleanedClients
+      console.log('📤 Sending clients:', JSON.stringify(cleanedClients, null, 2))
     } else {
       submitData.cashAmount = parseFloat(data.cashAmount) || 0
       submitData.cardAmount = parseFloat(data.cardAmount) || 0
       submitData.clientsCount = parseInt(data.clientsCount) || 0
     }
 
+    console.log('📤 Submitting data:', JSON.stringify(submitData, null, 2))
     mutation.mutate(submitData)
   }
 
