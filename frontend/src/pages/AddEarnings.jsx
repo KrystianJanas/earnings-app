@@ -267,8 +267,23 @@ const AmountInputWrapper = styled.div`
 `
 
 const AmountInput = styled(Input)`
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.muted};
+    font-weight: 500;
+  }
 `
 
 const TextArea = styled.textarea`
@@ -441,33 +456,85 @@ const ModeButton = styled(motion.button)`
 `
 
 const ClientsSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `
 
-const ClientsSummary = styled.div`
+const ClientsSummary = styled(motion(GlassCard))`
   display: flex;
   flex-direction: column;
-  padding: ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  padding: ${({ theme }) => theme.spacing.xl};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  font-weight: 500;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  font-weight: 600;
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  transition: all ${({ theme }) => theme.transitions.normal};
+  text-align: center;
+  gap: ${({ theme }) => theme.spacing.md};
+
+  &:hover {
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.1) 100%);
+  }
+
+  div:first-child {
+    font-size: 1.05rem;
+    color: ${({ theme }) => theme.colors.text.primary};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  }
+
+  div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    gap: ${({ theme }) => theme.spacing.sm};
+  }
+
+  strong {
+    background: ${({ theme }) => theme.colors.gradient.primary};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.1rem;
+  }
+
+  div[style*="fontSize: 0.75rem"] {
+    color: ${({ theme }) => theme.colors.error};
+    font-weight: 500;
+  }
+
+  div[style*="fontSize: 0.8rem"] {
+    color: ${({ theme }) => theme.colors.text.secondary};
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
 `
 
 const AddClientButton = styled(Button)`
-  background: ${({ theme }) => theme.colors.success};
+  background: linear-gradient(135deg, ${({ theme }) => theme.colors.success} 0%, ${({ theme }) => theme.colors.secondary}99 100%);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  padding: 14px 20px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  padding: 14px 24px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  min-height: 48px;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.success}dd;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, ${({ theme }) => theme.colors.success}e6 0%, ${({ theme }) => theme.colors.secondary}99 100%);
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    transform: translateY(-3px);
+    border-color: ${({ theme }) => theme.colors.success};
+  }
+
+  svg {
+    font-size: 1.2rem;
   }
 `
 
