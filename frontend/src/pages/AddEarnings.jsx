@@ -34,14 +34,14 @@ const AddEarningsContainer = styled(motion.div)`
 const Container = styled.div`
   max-width: 428px;
   margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.spacing.sm};
+  padding: 0 ${({ theme }) => theme.spacing.md};
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
 
   ${media.sm`
     max-width: 640px;
-    padding: 0 ${({ theme }) => theme.spacing.md};
+    padding: 0 ${({ theme }) => theme.spacing.lg};
   `}
 
   ${media.md`
@@ -50,21 +50,21 @@ const Container = styled.div`
 
   ${media.lg`
     max-width: 1200px;
-    padding: 0 ${({ theme }) => theme.spacing.md};
+    padding: 0 ${({ theme }) => theme.spacing.lg};
   `}
 
   ${media.xl`
-    max-width: 1300px;
-    padding: 0 ${({ theme }) => theme.spacing.lg};
+    max-width: 1400px;
+    padding: 0 ${({ theme }) => theme.spacing.xl};
   `}
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   text-align: center;
 
   ${media.lg`
-    margin-bottom: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
@@ -100,10 +100,10 @@ const SubText = styled.p`
 `
 
 const FormCard = styled(motion(GlassCard))`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
   width: 100%;
   box-sizing: border-box;
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
   backdrop-filter: ${({ theme }) => theme.blur.sm};
   -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
@@ -117,19 +117,19 @@ const FormCard = styled(motion(GlassCard))`
 
   ${media.md`
     max-width: 700px;
-    margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
-    padding: ${({ theme }) => theme.spacing.lg};
+    margin: 0 auto ${({ theme }) => theme.spacing.xl} auto;
+    padding: ${({ theme }) => theme.spacing.xl};
   `}
 
   ${media.lg`
     max-width: 100%;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
-    padding: ${({ theme }) => theme.spacing.lg};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
+    padding: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
 const FormGroup = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   width: 100%;
   box-sizing: border-box;
 
@@ -141,14 +141,14 @@ const FormGroup = styled.div`
 const DateSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${({ theme }) => theme.spacing.md};
 `
 
 const DateNavigation = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing.md};
 `
 
 const DateButton = styled(motion.button)`
@@ -361,17 +361,17 @@ const ModeToggle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: 16px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
   transition: all ${({ theme }) => theme.transitions.normal};
 
   ${media.sm`
-    gap: ${({ theme }) => theme.spacing.md};
-    padding: ${({ theme }) => theme.spacing.md};
+    gap: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 
   ${media.lg`
@@ -379,8 +379,8 @@ const ModeToggle = styled.div`
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
-    padding: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 `
 
@@ -431,17 +431,17 @@ const ModeButton = styled(motion.button)`
 `
 
 const ClientsSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 
 const ClientsSummary = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.colors.primary}10;
-  border: 1px solid ${({ theme }) => theme.colors.primary}30;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-weight: 500;
 `
 
@@ -449,25 +449,32 @@ const AddClientButton = styled(Button)`
   background: ${({ theme }) => theme.colors.success};
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 600;
 
   &:hover {
     background: ${({ theme }) => theme.colors.success}dd;
+    transform: translateY(-2px);
   }
 `
 
 const GlobalFieldsSection = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-  padding-top: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.md};
+  border-top: 1px solid ${({ theme }) => theme.colors.borderLight};
+  padding-top: ${({ theme }) => theme.spacing.xl};
+  margin-top: ${({ theme }) => theme.spacing.xl};
 `
 
 const SectionTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 
 const ResetHint = styled.div`
