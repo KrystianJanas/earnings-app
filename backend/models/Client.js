@@ -147,9 +147,19 @@ class Client {
   }
 
   static async updateStats(clientId, visitDate, amountSpent) {
-    await db.query(`
-      SELECT update_client_stats($1, $2, $3)
-    `, [clientId, visitDate, amountSpent]);
+    try {
+      await db.query(`
+        UPDATE clients 
+        SET 
+          last_visit_date = GREATEST(COALESCE(last_visit_date, $2::date), $2::date),
+          total_visits = COALESCE(total_visits, 0) + 1,
+          total_spent = COALESCE(total_spent, 0) + $3::numeric,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1
+      `, [clientId, visitDate, amountSpent]);
+    } catch (error) {
+      console.warn('Could not update client stats:', error.message);
+    }
   }
 
   // Get client transaction history

@@ -5,11 +5,14 @@ class Earnings {
   static async createOrUpdate({ userId, companyId, date, cashAmount, cardAmount, tipsAmount, clientsCount, hoursWorked, notes, entryMode = 'summary', clients = [] }) {
     console.log('🔵 Earnings.createOrUpdate called with:', { userId, companyId, date, entryMode, clientsCount: clients?.length });
 
-    await db.query('BEGIN');
+    // Use a dedicated client for the transaction to ensure all queries use the same connection
+    const client = await db.getClient();
 
     try {
+      await client.query('BEGIN');
+
       // Create or update the daily earnings record
-      const result = await db.query(`
+      const result = await client.query(`
         INSERT INTO daily_earnings (user_id, company_id, date, cash_amount, card_amount, tips_amount, clients_count, hours_worked, notes, entry_mode)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         ON CONFLICT (user_id, date)
@@ -55,12 +58,14 @@ class Earnings {
       }
 
       console.log('🔄 About to COMMIT transaction...');
-      await db.query('COMMIT');
+      await client.query('COMMIT');
       console.log('✅ Transaction COMMITTED successfully');
       return dailyEarnings;
     } catch (error) {
-      await db.query('ROLLBACK');
+      await client.query('ROLLBACK');
       throw error;
+    } finally {
+      client.release();
     }
   }
 
