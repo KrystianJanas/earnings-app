@@ -89,49 +89,62 @@ const SubText = styled.p`
 `
 
 const PeriodSelector = styled.div`
-  display: none;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+`
+
+const PeriodsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: ${({ theme }) => theme.spacing.sm};
+
+  ${media.sm`
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${({ theme }) => theme.spacing.md};
+  `}
 
   ${media.lg`
-    display: flex;
-    justify-content: center;
-    margin-bottom: 0;
+    grid-template-columns: repeat(6, 1fr);
   `}
 `
 
-const PeriodSelect = styled.select`
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+const PeriodButton = styled(motion.button)`
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ isActive, theme }) =>
+    isActive 
+      ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
+      : 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%)'};
+  border: 2px solid ${({ isActive, theme }) =>
+    isActive ? theme.colors.primary : theme.colors.borderLight};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  color: ${({ theme }) => theme.colors.text.primary};
-  padding: 10px 32px 10px 16px;
-  font-size: 0.9rem;
+  color: ${({ isActive, theme }) =>
+    isActive ? 'white' : theme.colors.text.primary};
+  font-size: 0.8rem;
+  font-weight: 700;
   cursor: pointer;
-  appearance: none;
-  position: relative;
   transition: all ${({ theme }) => theme.transitions.normal};
-  font-weight: 600;
-  backdrop-filter: ${({ theme }) => theme.blur.sm};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5cf6' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
+  text-transform: capitalize;
 
   &:hover {
+    background: ${({ isActive, theme }) =>
+      isActive 
+        ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
+        : 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%)'};
     border-color: ${({ theme }) => theme.colors.primary};
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
     transform: translateY(-2px);
   }
 
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-  }
+  ${media.sm`
+    font-size: 0.85rem;
+    padding: ${({ theme }) => theme.spacing.md};
+  `}
 
   ${media.lg`
-    padding: 12px 36px 12px 16px;
-    font-size: 0.95rem;
+    padding: 12px 16px;
+    font-size: 0.9rem;
   `}
 `
 
@@ -521,24 +534,17 @@ const Dashboard = () => {
 
   const earnings = dashboardData?.data || {}
 
-  // Period selector component to pass to Header
-  const periodSelectorElement = (
-    <PeriodSelect
-      value={selectedPeriod}
-      onChange={(e) => setSelectedPeriod(e.target.value)}
-    >
-      <option value="day">Dzisiaj</option>
-      <option value="week">Ten tydzień</option>
-      <option value="month">Ten miesiąc</option>
-      <option value="prev-month">Poprzedni miesiąc</option>
-      <option value="year">Ten rok</option>
-      <option value="all">Od początku</option>
-    </PeriodSelect>
-  )
+  const periodOptions = [
+    { value: 'day', label: 'Dzisiaj' },
+    { value: 'week', label: 'Ten tydzień' },
+    { value: 'month', label: 'Ten miesiąc' },
+    { value: 'prev-month', label: 'Poprzedni' },
+    { value: 'year', label: 'Ten rok' },
+    { value: 'all', label: 'Od początku' },
+  ]
 
   return (
     <DashboardContainer>
-      <Header periodSelector={periodSelectorElement} />
       <ResponsiveContainer>
         <div style={{ marginBottom: '1rem' }}>
           <DashboardHeaderContent>
@@ -546,12 +552,24 @@ const Dashboard = () => {
               <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
               <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
             </HeaderTextContent>
-
-            <PeriodSelector>
-              {periodSelectorElement}
-            </PeriodSelector>
           </DashboardHeaderContent>
         </div>
+
+        <PeriodSelector>
+          <PeriodsGrid>
+            {periodOptions.map((option) => (
+              <PeriodButton
+                key={option.value}
+                isActive={selectedPeriod === option.value}
+                onClick={() => setSelectedPeriod(option.value)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {option.label}
+              </PeriodButton>
+            ))}
+          </PeriodsGrid>
+        </PeriodSelector>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
