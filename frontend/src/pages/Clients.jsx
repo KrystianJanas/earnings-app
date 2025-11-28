@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiUsers, FiSearch, FiX, FiCalendar, FiDollarSign, FiPhone, FiMail, FiFileText, FiPlus, FiEdit3, FiTrash2, FiSave } from 'react-icons/fi'
 import { clientsAPI } from '../services/api'
-import { Container, Card, Button, Input, Label, media } from '../styles/theme'
+import { Container, Card, GlassCard, Button, Input, Label, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import Header from '../components/Header'
 
@@ -45,7 +45,10 @@ const PageHeader = styled.div`
 const Title = styled.h1`
   font-size: 1.25rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 4px;
   display: flex;
   align-items: center;

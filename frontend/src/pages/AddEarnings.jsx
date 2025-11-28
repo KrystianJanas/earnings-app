@@ -7,7 +7,7 @@ import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCirc
 import { format, addDays, subDays } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import { earningsAPI } from '../services/api'
-import { Card, Button, Input, Label, media } from '../styles/theme'
+import { Card, GlassCard, Button, Input, Label, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import ClientEntry from '../components/ClientEntry'
 
@@ -71,7 +71,10 @@ const Header = styled.div`
 const Title = styled.h1`
   font-size: 1.25rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 4px;
 
   ${media.md`
@@ -96,11 +99,12 @@ const SubText = styled.p`
   `}
 `
 
-const FormCard = styled(Card)`
+const FormCard = styled(GlassCard)`
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   box-sizing: border-box;
   padding: ${({ theme }) => theme.spacing.sm};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
 
   ${media.md`
     max-width: 700px;

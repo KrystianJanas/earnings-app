@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { FiCalendar, FiTrendingUp, FiCreditCard, FiGift, FiChevronLeft, FiChevronRight, FiUsers, FiClock } from 'react-icons/fi'
 import { format, startOfMonth, endOfMonth, subMonths, addMonths } from 'date-fns'
 import { earningsAPI } from '../services/api'
-import { Container, Card, media } from '../styles/theme'
+import { Container, Card, GlassCard, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
 
 const MonthlyContainer = styled.div`
@@ -45,7 +45,10 @@ const Header = styled.div`
 const Title = styled.h1`
   font-size: 1.25rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 4px;
 
   ${media.lg`
@@ -119,10 +122,11 @@ const SummaryGrid = styled.div`
   `}
 `
 
-const MainStatsCard = styled(Card)`
+const MainStatsCard = styled(GlassCard)`
   position: relative;
   overflow: hidden;
   padding: ${({ theme }) => theme.spacing.sm};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
 
   &::before {
     content: '';
