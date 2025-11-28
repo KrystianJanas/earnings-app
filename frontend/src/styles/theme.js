@@ -293,8 +293,8 @@ export const GradientText = styled.span`
   background-clip: text;
 `
 
-export const Button = styled.button.attrs(({ fullWidth }) => ({
-  // Remove fullWidth from DOM to prevent React warning
+export const Button = styled.button.attrs(props => ({
+  type: props.type || 'button'
 }))`
   display: inline-flex;
   align-items: center;
@@ -318,11 +318,14 @@ export const Button = styled.button.attrs(({ fullWidth }) => ({
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-weight: 600;
   font-size: 0.9rem;
+  cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
-  width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
+  width: ${({ $fullWidth }) => $fullWidth ? '100%' : 'auto'};
   min-height: 44px;
   position: relative;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 
   &::before {
     content: '';

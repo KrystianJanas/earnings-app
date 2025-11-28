@@ -391,7 +391,7 @@ const Register = () => {
 
             <SubmitButton 
               type="submit" 
-              fullWidth 
+              $fullWidth 
               disabled={isLoading}
             >
               {isLoading ? 'Tworzenie...' : (

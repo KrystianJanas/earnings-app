@@ -315,7 +315,7 @@ const Login = () => {
 
             <SubmitButton 
               type="submit" 
-              fullWidth 
+              $fullWidth 
               disabled={isLoading}
             >
               {isLoading ? 'Logowanie...' : (

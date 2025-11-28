@@ -1152,7 +1152,7 @@ const AddEarnings = () => {
 
                   <Button
                     type="submit"
-                    fullWidth
+                    $fullWidth
                     disabled={mutation.isLoading}
                   >
                     {mutation.isLoading ? (
