@@ -32,20 +32,21 @@ const AddEarningsContainer = styled(motion.div)`
 `
 
 const Container = styled.div`
-  max-width: 428px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.spacing.md};
+  padding: 0 ${({ theme }) => theme.spacing.sm};
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
 
   ${media.sm`
-    max-width: 640px;
-    padding: 0 ${({ theme }) => theme.spacing.lg};
+    max-width: 100%;
+    padding: 0 ${({ theme }) => theme.spacing.md};
   `}
 
   ${media.md`
     max-width: 768px;
+    padding: 0 ${({ theme }) => theme.spacing.lg};
   `}
 
   ${media.lg`

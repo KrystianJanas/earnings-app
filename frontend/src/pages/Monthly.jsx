@@ -126,54 +126,64 @@ const CurrentMonth = styled.div`
 
 const MonthsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: ${({ theme }) => theme.spacing.sm};
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
 
   ${media.sm`
-    grid-template-columns: repeat(4, 1fr);
-    gap: ${({ theme }) => theme.spacing.md};
+    grid-template-columns: repeat(6, 1fr);
+    gap: ${({ theme }) => theme.spacing.sm};
   `}
 
   ${media.lg`
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(12, 1fr);
+    gap: ${({ theme }) => theme.spacing.md};
   `}
 `
 
 const MonthItem = styled(motion.button)`
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: 8px 4px;
   background: ${({ isActive, theme }) =>
     isActive 
       ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
       : 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%)'};
   border: 2px solid ${({ isActive, theme }) =>
     isActive ? theme.colors.primary : theme.colors.borderLight};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   color: ${({ isActive, theme }) =>
     isActive ? 'white' : theme.colors.text.primary};
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   font-weight: 700;
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
   text-transform: capitalize;
+  min-height: 36px;
+  box-shadow: ${({ isActive }) => isActive ? '0 4px 12px rgba(139, 92, 246, 0.3)' : 'none'};
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: ${({ isActive, theme }) =>
       isActive 
         ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
-        : 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%)'};
+        : 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%)'};
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
     transform: translateY(-2px);
   }
 
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
   ${media.sm`
-    font-size: 0.9rem;
-    padding: ${({ theme }) => theme.spacing.md};
+    font-size: 0.75rem;
+    padding: 10px 6px;
+    min-height: 40px;
   `}
 
   ${media.lg`
     padding: 12px 16px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    min-height: 44px;
   `}
 `
 

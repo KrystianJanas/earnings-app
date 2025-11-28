@@ -5,14 +5,16 @@ import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch } from 'react
 import { Input, Label, Button } from '../styles/theme'
 
 const ClientCard = styled.div`
-  padding: 10px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
   @media (min-width: 640px) {
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   }
 `
 
@@ -59,17 +61,17 @@ const PaymentsSection = styled.div`
 const PaymentEntry = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 8px;
-  padding: 10px;
-  background: ${({ theme }) => theme.colors.background}80;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  border: 1px solid ${({ theme }) => theme.colors.border}50;
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(236, 72, 153, 0.03) 100%);
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
 
   @media (min-width: 640px) {
-    gap: ${({ theme }) => theme.spacing.sm};
-    padding: ${({ theme }) => theme.spacing.sm};
-    margin-bottom: ${({ theme }) => theme.spacing.xs};
+    gap: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
   }
 `
 
@@ -102,15 +104,15 @@ const PaymentMethodHeader = styled.div`
 
 const PaymentButtons = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: ${({ theme }) => theme.spacing.xs};
-  margin-top: 4px;
+  margin-top: ${({ theme }) => theme.spacing.xs};
   overflow: visible;
   width: 100%;
 
   @media (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-    margin-top: ${({ theme }) => theme.spacing.xs};
+    grid-template-columns: repeat(6, 1fr);
+    margin-top: ${({ theme }) => theme.spacing.sm};
     gap: ${({ theme }) => theme.spacing.sm};
   }
 `
@@ -120,30 +122,37 @@ const PaymentButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 8px 6px;
-  border: 1px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.border};
+  padding: 10px 8px;
+  border: 2px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.borderLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
+  background: ${({ active, theme }) => active 
+    ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` 
+    : 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%)'};
   color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  min-height: 38px;
+  min-height: 42px;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-shadow: ${({ active }) => active ? '0 4px 12px rgba(139, 92, 246, 0.3)' : 'none'};
 
   @media (min-width: 640px) {
-    padding: 12px 8px;
-    font-size: 0.85rem;
-    gap: 5px;
+    padding: 12px 10px;
+    font-size: 0.8rem;
+    gap: 6px;
     min-height: 48px;
   }
 
   &:hover {
-    background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
+    background: ${({ active, theme }) => active 
+      ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` 
+      : 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%)'};
     border-color: ${({ theme }) => theme.colors.primary};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
   }
 `
 
