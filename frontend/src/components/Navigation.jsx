@@ -11,9 +11,12 @@ const NavContainer = styled.nav`
   left: 0;
   right: 0;
   background: ${({ theme }) => theme.colors.cardBg};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  border-top: 1px solid ${({ theme }) => theme.colors.borderLight};
   padding: 8px ${({ theme }) => theme.spacing.sm};
   z-index: 100;
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 
   ${media.lg`
     display: none;
@@ -35,17 +38,21 @@ const NavItem = styled(NavLink)`
   padding: 8px ${({ theme }) => theme.spacing.xs};
   color: ${({ theme }) => theme.colors.text.muted};
   text-decoration: none;
-  transition: all 0.2s ease;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   min-height: 44px;
   justify-content: center;
+  position: relative;
 
   &.active {
     color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.primaryLight};
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
   }
 
   &:hover {
-    color: ${({ theme }) => theme.colors.text.primary};
+    color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.primaryLight};
   }
 
   svg {

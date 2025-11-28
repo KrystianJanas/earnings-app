@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { FiCreditCard, FiGift, FiUsers, FiClock, FiChevronDown } from 'react-icons/fi'
 import { earningsAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import { Container, Card, media } from '../styles/theme'
+import { Container, Card, GlassCard, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
 import Header from '../components/Header'
 
@@ -68,7 +68,10 @@ const HeaderTextContent = styled.div`
 const WelcomeText = styled.h1`
   font-size: 1.25rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 4px;
 
   ${media.lg`
@@ -150,7 +153,7 @@ const AllCardsGrid = styled.div`
   `}
 `
 
-const EarningsCard = styled(Card)`
+const EarningsCard = styled(GlassCard)`
   position: relative;
   overflow: hidden;
   display: flex;
@@ -160,6 +163,7 @@ const EarningsCard = styled(Card)`
   text-align: center;
   min-height: 70px;
   padding: ${({ theme }) => theme.spacing.sm};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
 
   ${media.lg`
     min-height: 80px;
