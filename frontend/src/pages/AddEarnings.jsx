@@ -11,11 +11,11 @@ import { Card, GlassCard, Button, Input, Label, media, GradientText } from '../s
 import Navigation from '../components/Navigation'
 import ClientEntry from '../components/ClientEntry'
 
-const AddEarningsContainer = styled.div`
+const AddEarningsContainer = styled(motion.div)`
   min-height: 100vh;
   padding: ${({ theme }) => theme.spacing.sm} 0;
   padding-bottom: 100px;
-  background: ${({ theme }) => theme.colors.background};
+  background: linear-gradient(135deg, ${({ theme }) => theme.colors.background} 0%, ${({ theme }) => theme.colors.backgroundSecondary} 100%);
   overflow-x: hidden;
   width: 100%;
   box-sizing: border-box;
@@ -99,23 +99,32 @@ const SubText = styled.p`
   `}
 `
 
-const FormCard = styled(GlassCard)`
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+const FormCard = styled(motion(GlassCard))`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   width: 100%;
   box-sizing: border-box;
-  padding: ${({ theme }) => theme.spacing.sm};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.sm};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    box-shadow: 0 20px 50px rgba(139, 92, 246, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  }
 
   ${media.md`
     max-width: 700px;
     margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 
   ${media.lg`
     max-width: 100%;
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-    padding: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 `
 
@@ -142,23 +151,25 @@ const DateNavigation = styled.div`
   gap: ${({ theme }) => theme.spacing.sm};
 `
 
-const DateButton = styled.button`
+const DateButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  color: ${({ theme }) => theme.colors.text.primary};
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  color: ${({ theme }) => theme.colors.primary};
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.primary};
     border-color: ${({ theme }) => theme.colors.primary};
     color: white;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    transform: translateY(-2px);
   }
 
   &:disabled {
@@ -167,14 +178,14 @@ const DateButton = styled.button`
   }
 
   svg {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   ${media.lg`
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     svg {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
   `}
 `
@@ -182,29 +193,30 @@ const DateButton = styled.button`
 const DateDisplay = styled.div`
   flex: 1;
   text-align: center;
-  padding: 8px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-weight: 500;
-  font-size: 0.9rem;
-  min-height: 36px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
   position: relative;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primary}10;
-    border-color: ${({ theme }) => theme.colors.primary}50;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
   }
 
   ${media.lg`
-    min-height: 40px;
-    padding: ${({ theme }) => theme.spacing.sm};
+    min-height: 44px;
+    padding: ${({ theme }) => theme.spacing.md};
     font-size: 1rem;
   `}
 `
@@ -252,20 +264,24 @@ const AmountInput = styled(Input)`
 
 const TextArea = styled.textarea`
   width: 100%;
-  padding: 10px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-family: inherit;
   resize: vertical;
-  min-height: 70px;
+  min-height: 100px;
+  transition: all ${({ theme }) => theme.transitions.normal};
+  backdrop-filter: ${({ theme }) => theme.blur.xs};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.xs};
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
   }
 
   &::placeholder {
@@ -273,8 +289,8 @@ const TextArea = styled.textarea`
   }
 
   ${media.md`
-    min-height: 100px;
-    padding: ${({ theme }) => theme.spacing.sm};
+    min-height: 120px;
+    padding: ${({ theme }) => theme.spacing.md};
     font-size: 1rem;
   `}
 `
@@ -305,30 +321,32 @@ const SuccessMessage = styled.div`
   }
 `;
 
-const ButtonSuccessMessage = styled.div`
+const ButtonSuccessMessage = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  background: ${({ theme }) => theme.colors.success}20;
-  border: 1px solid ${({ theme }) => theme.colors.success}40;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.success};
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-top: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 16px;
   animation: fadeInOut 3s ease-in-out;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
   
   @keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(10px); }
+    0% { opacity: 0; transform: translateY(15px); }
     15% { opacity: 1; transform: translateY(0); }
     85% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 0; transform: translateY(-15px); }
   }
   
   svg {
     color: ${({ theme }) => theme.colors.success};
+    font-size: 1.2rem;
   }
 `
 
@@ -343,16 +361,17 @@ const ModeToggle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  padding: 8px;
-  background: ${({ theme }) => theme.colors.surface};
+  gap: 12px;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
 
   ${media.sm`
-    gap: ${({ theme }) => theme.spacing.sm};
-    padding: ${({ theme }) => theme.spacing.sm};
+    gap: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.md};
   `}
 
   ${media.lg`
@@ -360,56 +379,54 @@ const ModeToggle = styled.div`
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
-    padding: ${({ theme }) => theme.spacing.sm};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.md};
   `}
 `
 
-const ModeButton = styled.button`
+const ModeButton = styled(motion.button)`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
-  padding: 8px 12px;
+  padding: 12px 16px;
   border: 1px solid ${({ active, disabled, theme }) =>
-    disabled ? theme.colors.border + '50' :
-    active ? theme.colors.primary : theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+    disabled ? theme.colors.borderLight + '50' :
+    active ? theme.colors.primary : theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   background: ${({ active, disabled, theme }) =>
-    disabled ? theme.colors.surface + '50' :
-    active ? theme.colors.primary : 'transparent'};
+    disabled ? 'transparent' :
+    active ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` : 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)'};
   color: ${({ active, disabled, theme }) =>
     disabled ? theme.colors.text.muted :
     active ? 'white' : theme.colors.text.primary};
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
-  transition: all 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
   flex: 1;
   justify-content: center;
   opacity: ${({ disabled }) => disabled ? 0.5 : 1};
-  min-height: 36px;
+  min-height: 44px;
   width: 100%;
 
-  ${media.lg`
-    min-height: 44px;
-    padding: ${({ theme }) => theme.spacing.sm};
-  `}
-
   ${media.sm`
-    font-size: 0.9rem;
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-    min-height: 40px;
+    font-size: 0.95rem;
+    padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.md};
+    min-height: 44px;
   `}
 
   ${media.lg`
     width: auto;
-    min-width: 180px;
+    min-width: 160px;
     font-size: 0.95rem;
+    padding: 12px 24px;
   `}
 
   &:hover:not(:disabled) {
-    background: ${({ active, theme }) => active ? theme.colors.primary : theme.colors.surface};
+    background: ${({ active, theme }) => active ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` : 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%)'};
     border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: ${({ active, theme }) => active ? `0 0 20px ${theme.colors.primary}40` : '0 0 15px rgba(139, 92, 246, 0.2)'};
+    transform: translateY(-2px);
   }
 `
 
