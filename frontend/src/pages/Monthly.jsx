@@ -33,26 +33,27 @@ const ResponsiveContainer = styled(Container)`
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   text-align: center;
 
   ${media.lg`
     text-align: left;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
 const Title = styled.h1`
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   background: ${({ theme }) => theme.colors.gradient.primary};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 
   ${media.lg`
-    font-size: 1.75rem;
+    font-size: 2rem;
   `}
 `
 
@@ -60,52 +61,60 @@ const MonthSelector = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
 
   ${media.lg`
-    margin-bottom: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
-const MonthButton = styled.button`
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  color: ${({ theme }) => theme.colors.text.primary};
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+const MonthButton = styled(motion.button)`
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  color: ${({ theme }) => theme.colors.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
+  font-weight: 600;
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.primary};
     border-color: ${({ theme }) => theme.colors.primary};
+    color: white;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+    transform: translateY(-3px);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
   svg {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 `
 
 const CurrentMonth = styled.div`
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  min-width: 160px;
+  min-width: 180px;
   text-align: center;
 
   ${media.lg`
     font-size: 1.2rem;
-    min-width: 180px;
+    min-width: 220px;
   `}
 `
 
@@ -122,11 +131,21 @@ const SummaryGrid = styled.div`
   `}
 `
 
-const MainStatsCard = styled(GlassCard)`
+const MainStatsCard = styled(motion(GlassCard))`
   position: relative;
   overflow: hidden;
-  padding: ${({ theme }) => theme.spacing.sm};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.1) 100%);
+  }
 
   &::before {
     content: '';
@@ -135,11 +154,11 @@ const MainStatsCard = styled(GlassCard)`
     left: 0;
     right: 0;
     height: 4px;
-    background: #6366f1;
+    background: ${({ theme }) => theme.colors.gradient.primary};
   }
 
   @media (min-width: 640px) {
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.xl};
   }
 `
 

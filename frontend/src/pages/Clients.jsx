@@ -95,28 +95,32 @@ const SearchWrapper = styled.div`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 10px 10px 10px 40px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 14px 16px 14px 44px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 0.9rem;
-  height: 40px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  height: 48px;
+  transition: all ${({ theme }) => theme.transitions.normal};
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
   }
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.text.muted};
+    font-weight: 500;
   }
 
   ${media.md`
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.sm} 2.5rem;
+    padding: 14px 16px 14px 44px;
     font-size: 1rem;
-    height: 44px;
+    height: 48px;
   `}
 `
 
@@ -159,19 +163,25 @@ const ClientsList = styled.div`
   gap: ${({ theme }) => theme.spacing.sm};
 `
 
-const ClientCard = styled(Card)`
+const ClientCard = styled(motion(GlassCard))`
   cursor: pointer;
-  transition: all 0.2s ease;
-  padding: ${({ theme }) => theme.spacing.sm};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
     border-color: ${({ theme }) => theme.colors.primary};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
   }
 
   ${media.md`
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 `
 
@@ -291,14 +301,17 @@ const ModalOverlay = styled(motion.div)`
 `
 
 const Modal = styled(motion.div)`
-  background: ${({ theme }) => theme.colors.cardBg};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.lg};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   max-width: 600px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
 `
 
 const ModalHeader = styled.div`

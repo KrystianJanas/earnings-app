@@ -21,30 +21,31 @@ const SettingsContainer = styled.div`
 `;
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   text-align: center;
 
   ${media.lg`
     text-align: left;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `;
 
 const Title = styled.h1`
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   background: ${({ theme }) => theme.colors.gradient.primary};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
 
   ${media.lg`
-    font-size: 1.75rem;
+    font-size: 2rem;
     justify-content: flex-start;
   `}
 `;
@@ -79,12 +80,28 @@ const SettingsForm = styled.form`
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
-const SectionCard = styled(GlassCard)`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+const SectionCard = styled(motion(GlassCard))`
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.1) 100%);
+  }
 `;
 
 const SectionTitle = styled.h2`

@@ -33,26 +33,27 @@ const ResponsiveContainer = styled(Container)`
 `
 
 const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   text-align: center;
 
   ${media.lg`
     text-align: left;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
 const Title = styled.h1`
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   background: ${({ theme }) => theme.colors.gradient.primary};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 
   ${media.lg`
-    font-size: 1.75rem;
+    font-size: 2rem;
   `}
 `
 
@@ -72,16 +73,21 @@ const EmployeeList = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 
-const EmployeeCard = styled(GlassCard)`
+const EmployeeCard = styled(motion(GlassCard))`
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
   position: relative;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  padding: ${({ theme }) => theme.spacing.lg};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.md};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: ${({ theme }) => theme.shadows.glow};
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
   }
 
   ${({ isSelected, theme }) => isSelected && `
