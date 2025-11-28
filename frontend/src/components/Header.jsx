@@ -11,13 +11,11 @@ const HeaderContainer = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  background: ${({ theme }) => theme.colors.cardBg};
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
-  padding: 1rem;
+  background: ${({ theme }) => theme.colors.background};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.borderLight};
+  padding: 0.75rem 1rem;
   z-index: 100;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 
   ${media.lg`
     display: none;
@@ -80,40 +78,41 @@ const PeriodSelect = styled.select`
 const CompanyButton = styled(motion.button)`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  gap: 0.75rem;
+  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}15 0%, ${({ theme }) => theme.colors.secondary}10 100%);
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 0.75rem;
-  border-radius: 12px;
+  padding: 0.625rem 0.875rem;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}25 0%, ${({ theme }) => theme.colors.secondary}15 100%);
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 
   svg {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    color: ${({ theme }) => theme.colors.primary};
     transition: transform 0.2s ease;
     transform: ${({ $isOpen }) => $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
   }
 `
 
 const CompanyName = styled.div`
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: 0.125rem;
+  margin-bottom: 2px;
 `
 
 const UserRole = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: ${({ theme }) => theme.colors.text.muted};
+  font-weight: 500;
 `
 
 const Dropdown = styled(motion.div)`
@@ -121,13 +120,11 @@ const Dropdown = styled(motion.div)`
   top: 100%;
   left: 0;
   right: 0;
-  background: ${({ theme }) => theme.colors.cardBg};
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  margin-top: 0.75rem;
+  background: ${({ theme }) => theme.colors.background};
+  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  margin-top: 0.5rem;
   overflow: hidden;
   z-index: 1000;
 `
@@ -137,17 +134,17 @@ const DropdownItem = styled(motion.button)`
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   border: none;
   background: transparent;
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
   text-align: left;
+  font-size: 0.9rem;
 
   &:hover {
-    background: rgba(139, 92, 246, 0.15);
-    padding-left: 1.25rem;
+    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}15 0%, ${({ theme }) => theme.colors.secondary}08 100%);
   }
 
   &:not(:last-child) {
@@ -155,7 +152,7 @@ const DropdownItem = styled(motion.button)`
   }
 
   svg {
-    font-size: 1.125rem;
+    font-size: 1.1rem;
     color: ${({ theme }) => theme.colors.primary};
   }
 `
