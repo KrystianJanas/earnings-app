@@ -99,47 +99,49 @@ const PeriodSelector = styled.div`
 `
 
 const PeriodSelect = styled.select`
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
-  padding: 6px 28px 6px 10px;
-  font-size: 0.75rem;
+  padding: 10px 32px 10px 16px;
+  font-size: 0.9rem;
   cursor: pointer;
   appearance: none;
   position: relative;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+  transition: all ${({ theme }) => theme.transitions.normal};
+  font-weight: 600;
+  backdrop-filter: ${({ theme }) => theme.blur.sm};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b5cf6' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 6px center;
+  background-position: right 10px center;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
-    background: ${({ theme }) => theme.colors.cardBg};
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+    transform: translateY(-2px);
   }
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
   }
 
   ${media.lg`
-    padding: 10px 36px 10px 16px;
-    font-size: 0.9rem;
-    background: ${({ theme }) => theme.colors.cardBg};
-    border: 1px solid ${({ theme }) => theme.colors.border};
+    padding: 12px 36px 12px 16px;
+    font-size: 0.95rem;
   `}
 `
 
 const AllCardsGrid = styled.div`
   display: grid;
-  gap: ${({ theme }) => theme.spacing.sm};
+  gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   grid-template-columns: 1fr;
-  max-width: 600px;
-  margin: 0 auto ${({ theme }) => theme.spacing.md} auto;
+  max-width: 100%;
+  margin: 0 0 ${({ theme }) => theme.spacing.lg} 0;
 
   ${media.md`
     gap: ${({ theme }) => theme.spacing.md};
@@ -147,8 +149,7 @@ const AllCardsGrid = styled.div`
 
   ${media.lg`
     max-width: 100%;
-    margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
-    gap: ${({ theme }) => theme.spacing.sm};
+    gap: ${({ theme }) => theme.spacing.md};
     grid-template-columns: 1fr;
   `}
 `
@@ -161,19 +162,23 @@ const EarningsCard = styled(motion(GlassCard))`
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 70px;
-  padding: ${({ theme }) => theme.spacing.sm};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  min-height: 100px;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  backdrop-filter: ${({ theme }) => theme.blur.sm};
+  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
   transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(139, 92, 246, 0.3);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%);
   }
 
   ${media.lg`
-    min-height: 80px;
-    padding: ${({ theme }) => theme.spacing.md};
+    min-height: 110px;
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
 
   &::before {
@@ -182,8 +187,19 @@ const EarningsCard = styled(motion(GlassCard))`
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 3px;
     background: ${({ color }) => color};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top right, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+    pointer-events: none;
   }
 `
 
@@ -211,43 +227,48 @@ const EarningsTitle = styled.h3`
 `
 
 const IconWrapper = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: ${({ color, theme }) => color}20;
   display: flex;
   align-items: center;
   justify-content: center;
   color: ${({ color }) => color};
-  font-size: 1rem;
+  font-size: 1.2rem;
+  box-shadow: 0 0 20px ${({ color }) => color}30;
+  transition: all ${({ theme }) => theme.transitions.normal};
 
   svg {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   ${media.lg`
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
 
     svg {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
     }
   `}
 `
 
 const EarningsAmount = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: 2px;
+  font-size: 1.75rem;
+  font-weight: 800;
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
 
   ${media.md`
-    font-size: 1.75rem;
+    font-size: 2rem;
   `}
 
   ${media.lg`
-    font-size: 2rem;
-    margin-bottom: 4px;
+    font-size: 2.25rem;
+    margin-bottom: 8px;
   `}
 `
 
@@ -261,9 +282,9 @@ const EarningsLabel = styled.div`
 `
 
 const Section = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  padding-bottom: ${({ theme }) => theme.spacing.sm};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.lg};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
 
   &:last-child {
     border-bottom: none;
@@ -272,8 +293,8 @@ const Section = styled.div`
   }
 
   ${media.lg`
-    margin-bottom: ${({ theme }) => theme.spacing.md};
-    padding-bottom: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
+    padding-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
@@ -320,22 +341,44 @@ const StatsGrid = styled.div`
   `}
 `
 
-const StatCard = styled(Card)`
+const StatCard = styled(motion(Card))`
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 75px;
-  padding: 10px;
+  min-height: 100px;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(139, 92, 246, 0.25);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
+  }
 
   ${media.lg`
-    min-height: 85px;
-    padding: ${({ theme }) => theme.spacing.sm};
+    min-height: 120px;
+    padding: ${({ theme }) => theme.spacing.md};
   `}
 
   ${media.xl`
-    padding: ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.lg};
   `}
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+    transition: all ${({ theme }) => theme.transitions.normal};
+  }
 `
 
 const StatsContainer = styled.div`
@@ -345,22 +388,23 @@ const StatsContainer = styled.div`
 `
 
 const StatAmount = styled.div`
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 800;
   color: ${({ color, theme }) => color || theme.colors.text.primary};
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 20px ${({ color, theme }) => color}30;
 
   ${media.md`
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   `}
 
   ${media.lg`
-    font-size: 1.25rem;
-    margin-bottom: 4px;
+    font-size: 1.75rem;
+    margin-bottom: 12px;
   `}
 
   ${media.xl`
-    font-size: 1.5rem;
+    font-size: 2rem;
   `}
 `
 
