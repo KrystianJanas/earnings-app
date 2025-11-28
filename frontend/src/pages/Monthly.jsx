@@ -58,19 +58,25 @@ const Title = styled.h1`
 `
 
 const MonthSelector = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.lg};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
   padding: ${({ theme }) => theme.spacing.lg};
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 2px solid ${({ theme }) => theme.colors.borderLight};
+`
 
-  ${media.lg`
-    margin-bottom: ${({ theme }) => theme.spacing.xl};
-  `}
+const MonthSelectorHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.lg};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+`
+
+const MonthNavigationButtons = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.md};
 `
 
 const MonthButton = styled(motion.button)`
@@ -85,7 +91,7 @@ const MonthButton = styled(motion.button)`
   justify-content: center;
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
-  font-weight: 600;
+  font-weight: 700;
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.primary};
@@ -106,15 +112,68 @@ const MonthButton = styled(motion.button)`
 `
 
 const CurrentMonth = styled.div`
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.primary};
-  min-width: 180px;
-  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 
   ${media.lg`
-    font-size: 1.2rem;
-    min-width: 220px;
+    font-size: 1.3rem;
+  `}
+`
+
+const MonthsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: ${({ theme }) => theme.spacing.sm};
+
+  ${media.sm`
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${({ theme }) => theme.spacing.md};
+  `}
+
+  ${media.lg`
+    grid-template-columns: repeat(6, 1fr);
+  `}
+`
+
+const MonthItem = styled(motion.button)`
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ isActive, theme }) =>
+    isActive 
+      ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
+      : 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%)'};
+  border: 2px solid ${({ isActive, theme }) =>
+    isActive ? theme.colors.primary : theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  color: ${({ isActive, theme }) =>
+    isActive ? 'white' : theme.colors.text.primary};
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all ${({ theme }) => theme.transitions.normal};
+  text-transform: capitalize;
+
+  &:hover {
+    background: ${({ isActive, theme }) =>
+      isActive 
+        ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
+        : 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%)'};
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+    transform: translateY(-2px);
+  }
+
+  ${media.sm`
+    font-size: 0.9rem;
+    padding: ${({ theme }) => theme.spacing.md};
+  `}
+
+  ${media.lg`
+    padding: 12px 16px;
+    font-size: 0.95rem;
   `}
 `
 
@@ -453,16 +512,43 @@ const Monthly = () => {
         </Header>
 
         <MonthSelector>
-          <MonthButton onClick={goToPreviousMonth}>
-            <FiChevronLeft />
-          </MonthButton>
-          <CurrentMonth>{monthName}</CurrentMonth>
-          <MonthButton 
-            onClick={goToNextMonth}
-            disabled={isCurrentMonth}
-          >
-            <FiChevronRight />
-          </MonthButton>
+          <MonthSelectorHeader>
+            <CurrentMonth>{monthName}</CurrentMonth>
+            <MonthNavigationButtons>
+              <MonthButton onClick={goToPreviousMonth} title="Poprzedni miesiąc">
+                <FiChevronLeft />
+              </MonthButton>
+              <MonthButton 
+                onClick={goToNextMonth}
+                disabled={isCurrentMonth}
+                title="Następny miesiąc"
+              >
+                <FiChevronRight />
+              </MonthButton>
+            </MonthNavigationButtons>
+          </MonthSelectorHeader>
+          
+          <MonthsGrid>
+            {monthNames.map((month, index) => {
+              const monthDate = new Date(selectedDate.getFullYear(), index, 1)
+              const isSelected = index === selectedDate.getMonth() && 
+                               monthDate.getFullYear() === selectedDate.getFullYear()
+              const isDisabled = monthDate > new Date()
+              
+              return (
+                <MonthItem
+                  key={index}
+                  isActive={isSelected}
+                  disabled={isDisabled}
+                  onClick={() => setSelectedDate(new Date(selectedDate.getFullYear(), index, 1))}
+                  whileHover={{ scale: isDisabled ? 1 : 1.05 }}
+                  whileTap={{ scale: isDisabled ? 1 : 0.98 }}
+                >
+                  {month.substring(0, 3)}
+                </MonthItem>
+              )
+            })}
+          </MonthsGrid>
         </MonthSelector>
 
         <motion.div
