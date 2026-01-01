@@ -3,7 +3,11 @@
     "allow": [
       "Bash(docker-compose exec:*)",
       "WebFetch(domain:moje.studiopaulinka.pl)",
-      "Read(//Users/krystianjanas/Downloads/**)"
+      "Read(//Users/krystianjanas/Downloads/**)",
+      "Bash(cd:*)",
+      "Bash(npm audit:*)",
+      "Bash(ls:*)",
+      "Bash(npm i:*)"
     ],
     "deny": [],
     "ask": []

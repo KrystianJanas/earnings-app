@@ -222,7 +222,7 @@ const ClientSearchInput = styled(Input)`
 const SearchIcon = styled.div`
   position: absolute;
   left: 10px;
-  top: 30px;
+  top: 28px;
   color: ${({ theme }) => theme.colors.text.muted};
   font-size: 0.9rem;
   pointer-events: none;
