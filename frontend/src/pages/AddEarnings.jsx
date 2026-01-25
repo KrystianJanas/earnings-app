@@ -404,27 +404,32 @@ const AddEarnings = () => {
     {
       refetchOnMount: true,
       onSuccess: (data) => {
-        if (data?.earning) {
-          setHoursWorked(data.earning.hoursWorked?.toString() || '')
-          setTipsAmount(data.earning.tipsAmount?.toString() || '')
-          setNotes(data.earning.notes || '')
+        if (data) {
+          setHoursWorked(data.hoursWorked?.toString() || '')
+          setTipsAmount(data.tipsAmount?.toString() || '')
+          setNotes(data.notes || '')
+          setDetailedMode(data.entryMode === 'detailed')
           setPaymentAmounts({
-            cash: data.earning.cashAmount?.toString() || '',
-            card: data.earning.cardAmount?.toString() || '',
-            blik: data.earning.blikAmount?.toString() || '',
-            prepaid: data.earning.prepaidAmount?.toString() || '',
-            transfer: data.earning.transferAmount?.toString() || '',
-            free: data.earning.freeAmount?.toString() || '',
+            cash: data.cashAmount?.toString() || '',
+            card: data.cardAmount?.toString() || '',
+            blik: data.blikAmount?.toString() || '',
+            prepaid: data.prepaidAmount?.toString() || '',
+            transfer: data.transferAmount?.toString() || '',
+            free: data.freeAmount?.toString() || '',
           })
-          if (data.transactions) {
-            setClients(data.transactions.map((t, index) => ({
-              id: t.id || index,
-              clientId: t.clientId,
-              clientName: t.clientName || '',
-              paymentMethod: t.paymentMethod || 'cash',
-              amount: t.amount?.toString() || '',
-              isNewClient: t.isNewClient || false,
+          if (data.clients && data.clients.length > 0) {
+            setClients(data.clients.map((c, index) => ({
+              id: c.id || index,
+              clientId: c.clientId,
+              clientName: c.clientName || '',
+              paymentMethod: c.paymentMethod || 'cash',
+              amount: c.amount?.toString() || '',
+              payments: c.payments || [{ amount: c.amount || 0, method: c.paymentMethod || 'cash' }],
+              notes: c.notes || '',
+              isNewClient: false,
             })))
+          } else {
+            setClients([])
           }
         }
       }
