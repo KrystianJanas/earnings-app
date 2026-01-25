@@ -34,6 +34,8 @@ router.get('/', [
   query('offset').optional().isInt({ min: 0 }).toInt()
 ], async (req, res) => {
   try {
+    console.log('📋 GET /clients - user:', req.user.userId, 'companyId:', req.user.companyId);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -46,6 +48,7 @@ router.get('/', [
       offset
     });
 
+    console.log('📋 Found clients:', clients.length);
     res.json(clients);
   } catch (error) {
     console.error('Get clients error:', error);

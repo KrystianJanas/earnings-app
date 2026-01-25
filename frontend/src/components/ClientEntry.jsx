@@ -53,10 +53,14 @@ const PaymentEntry = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.md};
   background: ${({ theme }) => theme.colors.cardBg};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  
+  ${media.md`
+    padding: ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const AmountInputWrapper = styled.div`
@@ -73,6 +77,7 @@ const AmountInput = styled(Input)`
 
 const PaymentMethodWrapper = styled.div`
   width: 100%;
+  overflow: hidden;
 `
 
 const PaymentMethodHeader = styled.div`
@@ -84,8 +89,9 @@ const PaymentMethodHeader = styled.div`
 
 const PaymentButtons = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
 
   ${media.md`
     grid-template-columns: repeat(6, 1fr);

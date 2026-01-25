@@ -439,9 +439,9 @@ const Clients = () => {
     })
   }
 
-  const clients = clientsData?.clients || []
+  const clients = Array.isArray(clientsData) ? clientsData : (clientsData?.clients || [])
   const filteredClients = clients.filter(client => {
-    const fullName = `${client.firstName || ''} ${client.lastName || ''}`.toLowerCase()
+    const fullName = (client.full_name || client.fullName || `${client.firstName || ''} ${client.lastName || ''}`).toLowerCase()
     return fullName.includes(searchQuery.toLowerCase())
   })
 
@@ -518,7 +518,7 @@ const Clients = () => {
               <ClientHeader>
                 <ClientInfo>
                   <ClientName>
-                    {client.firstName} {client.lastName}
+                    {client.full_name || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Brak nazwy'}
                   </ClientName>
                   <ClientContact>
                     {client.phone && (
