@@ -134,12 +134,14 @@ router.put('/:id', requireCompanyAccess, requireOwnerRole, [
 router.get('/:id/employees', requireCompanyAccess, requireOwnerRole, async (req, res) => {
   try {
     const { id } = req.params;
+    console.log('👥 GET /employees - companyId:', id, 'user:', req.user.userId);
     
     if (parseInt(id) !== req.user.companyId) {
       return res.status(403).json({ error: 'Can only view current company employees' });
     }
     
     const employees = await Company.getEmployees(id);
+    console.log('👥 Found employees:', employees?.length || 0);
     res.json(employees);
   } catch (error) {
     console.error('Get employees error:', error);

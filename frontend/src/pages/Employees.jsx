@@ -361,7 +361,7 @@ const Employees = () => {
     )
   }
 
-  const employees = employeesData?.employees || []
+  const employees = Array.isArray(employeesData) ? employeesData : (employeesData?.employees || [])
 
   return (
     <EmployeesContainer>

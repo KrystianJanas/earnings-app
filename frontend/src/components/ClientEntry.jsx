@@ -5,14 +5,16 @@ import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch } from 'react
 import { Input, Label, Button, media } from '../styles/theme'
 
 const ClientCard = styled.div`
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.sm};
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 
   ${media.md`
-    padding: ${({ theme }) => theme.spacing.xl};
+    padding: ${({ theme }) => theme.spacing.lg};
+    border-radius: ${({ theme }) => theme.borderRadius.xl};
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
   `}
 `
 
@@ -44,22 +46,30 @@ const RemoveButton = styled(Button)`
 `
 
 const PaymentsSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  
+  ${media.md`
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    margin-top: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const PaymentEntry = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm};
   background: ${({ theme }) => theme.colors.cardBg};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
   
   ${media.md`
+    gap: ${({ theme }) => theme.spacing.md};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
     padding: ${({ theme }) => theme.spacing.lg};
+    border-radius: ${({ theme }) => theme.borderRadius.lg};
   `}
 `
 
