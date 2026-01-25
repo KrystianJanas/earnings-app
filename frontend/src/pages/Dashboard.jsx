@@ -414,7 +414,7 @@ const Dashboard = () => {
             <FiUsers />
           </StatIconWrapper>
           <StatValue>{earnings.clientsCount || 0}</StatValue>
-          <StatLabel>Klientek</StatLabel>
+          <StatLabel>Klientów</StatLabel>
         </StatCard>
 
         <StatCard

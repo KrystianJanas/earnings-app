@@ -100,7 +100,7 @@ const Navigation = () => {
 
         <NavItem to="/clients">
           <FiUserCheck />
-          <span>Klientki</span>
+          <span>Klienci</span>
         </NavItem>
 
         {isOwner && (

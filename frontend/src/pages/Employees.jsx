@@ -464,7 +464,7 @@ const Employees = () => {
                           <StatValue $color="#8B5CF6">
                             {employee.stats?.clientsCount || 0}
                           </StatValue>
-                          <StatLabel><FiUsers /> Klientek</StatLabel>
+                          <StatLabel><FiUsers /> Klientów</StatLabel>
                         </StatCard>
                         <StatCard>
                           <StatValue $color="#06B6D4">

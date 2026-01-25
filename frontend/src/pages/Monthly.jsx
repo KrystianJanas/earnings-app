@@ -407,7 +407,7 @@ const Monthly = () => {
         <StatsGrid>
           <StatCard>
             <StatValue $color="#8B5CF6">{total.clients || 0}</StatValue>
-            <StatLabel><FiUsers /> Klientek</StatLabel>
+            <StatLabel><FiUsers /> Klientów</StatLabel>
           </StatCard>
           <StatCard>
             <StatValue $color="#06B6D4">{(total.hours || 0).toFixed(1)} h</StatValue>

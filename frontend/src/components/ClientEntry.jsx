@@ -403,7 +403,7 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
         <ClientSearchInput
           id={`client-${index}-search`}
           type="text"
-          placeholder="Wpisz imię klientki..."
+          placeholder="Wpisz imię klienta..."
           value={searchTerm}
           onChange={handleSearchChange}
           onKeyDown={handleKeyDown}
@@ -428,7 +428,7 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
               ))
             ) : (
               <NoResults>
-                Brak wyników. Wpisz więcej liter lub dodaj nową klientkę.
+                Brak wyników. Wpisz więcej liter lub dodaj nowego klienta.
               </NoResults>
             )}
           </SearchResults>

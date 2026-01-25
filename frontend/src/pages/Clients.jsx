@@ -409,7 +409,7 @@ const Clients = () => {
 
   const handleDelete = (id, e) => {
     e.stopPropagation()
-    if (window.confirm('Czy na pewno chcesz usunąć tę klientkę?')) {
+    if (window.confirm('Czy na pewno chcesz usunąć tego klienta?')) {
       deleteClientMutation.mutate(id)
     }
   }
@@ -449,9 +449,9 @@ const Clients = () => {
     return (
       <ClientsContainer>
         <PageHeader>
-          <h1><FiUsers /> Klientki</h1>
+          <h1><FiUsers /> Klienci</h1>
         </PageHeader>
-        <LoadingContainer>Ładowanie klientek...</LoadingContainer>
+        <LoadingContainer>Ładowanie klientów...</LoadingContainer>
       </ClientsContainer>
     )
   }
@@ -460,10 +460,10 @@ const Clients = () => {
     return (
       <ClientsContainer>
         <PageHeader>
-          <h1><FiUsers /> Klientki</h1>
+          <h1><FiUsers /> Klienci</h1>
         </PageHeader>
         <ErrorContainer>
-          <p>Nie udało się załadować listy klientek</p>
+          <p>Nie udało się załadować listy klientów</p>
         </ErrorContainer>
       </ClientsContainer>
     )
@@ -472,14 +472,14 @@ const Clients = () => {
   return (
     <ClientsContainer>
       <PageHeader>
-        <h1><FiUsers /> Klientki</h1>
-        <p>Zarządzaj swoimi klientkami</p>
+        <h1><FiUsers /> Klienci</h1>
+        <p>Zarządzaj swoimi klientami</p>
       </PageHeader>
 
       <HeaderActions>
         <AddClientButton onClick={() => setShowAddModal(true)}>
           <FiPlus />
-          Dodaj klientkę
+          Dodaj klienta
         </AddClientButton>
       </HeaderActions>
 
@@ -489,7 +489,7 @@ const Clients = () => {
         </SearchIcon>
         <SearchInput
           type="text"
-          placeholder="Szukaj klientki..."
+          placeholder="Szukaj klienta..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -503,8 +503,8 @@ const Clients = () => {
       {filteredClients.length === 0 ? (
         <EmptyState>
           <FiUsers />
-          <h3>Brak klientek</h3>
-          <p>Dodaj swoją pierwszą klientkę, aby rozpocząć</p>
+          <h3>Brak klientów</h3>
+          <p>Dodaj swojego pierwszego klienta, aby rozpocząć</p>
         </EmptyState>
       ) : (
         <ClientsList>
@@ -578,7 +578,7 @@ const Clients = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <ModalHeader>
-                <ModalTitle>Dodaj klientkę</ModalTitle>
+                <ModalTitle>Dodaj klienta</ModalTitle>
                 <CloseButton onClick={() => setShowAddModal(false)}>
                   <FiX size={20} />
                 </CloseButton>
@@ -591,7 +591,7 @@ const Clients = () => {
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    placeholder="Imię klientki"
+                    placeholder="Imię klienta"
                     required
                   />
                 </FormGroup>
@@ -601,7 +601,7 @@ const Clients = () => {
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    placeholder="Nazwisko klientki"
+                    placeholder="Nazwisko klienta"
                   />
                 </FormGroup>
                 <FormGroup>
@@ -660,7 +660,7 @@ const Clients = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <ModalHeader>
-                <ModalTitle>Edytuj klientkę</ModalTitle>
+                <ModalTitle>Edytuj klienta</ModalTitle>
                 <CloseButton onClick={() => setShowEditModal(false)}>
                   <FiX size={20} />
                 </CloseButton>
@@ -673,7 +673,7 @@ const Clients = () => {
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    placeholder="Imię klientki"
+                    placeholder="Imię klienta"
                     required
                   />
                 </FormGroup>
@@ -683,7 +683,7 @@ const Clients = () => {
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    placeholder="Nazwisko klientki"
+                    placeholder="Nazwisko klienta"
                   />
                 </FormGroup>
                 <FormGroup>

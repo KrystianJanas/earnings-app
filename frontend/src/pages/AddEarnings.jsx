@@ -625,7 +625,7 @@ const AddEarnings = () => {
         </DateSection>
 
         <ToggleSection>
-          <ToggleLabel>Tryb szczegółowy (z klientkami)</ToggleLabel>
+          <ToggleLabel>Tryb szczegółowy (z klientami)</ToggleLabel>
           <ToggleButton
             $isActive={detailedMode}
             onClick={() => setDetailedMode(!detailedMode)}
@@ -645,7 +645,7 @@ const AddEarnings = () => {
               </StatCard>
               <StatCard>
                 <StatValue $color="#8B5CF6">{clientsCount}</StatValue>
-                <StatLabel><FiUsers /> Klientek</StatLabel>
+                <StatLabel><FiUsers /> Klientów</StatLabel>
               </StatCard>
               <StatCard>
                 <FormGroup style={{ margin: 0 }}>
@@ -715,7 +715,7 @@ const AddEarnings = () => {
               <ClientsSection>
                 <SectionTitle>
                   <FiUsers />
-                  Klientki
+                  Klienci
                 </SectionTitle>
 
                 {clients.map((client, index) => (
@@ -730,7 +730,7 @@ const AddEarnings = () => {
 
                 <AddClientButton type="button" onClick={addClient} $variant="secondary">
                   <FiPlus />
-                  Dodaj klientkę
+                  Dodaj klienta
                 </AddClientButton>
               </ClientsSection>
             )}

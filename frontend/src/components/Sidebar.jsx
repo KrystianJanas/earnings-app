@@ -386,7 +386,7 @@ const Sidebar = () => {
 
           <NavItem to="/clients">
             <FiUserCheck />
-            <span>Klientki</span>
+            <span>Klienci</span>
           </NavItem>
         </NavSection>
 
