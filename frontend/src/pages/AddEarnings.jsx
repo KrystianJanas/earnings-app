@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { useForm } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { FiCalendar, FiSave, FiCreditCard, FiGift, FiUsers, FiClock, FiCheckCircle, FiPlus, FiToggleLeft, FiToggleRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import { format, addDays, subDays } from 'date-fns'
+import { format, addDays, subDays, parseISO, isValid } from 'date-fns'
 import { pl } from 'date-fns/locale'
 import { earningsAPI } from '../services/api'
 import { Button, Input, Label, media } from '../styles/theme'
@@ -377,12 +377,26 @@ const paymentMethods = [
 
 const AddEarnings = () => {
   const queryClient = useQueryClient()
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Pobierz datę z URL lub użyj dzisiejszej
+  const getInitialDate = () => {
+    const dateParam = searchParams.get('date')
+    if (dateParam) {
+      const parsed = parseISO(dateParam)
+      if (isValid(parsed)) {
+        return parsed
+      }
+    }
+    return new Date()
+  }
+
+  const [selectedDate, setSelectedDate] = useState(getInitialDate)
   const [clients, setClients] = useState([])
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [detailedMode, setDetailedMode] = useState(true)
-  
+
   const [hoursWorked, setHoursWorked] = useState('')
   const [tipsAmount, setTipsAmount] = useState('')
   const [notes, setNotes] = useState('')
@@ -397,6 +411,14 @@ const AddEarnings = () => {
   })
 
   const dateStr = format(selectedDate, 'yyyy-MM-dd')
+
+  // Aktualizuj URL gdy zmienia się data
+  useEffect(() => {
+    const currentDateParam = searchParams.get('date')
+    if (currentDateParam !== dateStr) {
+      setSearchParams({ date: dateStr }, { replace: true })
+    }
+  }, [dateStr, searchParams, setSearchParams])
 
   const { data: existingEarning, isLoading: loadingExisting } = useQuery(
     ['earningByDate', dateStr],
@@ -445,10 +467,12 @@ const AddEarnings = () => {
         queryClient.invalidateQueries(['earningByDate'])
         queryClient.invalidateQueries(['dashboard'])
         queryClient.invalidateQueries(['monthlyEarnings'])
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       },
       onError: (error) => {
         setErrorMessage(error.response?.data?.error || 'Błąd podczas zapisywania')
         setTimeout(() => setErrorMessage(''), 3000)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }
   )
