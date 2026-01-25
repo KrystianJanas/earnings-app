@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
-import { FiChevronDown, FiUsers, FiLogOut, FiPlus } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FiChevronDown, FiLogOut, FiPlus, FiCheck } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import CreateCompany from './CreateCompany'
 import { media } from '../styles/theme'
@@ -11,11 +11,11 @@ const HeaderContainer = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  background: ${({ theme }) => theme.colors.background};
-  border-bottom: 2px solid ${({ theme }) => theme.colors.borderLight};
-  padding: 0.75rem 1rem;
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  padding: 12px 16px;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: ${({ theme }) => theme.shadows.sm};
 
   ${media.lg`
     display: none;
@@ -23,20 +23,12 @@ const HeaderContainer = styled.header`
 `
 
 const HeaderContent = styled.div`
-  max-width: 428px;
+  max-width: 500px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-
-  ${media.sm`
-    max-width: 640px;
-  `}
-
-  ${media.md`
-    max-width: 768px;
-  `}
+  gap: 12px;
 `
 
 const CompanyInfo = styled.div`
@@ -48,93 +40,92 @@ const PeriodSelectorWrapper = styled.div`
   flex-shrink: 0;
 `
 
-const PeriodSelect = styled.select`
+const CompanyButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  color: ${({ theme }) => theme.colors.text.primary};
-  padding: 6px 24px 6px 8px;
-  font-size: 0.75rem;
   cursor: pointer;
-  appearance: none;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 6px center;
+  color: ${({ theme }) => theme.colors.text.primary};
+  padding: 10px 14px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  width: 100%;
 
   &:hover {
+    background: ${({ theme }) => theme.colors.surfaceHover};
     border-color: ${({ theme }) => theme.colors.primary};
-    background-color: ${({ theme }) => theme.colors.cardBg};
-  }
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
   }
 `
 
-const CompanyButton = styled(motion.button)`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}15 0%, ${({ theme }) => theme.colors.secondary}10 100%);
-  border: 2px solid ${({ theme }) => theme.colors.borderLight};
-  cursor: pointer;
-  color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 0.625rem 0.875rem;
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  transition: all ${({ theme }) => theme.transitions.normal};
-
-  &:hover {
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}25 0%, ${({ theme }) => theme.colors.secondary}15 100%);
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
-
-  svg {
-    font-size: 1.1rem;
-    color: ${({ theme }) => theme.colors.primary};
-    transition: transform 0.2s ease;
-    transform: ${({ $isOpen }) => $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
-  }
+const CompanyDetails = styled.div`
+  flex: 1;
+  text-align: left;
+  min-width: 0;
 `
 
 const CompanyName = styled.div`
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const UserRole = styled.div`
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: ${({ theme }) => theme.colors.text.muted};
   font-weight: 500;
 `
 
+const ChevronIcon = styled(FiChevronDown)`
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+  transition: transform 0.2s ease;
+  transform: ${({ $isOpen }) => $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+  flex-shrink: 0;
+`
+
 const Dropdown = styled(motion.div)`
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: ${({ theme }) => theme.colors.background};
-  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  top: calc(100% + 8px);
+  left: 16px;
+  right: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+  background: ${({ theme }) => theme.colors.cardBg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.xl};
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  margin-top: 0.5rem;
+  box-shadow: ${({ theme }) => theme.shadows.lg};
   overflow: hidden;
   z-index: 1000;
 `
 
-const DropdownItem = styled(motion.button)`
+const DropdownSection = styled.div`
+  padding: 8px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  }
+`
+
+const SectionTitle = styled.div`
+  padding: 8px 16px 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+`
+
+const DropdownItem = styled.button`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  gap: 12px;
+  padding: 12px 16px;
   border: none;
   background: transparent;
   color: ${({ theme }) => theme.colors.text.primary};
@@ -144,50 +135,49 @@ const DropdownItem = styled(motion.button)`
   font-size: 0.9rem;
 
   &:hover {
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}15 0%, ${({ theme }) => theme.colors.secondary}08 100%);
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+    background: ${({ theme }) => theme.colors.surface};
   }
 
   svg {
     font-size: 1.1rem;
     color: ${({ theme }) => theme.colors.primary};
+    flex-shrink: 0;
   }
-`
-
-const DropdownSection = styled.div`
-  padding: 0.5rem 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-
-  &:last-child {
-    border-bottom: none;
-  }
-`
-
-const SectionTitle = styled.div`
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text.muted};
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 `
 
 const CompanyMenuItem = styled(DropdownItem)`
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
+  justify-content: space-between;
+`
+
+const CompanyMenuInfo = styled.div`
+  flex: 1;
+  min-width: 0;
 `
 
 const CompanyMenuName = styled.div`
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const CompanyMenuRole = styled.div`
   font-size: 0.75rem;
   color: ${({ theme }) => theme.colors.text.muted};
+`
+
+const ActiveIndicator = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.primaryLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  svg {
+    font-size: 0.85rem;
+  }
 `
 
 const Overlay = styled.div`
@@ -250,52 +240,63 @@ const Header = ({ periodSelector }) => {
       <HeaderContent>
         <CompanyInfo>
           <div style={{ position: 'relative' }}>
-            <CompanyButton
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              $isOpen={isDropdownOpen}
-            >
-              <div>
+            <CompanyButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <CompanyDetails>
                 <CompanyName>{currentCompany.name}</CompanyName>
                 <UserRole>{getRoleLabel(currentCompany.userRole)}</UserRole>
-              </div>
-              <FiChevronDown />
+              </CompanyDetails>
+              <ChevronIcon $isOpen={isDropdownOpen} />
             </CompanyButton>
 
-            {isDropdownOpen && (
-              <>
-                <Overlay onClick={() => setIsDropdownOpen(false)} />
-                <Dropdown>
-                  {companies.length > 1 && (
-                    <DropdownSection>
-                      <SectionTitle>Przełącz salon</SectionTitle>
-                      {companies.map((company) => (
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <>
+                  <Overlay onClick={() => setIsDropdownOpen(false)} />
+                  <Dropdown
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {companies.length > 1 && (
+                      <DropdownSection>
+                        <SectionTitle>Przełącz salon</SectionTitle>
+                        {companies.map((company) => (
                           <CompanyMenuItem
                             key={company.id}
                             onClick={() => handleCompanySwitch(company.id)}
                           >
-                            <CompanyMenuName>{company.name}</CompanyMenuName>
-                            <CompanyMenuRole>{getRoleLabel(company.userRole)}</CompanyMenuRole>
+                            <CompanyMenuInfo>
+                              <CompanyMenuName>{company.name}</CompanyMenuName>
+                              <CompanyMenuRole>{getRoleLabel(company.userRole)}</CompanyMenuRole>
+                            </CompanyMenuInfo>
+                            {company.id === currentCompany.id && (
+                              <ActiveIndicator>
+                                <FiCheck />
+                              </ActiveIndicator>
+                            )}
                           </CompanyMenuItem>
-                      ))}
+                        ))}
+                      </DropdownSection>
+                    )}
+
+                    <DropdownSection>
+                      <DropdownItem onClick={handleCreateCompany}>
+                        <FiPlus />
+                        Utwórz nowy salon
+                      </DropdownItem>
                     </DropdownSection>
-                  )}
 
-                  <DropdownSection>
-                    <DropdownItem onClick={handleCreateCompany}>
-                      <FiPlus />
-                      Utwórz nowy salon
-                    </DropdownItem>
-                  </DropdownSection>
-
-                  <DropdownSection>
-                    <DropdownItem onClick={handleLogout}>
-                      <FiLogOut />
-                      Wyloguj się
-                    </DropdownItem>
-                  </DropdownSection>
-                </Dropdown>
-              </>
-            )}
+                    <DropdownSection>
+                      <DropdownItem onClick={handleLogout}>
+                        <FiLogOut />
+                        Wyloguj się
+                      </DropdownItem>
+                    </DropdownSection>
+                  </Dropdown>
+                </>
+              )}
+            </AnimatePresence>
           </div>
         </CompanyInfo>
 

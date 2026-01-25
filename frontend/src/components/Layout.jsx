@@ -9,6 +9,7 @@ const LayoutContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: ${({ theme }) => theme.colors.background};
 
   ${media.lg`
     flex-direction: row;
@@ -17,21 +18,21 @@ const LayoutContainer = styled.div`
 
 const Main = styled.main`
   flex: 1;
-  padding-top: 80px; /* Space for fixed header */
-  padding-bottom: 80px; /* Space for fixed navigation */
+  padding-top: 72px;
+  padding-bottom: 80px;
   background: ${({ theme }) => theme.colors.background};
 
   ${media.lg`
-    margin-left: 280px; /* Space for sidebar */
+    margin-left: 280px;
     padding-top: 0;
     padding-bottom: 0;
   `}
 `
 
 const Content = styled.div`
-  max-width: 428px;
+  max-width: 500px;
   margin: 0 auto;
-  min-height: calc(100vh - 160px); /* Full height minus header and nav */
+  min-height: calc(100vh - 152px);
 
   ${media.sm`
     max-width: 640px;
@@ -48,7 +49,7 @@ const Content = styled.div`
   `}
 
   ${media.xl`
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
   `}
 `

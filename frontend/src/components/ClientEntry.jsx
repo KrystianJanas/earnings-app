@@ -2,37 +2,31 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch } from 'react-icons/fi'
-import { Input, Label, Button } from '../styles/theme'
+import { Input, Label, Button, media } from '../styles/theme'
 
 const ClientCard = styled.div`
   padding: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
-  border: 2px solid ${({ theme }) => theme.colors.borderLight};
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 
-  @media (min-width: 640px) {
+  ${media.md`
     padding: ${({ theme }) => theme.spacing.lg};
-  }
+  `}
 `
 
 const ClientHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-
-  @media (min-width: 640px) {
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-  }
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `
 
 const ClientNumber = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: 8px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.primary};
   font-size: 0.9rem;
@@ -41,9 +35,8 @@ const ClientNumber = styled.div`
 const RemoveButton = styled(Button)`
   background: ${({ theme }) => theme.colors.error};
   color: white;
-  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  padding: 8px 12px;
   font-size: 0.8rem;
-  margin-left: auto;
 
   &:hover {
     background: ${({ theme }) => theme.colors.error}dd;
@@ -51,11 +44,7 @@ const RemoveButton = styled(Button)`
 `
 
 const PaymentsSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-
-  @media (min-width: 640px) {
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-  }
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `
 
 const PaymentEntry = styled.div`
@@ -64,15 +53,9 @@ const PaymentEntry = styled.div`
   gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   padding: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(236, 72, 153, 0.03) 100%);
+  background: ${({ theme }) => theme.colors.cardBg};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
-
-  @media (min-width: 640px) {
-    gap: ${({ theme }) => theme.spacing.md};
-    padding: ${({ theme }) => theme.spacing.lg};
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-  }
 `
 
 const AmountInputWrapper = styled.div`
@@ -81,14 +64,8 @@ const AmountInputWrapper = styled.div`
 
 const AmountInput = styled(Input)`
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  height: 36px;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-    height: 40px;
-  }
 `
 
 const PaymentMethodWrapper = styled.div`
@@ -99,22 +76,17 @@ const PaymentMethodHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 `
 
 const PaymentButtons = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: ${({ theme }) => theme.spacing.xs};
-  margin-top: ${({ theme }) => theme.spacing.xs};
-  overflow: visible;
-  width: 100%;
+  gap: 8px;
 
-  @media (min-width: 640px) {
+  ${media.md`
     grid-template-columns: repeat(6, 1fr);
-    margin-top: ${({ theme }) => theme.spacing.sm};
-    gap: ${({ theme }) => theme.spacing.sm};
-  }
+  `}
 `
 
 const PaymentButton = styled.button`
@@ -123,42 +95,36 @@ const PaymentButton = styled.button`
   justify-content: center;
   gap: 4px;
   padding: 10px 8px;
-  border: 2px solid ${({ active, theme }) => active ? theme.colors.primary : theme.colors.borderLight};
+  border: 1px solid ${({ $active, theme }) => $active ? theme.colors.primary : theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  background: ${({ active, theme }) => active 
-    ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` 
-    : 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%)'};
-  color: ${({ active, theme }) => active ? 'white' : theme.colors.text.primary};
+  background: ${({ $active, theme }) => $active 
+    ? theme.colors.gradient.primary
+    : theme.colors.surface};
+  color: ${({ $active, theme }) => $active ? 'white' : theme.colors.text.secondary};
   font-size: 0.7rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
   min-height: 42px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-shadow: ${({ active }) => active ? '0 4px 12px rgba(139, 92, 246, 0.3)' : 'none'};
+  box-shadow: ${({ $active, theme }) => $active ? theme.shadows.button : 'none'};
 
-  @media (min-width: 640px) {
+  ${media.md`
     padding: 12px 10px;
     font-size: 0.8rem;
-    gap: 6px;
     min-height: 48px;
-  }
+  `}
 
   &:hover {
-    background: ${({ active, theme }) => active 
-      ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)` 
-      : 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%)'};
     border-color: ${({ theme }) => theme.colors.primary};
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    background: ${({ $active, theme }) => $active 
+      ? undefined
+      : theme.colors.surfaceHover};
   }
 `
 
 const PaymentControlsWrapper = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spacing.xs};
+  gap: 8px;
   align-items: center;
 `
 
@@ -166,13 +132,12 @@ const PaymentControlButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border: 1px solid ${({ theme, variant }) =>
-    variant === 'add' ? theme.colors.success : theme.colors.error};
+  width: 28px;
+  height: 28px;
+  border: none;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  background: ${({ theme, variant }) =>
-    variant === 'add' ? theme.colors.success : theme.colors.error};
+  background: ${({ theme, $variant }) =>
+    $variant === 'add' ? theme.colors.success : theme.colors.error};
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -182,60 +147,42 @@ const PaymentControlButton = styled.button`
   }
 
   svg {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
   }
 `
 
 const TotalAmountDisplay = styled.div`
-  padding: ${({ theme }) => theme.spacing.xs};
-  background: ${({ theme }) => theme.colors.primary}10;
+  padding: 10px;
+  background: ${({ theme }) => theme.colors.primaryLight};
   border: 1px solid ${({ theme }) => theme.colors.primary}30;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.primary};
   text-align: center;
   font-size: 0.9rem;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `
 
 const ClientSearchWrapper = styled.div`
   position: relative;
-  margin-bottom: 8px;
-
-  @media (min-width: 640px) {
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-  }
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `
 
 const ClientSearchInput = styled(Input)`
-  padding-left: 2.5rem;
+  padding-left: 40px;
   font-weight: 500;
-  height: 36px;
-  font-size: 0.9rem;
-
-  @media (min-width: 640px) {
-    height: 40px;
-    font-size: 1rem;
-  }
 `
 
 const SearchIcon = styled.div`
   position: absolute;
-  left: 10px;
-  top: 28px;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.muted};
-  font-size: 0.9rem;
-  pointer-events: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 36px;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-    left: ${({ theme }) => theme.spacing.sm};
-    height: 40px;
-  }
+  pointer-events: none;
+  margin-top: 12px;
 `
 
 const SearchResults = styled.div`
@@ -243,24 +190,24 @@ const SearchResults = styled.div`
   top: 100%;
   left: 0;
   right: 0;
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.cardBg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-top: none;
   border-radius: 0 0 ${({ theme }) => theme.borderRadius.md} ${({ theme }) => theme.borderRadius.md};
   max-height: 200px;
   overflow-y: auto;
   z-index: 10;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 `
 
 const SearchResultItem = styled.div`
   padding: ${({ theme }) => theme.spacing.sm};
   cursor: pointer;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border}20;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
   transition: background-color 0.2s ease;
 
   &:hover, &.highlighted {
-    background: ${({ theme }) => theme.colors.primary}10;
+    background: ${({ theme }) => theme.colors.primaryLight};
   }
 
   &:last-child {
@@ -289,67 +236,55 @@ const NoResults = styled.div`
 
 const NotesInput = styled(Input)`
   font-size: 0.9rem;
-  height: 36px;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-    height: 40px;
-  }
 `
 
 const PAYMENT_METHODS = [
-  { value: 'cash', label: '💵 Gotówka', icon: '💵' },
-  { value: 'card', label: '💳 Karta', icon: <FiCreditCard /> },
-  { value: 'blik', label: '📱 BLIK', icon: '📱' },
-  { value: 'prepaid', label: '💰 Przedpłata', icon: '💰' },
-  { value: 'transfer', label: '🏦 Przelew', icon: '🏦' },
-  { value: 'free', label: '🎁 Gratis', icon: '🎁' }
+  { value: 'cash', label: 'Gotówka', icon: '💵' },
+  { value: 'card', label: 'Karta', icon: '💳' },
+  { value: 'blik', label: 'BLIK', icon: '📱' },
+  { value: 'prepaid', label: 'Przedpłata', icon: '💰' },
+  { value: 'transfer', label: 'Przelew', icon: '🏦' },
+  { value: 'free', label: 'Gratis', icon: '🎁' }
 ]
 
-const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
+const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
   const [searchTerm, setSearchTerm] = useState(client.clientName || '')
   const [showResults, setShowResults] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const searchRef = useRef(null)
-  const resultsRef = useRef(null)
 
-  // Search for clients
   const { data: searchResults = [] } = useQuery(
     ['clientSearch', searchTerm],
     () => {
       if (!searchTerm || searchTerm.length < 2) return []
-      // This will be implemented when we add the API endpoint
       return fetch(`/api/clients/search?q=${encodeURIComponent(searchTerm)}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       }).then(res => res.json()).catch(() => [])
     },
     {
       enabled: searchTerm.length >= 2,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     }
   )
 
-  // Handle search input changes
   const handleSearchChange = (e) => {
     const value = e.target.value
     setSearchTerm(value)
     setShowResults(value.length >= 2)
     setHighlightedIndex(-1)
     
-    // Update client name in parent component
-    onChange(index, {
+    onUpdate({
       ...client,
       clientName: value
     })
   }
 
-  // Handle client selection from search results
   const handleClientSelect = (selectedClient) => {
     setSearchTerm(selectedClient.full_name)
     setShowResults(false)
     setHighlightedIndex(-1)
     
-    onChange(index, {
+    onUpdate({
       ...client,
       clientName: selectedClient.full_name,
       clientId: selectedClient.id,
@@ -358,7 +293,6 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
     })
   }
 
-  // Handle keyboard navigation
   const handleKeyDown = (e) => {
     if (!showResults || searchResults.length === 0) return
 
@@ -386,7 +320,6 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
     }
   }
 
-  // Close search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -399,7 +332,6 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Initialize payments structure for backward compatibility
   const payments = client.payments || (client.paymentMethod ? 
     [{ amount: client.amount || 0, method: client.paymentMethod }] : 
     [{ amount: 0, method: 'cash' }]
@@ -414,16 +346,16 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
     
     const totalAmount = updatedPayments.reduce((sum, payment) => sum + (parseFloat(payment.amount) || 0), 0)
     
-    onChange(index, {
+    onUpdate({
       ...client,
       payments: updatedPayments,
-      amount: totalAmount // Keep total for backward compatibility
+      amount: totalAmount
     })
   }
 
   const addPayment = () => {
     const updatedPayments = [...payments, { amount: 0, method: 'cash' }]
-    onChange(index, {
+    onUpdate({
       ...client,
       payments: updatedPayments
     })
@@ -434,7 +366,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
       const updatedPayments = payments.filter((_, i) => i !== paymentIndex)
       const totalAmount = updatedPayments.reduce((sum, payment) => sum + (parseFloat(payment.amount) || 0), 0)
       
-      onChange(index, {
+      onUpdate({
         ...client,
         payments: updatedPayments,
         amount: totalAmount
@@ -443,7 +375,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
   }
 
   const handleNotesChange = (value) => {
-    onChange(index, {
+    onUpdate({
       ...client,
       notes: value
     })
@@ -480,7 +412,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
           autoComplete="off"
         />
         {showResults && (
-          <SearchResults ref={resultsRef}>
+          <SearchResults>
             {searchResults.length > 0 ? (
               searchResults.map((result, resultIndex) => (
                 <SearchResultItem
@@ -535,7 +467,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                 <PaymentControlsWrapper>
                   <PaymentControlButton
                     type="button"
-                    variant="add"
+                    $variant="add"
                     onClick={addPayment}
                     title="Dodaj płatność"
                   >
@@ -544,7 +476,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                   {payments.length > 1 && (
                     <PaymentControlButton
                       type="button"
-                      variant="remove"
+                      $variant="remove"
                       onClick={() => removePayment(paymentIndex)}
                       title="Usuń płatność"
                     >
@@ -558,17 +490,10 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                   <PaymentButton
                     key={method.value}
                     type="button"
-                    active={payment.method === method.value}
+                    $active={payment.method === method.value}
                     onClick={() => handlePaymentChange(paymentIndex, 'method', method.value)}
                   >
-                    {method.icon} {
-                      method.value === 'cash' ? 'Gotówka' :
-                      method.value === 'card' ? 'Karta' :
-                      method.value === 'blik' ? 'BLIK' :
-                      method.value === 'prepaid' ? 'Przedpłata' :
-                      method.value === 'transfer' ? 'Przelew' :
-                      method.value === 'free' ? 'Gratis' : method.label.split(' ')[1]
-                    }
+                    {method.icon} {method.label}
                   </PaymentButton>
                 ))}
               </PaymentButtons>
@@ -578,7 +503,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
       </PaymentsSection>
 
       <div>
-        <Label htmlFor={`client-notes-${index}`}>Notatki (opcjonalne)</Label>
+        <Label htmlFor={`client-notes-${index}`}>Notatki (opcjonalnie)</Label>
         <NotesInput
           id={`client-notes-${index}`}
           type="text"

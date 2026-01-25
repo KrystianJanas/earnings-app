@@ -1,468 +1,446 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { FiSettings, FiUsers, FiArrowRight, FiMail, FiLock, FiUser, FiSave, FiEye, FiEyeOff } from 'react-icons/fi';
-import { useMutation } from 'react-query';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Container as ThemeContainer, Card, GlassCard, Button, Input, Label, media, GradientText } from '../styles/theme';
-import Navigation from '../components/Navigation';
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { motion } from 'framer-motion'
+import { FiSettings, FiUsers, FiArrowRight, FiMail, FiLock, FiUser, FiSave, FiEye, FiEyeOff } from 'react-icons/fi'
+import { useMutation } from 'react-query'
+import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { Button, Input, Label, media } from '../styles/theme'
 
 const SettingsContainer = styled.div`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.md} 0;
+  padding: ${({ theme }) => theme.spacing.md};
   padding-bottom: 100px;
   background: ${({ theme }) => theme.colors.background};
 
   ${media.lg`
-    padding: ${({ theme }) => theme.spacing.lg} 0;
-    padding-bottom: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.xl};
+    padding-bottom: ${({ theme }) => theme.spacing.xl};
   `}
-`;
+`
 
-const Header = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-  text-align: center;
+const PageHeader = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.text.primary};
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    svg {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+
+    ${media.lg`
+      font-size: 1.875rem;
+    `}
+  }
+`
+
+const MaxWidth = styled.div`
+  max-width: 600px;
 
   ${media.lg`
-    text-align: left;
-    margin-bottom: ${({ theme }) => theme.spacing.xl};
+    max-width: 700px;
   `}
-`;
+`
 
-const Title = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 800;
-  background: ${({ theme }) => theme.colors.gradient.primary};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
+const SectionCard = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+`
+
+const SectionTitle = styled.h2`
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  svg {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const EmailDisplay = styled.div`
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  padding: 14px 16px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+
+  svg {
+    color: ${({ theme }) => theme.colors.text.muted};
+  }
+`
+
+const PasswordInputWrapper = styled.div`
+  position: relative;
+`
+
+const PasswordToggle = styled.button`
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.text.muted};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`
+
+const SuccessMessage = styled.div`
+  background: ${({ theme }) => theme.colors.successLight};
+  color: ${({ theme }) => theme.colors.success};
+  padding: 12px 16px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+`
+
+const ErrorMessage = styled.div`
+  background: ${({ theme }) => theme.colors.errorLight};
+  color: ${({ theme }) => theme.colors.error};
+  padding: 12px 16px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-weight: 500;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+`
+
+const InfoCard = styled.div`
+  background: ${({ theme }) => theme.colors.gradient.soft};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  text-align: center;
+`
+
+const InfoIcon = styled.div`
+  width: 64px;
+  height: 64px;
+  margin: 0 auto ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.primaryLight};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
 
-  ${media.lg`
-    font-size: 2rem;
-    justify-content: flex-start;
-  `}
-`;
-
-const InfoCard = styled(GlassCard)`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  text-align: center;
-  padding: ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
-`;
+  svg {
+    font-size: 1.75rem;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`
 
 const InfoText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   line-height: 1.6;
-`;
-
-const RedirectButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin: 0 auto;
-`;
-
-const SettingsForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const SectionCard = styled(motion(GlassCard))`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-  padding: ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%);
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
-  border: 2px solid ${({ theme }) => theme.colors.borderLight};
-  transition: all ${({ theme }) => theme.transitions.normal};
-
-  &:hover {
-    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.1) 100%);
-  }
-`;
-
-const SectionTitle = styled.h2`
-  color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 1.1rem;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-const EmailDisplay = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: ${({ theme }) => theme.spacing.sm};
-  color: ${({ theme }) => theme.colors.text.secondary};
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-const PasswordInputWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const PasswordInput = styled(Input)`
-  padding-right: 2.5rem;
-`;
-
-const PasswordToggle = styled.button`
-  position: absolute;
-  right: 0.75rem;
-  background: none;
-  border: none;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  
-  &:hover {
-    color: ${({ theme }) => theme.colors.text.primary};
-  }
-`;
-
-const SaveButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-`;
-
-const SuccessMessage = styled.div`
-  background: ${({ theme }) => theme.colors.success};
-  color: white;
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  text-align: center;
-`;
-
-const ErrorMessage = styled.div`
-  background: ${({ theme }) => theme.colors.error};
-  color: white;
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  text-align: center;
-`;
-
-const ResponsiveContainer = styled(ThemeContainer)`
-  @media (min-width: 1024px) {
-    max-width: 800px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
-  }
-
-  @media (min-width: 1280px) {
-    max-width: 900px;
-    padding: 0 ${({ theme }) => theme.spacing.xl};
-  }
-`;
+`
 
 const Settings = () => {
-  const { currentCompany, user } = useAuth();
-  const navigate = useNavigate();
+  const { currentCompany, user } = useAuth()
+  const navigate = useNavigate()
   
-  const [firstName, setFirstName] = useState(user?.firstName || '');
-  const [lastName, setLastName] = useState(user?.lastName || '');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState(user?.firstName || '')
+  const [lastName, setLastName] = useState(user?.lastName || '')
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
-  const [profileMessage, setProfileMessage] = useState('');
-  const [passwordMessage, setPasswordMessage] = useState('');
+  const [profileMessage, setProfileMessage] = useState('')
+  const [passwordMessage, setPasswordMessage] = useState('')
   
-  const isOwner = currentCompany?.userRole === 'owner';
-  
-  const handleNavigateToEmployees = () => {
-    navigate('/employees');
-  };
+  const isOwner = currentCompany?.userRole === 'owner'
 
-  // Placeholder mutations - we'll need to implement these API endpoints
   const updateProfileMutation = useMutation(
     async (data) => {
-      // TODO: Implement profile update API
-      console.log('Updating profile:', data);
-      return Promise.resolve();
+      console.log('Updating profile:', data)
+      return Promise.resolve()
     },
     {
       onSuccess: () => {
-        setProfileMessage('Profil został zaktualizowany');
-        setTimeout(() => setProfileMessage(''), 3000);
+        setProfileMessage('Profil został zaktualizowany')
+        setTimeout(() => setProfileMessage(''), 3000)
       },
       onError: () => {
-        setProfileMessage('Błąd podczas aktualizacji profilu');
-        setTimeout(() => setProfileMessage(''), 3000);
+        setProfileMessage('error:Błąd podczas aktualizacji profilu')
+        setTimeout(() => setProfileMessage(''), 3000)
       }
     }
-  );
+  )
 
   const changePasswordMutation = useMutation(
     async (data) => {
-      // TODO: Implement password change API
-      console.log('Changing password:', data);
-      return Promise.resolve();
+      console.log('Changing password:', data)
+      return Promise.resolve()
     },
     {
       onSuccess: () => {
-        setPasswordMessage('Hasło zostało zmienione');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setTimeout(() => setPasswordMessage(''), 3000);
+        setPasswordMessage('Hasło zostało zmienione')
+        setCurrentPassword('')
+        setNewPassword('')
+        setConfirmPassword('')
+        setTimeout(() => setPasswordMessage(''), 3000)
       },
       onError: () => {
-        setPasswordMessage('Błąd podczas zmiany hasła');
-        setTimeout(() => setPasswordMessage(''), 3000);
+        setPasswordMessage('error:Błąd podczas zmiany hasła')
+        setTimeout(() => setPasswordMessage(''), 3000)
       }
     }
-  );
+  )
 
   const handleProfileSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (firstName.trim() && lastName.trim()) {
       updateProfileMutation.mutate({
         firstName: firstName.trim(),
         lastName: lastName.trim()
-      });
+      })
     }
-  };
+  }
 
   const handlePasswordSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (newPassword !== confirmPassword) {
-      setPasswordMessage('Nowe hasła nie są identyczne');
-      setTimeout(() => setPasswordMessage(''), 3000);
-      return;
+      setPasswordMessage('error:Nowe hasła nie są identyczne')
+      setTimeout(() => setPasswordMessage(''), 3000)
+      return
     }
     if (newPassword.length < 6) {
-      setPasswordMessage('Nowe hasło musi mieć co najmniej 6 znaków');
-      setTimeout(() => setPasswordMessage(''), 3000);
-      return;
+      setPasswordMessage('error:Nowe hasło musi mieć co najmniej 6 znaków')
+      setTimeout(() => setPasswordMessage(''), 3000)
+      return
     }
     changePasswordMutation.mutate({
       currentPassword,
       newPassword
-    });
-  };
+    })
+  }
 
   return (
     <SettingsContainer>
-      <ResponsiveContainer>
-        <Header>
-          <Title>
-            <FiSettings size={24} color="#8B5CF6" />
-            Ustawienia
-          </Title>
-        </Header>
+      <PageHeader>
+        <h1>
+          <FiSettings />
+          Ustawienia
+        </h1>
+      </PageHeader>
 
-        <motion.div
+      <MaxWidth>
+        <SectionCard
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
         >
-          {/* Account Information Section */}
-          <SectionCard>
-            <SectionTitle>
-              <FiMail size={20} />
-              Informacje o koncie
-            </SectionTitle>
+          <SectionTitle>
+            <FiMail />
+            Informacje o koncie
+          </SectionTitle>
+          
+          <FormGroup>
+            <Label>Adres e-mail</Label>
+            <EmailDisplay>
+              <FiMail size={18} />
+              {user?.email || 'Brak adresu e-mail'}
+            </EmailDisplay>
+          </FormGroup>
+        </SectionCard>
+
+        <SectionCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <SectionTitle>
+            <FiUser />
+            Profil
+          </SectionTitle>
+          
+          {profileMessage && (
+            profileMessage.startsWith('error:') ? (
+              <ErrorMessage>{profileMessage.replace('error:', '')}</ErrorMessage>
+            ) : (
+              <SuccessMessage>{profileMessage}</SuccessMessage>
+            )
+          )}
+          
+          <Form onSubmit={handleProfileSubmit}>
+            <FormGroup>
+              <Label htmlFor="firstName">Imię</Label>
+              <Input
+                id="firstName"
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Wpisz swoje imię"
+                required
+              />
+            </FormGroup>
             
             <FormGroup>
-              <Label>Adres e-mail</Label>
-              <EmailDisplay>
-                <FiMail size={16} />
-                {user?.email || 'Brak adresu e-mail'}
-              </EmailDisplay>
+              <Label htmlFor="lastName">Nazwisko</Label>
+              <Input
+                id="lastName"
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Wpisz swoje nazwisko"
+                required
+              />
             </FormGroup>
-          </SectionCard>
+            
+            <Button type="submit" disabled={updateProfileMutation.isLoading}>
+              <FiSave />
+              {updateProfileMutation.isLoading ? 'Zapisywanie...' : 'Zapisz profil'}
+            </Button>
+          </Form>
+        </SectionCard>
 
-          {/* Profile Section */}
-          <SectionCard>
-            <SectionTitle>
-              <FiUser size={20} />
-              Profil
-            </SectionTitle>
-            
-            {profileMessage && (
-              profileMessage.includes('Błąd') ? (
-                <ErrorMessage>{profileMessage}</ErrorMessage>
-              ) : (
-                <SuccessMessage>{profileMessage}</SuccessMessage>
-              )
-            )}
-            
-            <SettingsForm onSubmit={handleProfileSubmit}>
-              <FormGroup>
-                <Label htmlFor="firstName">Imię</Label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Wpisz swoje imię"
-                  required
-                />
-              </FormGroup>
-              
-              <FormGroup>
-                <Label htmlFor="lastName">Nazwisko</Label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Wpisz swoje nazwisko"
-                  required
-                />
-              </FormGroup>
-              
-              <SaveButton 
-                type="submit" 
-                disabled={updateProfileMutation.isLoading}
-              >
-                <FiSave size={16} />
-                {updateProfileMutation.isLoading ? 'Zapisywanie...' : 'Zapisz profil'}
-              </SaveButton>
-            </SettingsForm>
-          </SectionCard>
-
-          {/* Password Section */}
-          <SectionCard>
-            <SectionTitle>
-              <FiLock size={20} />
-              Zmiana hasła
-            </SectionTitle>
-            
-            {passwordMessage && (
-              passwordMessage.includes('Błąd') ? (
-                <ErrorMessage>{passwordMessage}</ErrorMessage>
-              ) : (
-                <SuccessMessage>{passwordMessage}</SuccessMessage>
-              )
-            )}
-            
-            <SettingsForm onSubmit={handlePasswordSubmit}>
-              <FormGroup>
-                <Label htmlFor="currentPassword">Aktualne hasło</Label>
-                <PasswordInputWrapper>
-                  <PasswordInput
-                    id="currentPassword"
-                    type={showCurrentPassword ? "text" : "password"}
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Wpisz aktualne hasło"
-                    required
-                  />
-                  <PasswordToggle
-                    type="button"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  >
-                    {showCurrentPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-                  </PasswordToggle>
-                </PasswordInputWrapper>
-              </FormGroup>
-              
-              <FormGroup>
-                <Label htmlFor="newPassword">Nowe hasło</Label>
-                <PasswordInputWrapper>
-                  <PasswordInput
-                    id="newPassword"
-                    type={showNewPassword ? "text" : "password"}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Wpisz nowe hasło"
-                    required
-                  />
-                  <PasswordToggle
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                  >
-                    {showNewPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-                  </PasswordToggle>
-                </PasswordInputWrapper>
-              </FormGroup>
-              
-              <FormGroup>
-                <Label htmlFor="confirmPassword">Potwierdź nowe hasło</Label>
-                <PasswordInputWrapper>
-                  <PasswordInput
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Potwierdź nowe hasło"
-                    required
-                  />
-                  <PasswordToggle
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-                  </PasswordToggle>
-                </PasswordInputWrapper>
-              </FormGroup>
-              
-              <SaveButton 
-                type="submit" 
-                disabled={changePasswordMutation.isLoading}
-              >
-                <FiLock size={16} />
-                {changePasswordMutation.isLoading ? 'Zmienianie...' : 'Zmień hasło'}
-              </SaveButton>
-            </SettingsForm>
-          </SectionCard>
-
-          {/* Employee Management Link for Owners */}
-          {isOwner && (
-            <InfoCard>
-              <FiUsers size={48} style={{ marginBottom: '1rem', color: '#8B5CF6' }} />
-              <InfoText>
-                Zarządzaj pracownikami, ustalaj stawki godzinowe i przeglądaj statystyki w sekcji zarządzania pracownikami.
-              </InfoText>
-              <RedirectButton onClick={handleNavigateToEmployees}>
-                <FiUsers size={16} />
-                Przejdź do zarządzania pracownikami
-                <FiArrowRight size={16} />
-              </RedirectButton>
-            </InfoCard>
+        <SectionCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <SectionTitle>
+            <FiLock />
+            Zmiana hasła
+          </SectionTitle>
+          
+          {passwordMessage && (
+            passwordMessage.startsWith('error:') ? (
+              <ErrorMessage>{passwordMessage.replace('error:', '')}</ErrorMessage>
+            ) : (
+              <SuccessMessage>{passwordMessage}</SuccessMessage>
+            )
           )}
-        </motion.div>
-      </ResponsiveContainer>
-      <Navigation />
-    </SettingsContainer>
-  );
-};
+          
+          <Form onSubmit={handlePasswordSubmit}>
+            <FormGroup>
+              <Label htmlFor="currentPassword">Aktualne hasło</Label>
+              <PasswordInputWrapper>
+                <Input
+                  id="currentPassword"
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Wpisz aktualne hasło"
+                  required
+                  style={{ paddingRight: '52px' }}
+                />
+                <PasswordToggle
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                >
+                  {showCurrentPassword ? <FiEyeOff /> : <FiEye />}
+                </PasswordToggle>
+              </PasswordInputWrapper>
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="newPassword">Nowe hasło</Label>
+              <PasswordInputWrapper>
+                <Input
+                  id="newPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Wpisz nowe hasło"
+                  required
+                  style={{ paddingRight: '52px' }}
+                />
+                <PasswordToggle
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? <FiEyeOff /> : <FiEye />}
+                </PasswordToggle>
+              </PasswordInputWrapper>
+            </FormGroup>
+            
+            <FormGroup>
+              <Label htmlFor="confirmPassword">Potwierdź nowe hasło</Label>
+              <PasswordInputWrapper>
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Potwierdź nowe hasło"
+                  required
+                  style={{ paddingRight: '52px' }}
+                />
+                <PasswordToggle
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                </PasswordToggle>
+              </PasswordInputWrapper>
+            </FormGroup>
+            
+            <Button type="submit" disabled={changePasswordMutation.isLoading}>
+              <FiLock />
+              {changePasswordMutation.isLoading ? 'Zmienianie...' : 'Zmień hasło'}
+            </Button>
+          </Form>
+        </SectionCard>
 
-export default Settings;
+        {isOwner && (
+          <InfoCard>
+            <InfoIcon>
+              <FiUsers />
+            </InfoIcon>
+            <InfoText>
+              Zarządzaj pracownikami, ustalaj stawki godzinowe i przeglądaj statystyki.
+            </InfoText>
+            <Button onClick={() => navigate('/employees')}>
+              <FiUsers />
+              Zarządzanie pracownikami
+              <FiArrowRight />
+            </Button>
+          </InfoCard>
+        )}
+      </MaxWidth>
+    </SettingsContainer>
+  )
+}
+
+export default Settings

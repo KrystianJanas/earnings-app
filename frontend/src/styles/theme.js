@@ -19,45 +19,50 @@ export const media = {
 
 export const theme = {
   colors: {
-    primary: '#8B5CF6',
-    primaryHover: '#7C3AED',
-    primaryLight: 'rgba(139, 92, 246, 0.15)',
+    primary: '#7C3AED',
+    primaryHover: '#6D28D9',
+    primaryLight: 'rgba(124, 58, 237, 0.08)',
+    primarySoft: 'rgba(124, 58, 237, 0.12)',
     secondary: '#EC4899',
-    secondaryLight: 'rgba(236, 72, 153, 0.15)',
-    accent: '#06B6D4',
-    accentLight: 'rgba(6, 182, 212, 0.15)',
+    secondaryLight: 'rgba(236, 72, 153, 0.08)',
+    accent: '#F59E0B',
+    accentLight: 'rgba(245, 158, 11, 0.08)',
     
-    background: '#0F0F1A',
-    backgroundSecondary: '#14142B',
-    cardBg: 'rgba(26, 26, 46, 0.7)',
-    cardBgSolid: '#1A1A2E',
-    surface: 'rgba(42, 42, 74, 0.5)',
-    surfaceSolid: '#2A2A4A',
+    background: '#FAFAFA',
+    backgroundSecondary: '#F5F3FF',
+    cardBg: '#FFFFFF',
+    cardBgSolid: '#FFFFFF',
+    surface: '#F8F7FC',
+    surfaceSolid: '#FFFFFF',
+    surfaceHover: '#F3F0FF',
     
     text: {
-      primary: '#FFFFFF',
-      secondary: '#B4B4C4',
-      muted: '#6B6B8A',
-      accent: '#8B5CF6'
+      primary: '#1F1A2E',
+      secondary: '#6B7280',
+      muted: '#9CA3AF',
+      accent: '#7C3AED',
+      inverse: '#FFFFFF'
     },
     
     success: '#10B981',
-    successLight: 'rgba(16, 185, 129, 0.15)',
+    successLight: 'rgba(16, 185, 129, 0.1)',
     warning: '#F59E0B',
-    warningLight: 'rgba(245, 158, 11, 0.15)',
+    warningLight: 'rgba(245, 158, 11, 0.1)',
     error: '#EF4444',
-    errorLight: 'rgba(239, 68, 68, 0.15)',
+    errorLight: 'rgba(239, 68, 68, 0.1)',
     
-    border: 'rgba(139, 92, 246, 0.2)',
-    borderLight: 'rgba(255, 255, 255, 0.08)',
+    border: '#E5E7EB',
+    borderLight: '#F3F4F6',
+    borderFocus: '#7C3AED',
     
     gradient: {
-      primary: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
-      secondary: 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
-      accent: 'linear-gradient(135deg, #EC4899 0%, #F59E0B 100%)',
-      dark: 'linear-gradient(180deg, #1A1A2E 0%, #0F0F1A 100%)',
-      card: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%)',
-      glow: 'radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.3) 0%, transparent 50%)'
+      primary: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
+      secondary: 'linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%)',
+      accent: 'linear-gradient(135deg, #F59E0B 0%, #EC4899 100%)',
+      soft: 'linear-gradient(135deg, #F5F3FF 0%, #FDF2F8 100%)',
+      hero: 'linear-gradient(135deg, #EDE9FE 0%, #FCE7F3 50%, #FEF3C7 100%)',
+      card: 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)',
+      shimmer: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)'
     }
   },
   spacing: {
@@ -72,16 +77,24 @@ export const theme = {
     sm: '0.5rem',
     md: '0.75rem',
     lg: '1rem',
-    xl: '1.5rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
     full: '9999px'
   },
   shadows: {
-    sm: '0 2px 8px rgba(0, 0, 0, 0.25)',
-    md: '0 4px 16px rgba(0, 0, 0, 0.3)',
-    lg: '0 8px 32px rgba(0, 0, 0, 0.4)',
-    glow: '0 0 40px rgba(139, 92, 246, 0.3)',
-    glowSm: '0 0 20px rgba(139, 92, 246, 0.2)',
-    inner: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)'
+    xs: '0 1px 2px rgba(0, 0, 0, 0.04)',
+    sm: '0 2px 8px rgba(0, 0, 0, 0.06)',
+    md: '0 4px 16px rgba(0, 0, 0, 0.08)',
+    lg: '0 8px 32px rgba(0, 0, 0, 0.1)',
+    xl: '0 16px 48px rgba(0, 0, 0, 0.12)',
+    glow: '0 0 40px rgba(124, 58, 237, 0.15)',
+    glowSm: '0 0 20px rgba(124, 58, 237, 0.1)',
+    card: '0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.04)',
+    cardHover: '0 4px 12px rgba(0, 0, 0, 0.08), 0 16px 32px rgba(0, 0, 0, 0.06)',
+    input: '0 1px 2px rgba(0, 0, 0, 0.04)',
+    inputFocus: '0 0 0 3px rgba(124, 58, 237, 0.12)',
+    button: '0 2px 8px rgba(124, 58, 237, 0.25)',
+    buttonHover: '0 8px 24px rgba(124, 58, 237, 0.3)'
   },
   blur: {
     sm: 'blur(8px)',
@@ -90,9 +103,9 @@ export const theme = {
   },
   transitions: {
     fast: '0.15s ease',
-    normal: '0.25s ease',
-    slow: '0.4s ease',
-    bounce: '0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+    normal: '0.2s ease',
+    slow: '0.3s ease',
+    bounce: '0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
   },
   breakpoints,
   media
@@ -110,14 +123,17 @@ const pulse = keyframes`
 
 const float = keyframes`
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 `
 
-export { shimmer, pulse, float }
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+`
+
+export { shimmer, pulse, float, fadeIn }
 
 export const GlobalStyles = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
   * {
     margin: 0;
     padding: 0;
@@ -139,27 +155,10 @@ export const GlobalStyles = createGlobalStyle`
     min-height: 100vh;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse 60% 40% at 100% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse 60% 40% at 0% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
   #root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    position: relative;
-    z-index: 1;
   }
 
   input, button, textarea, select {
@@ -183,20 +182,20 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.backgroundSecondary};
+    background: ${({ theme }) => theme.colors.background};
   }
 
   ::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.colors.border};
-    border-radius: 3px;
+    border-radius: 4px;
     
     &:hover {
-      background: ${({ theme }) => theme.colors.primary};
+      background: ${({ theme }) => theme.colors.text.muted};
     }
   }
 
@@ -242,44 +241,30 @@ export const Container = styled.div`
 
 export const GlassCard = styled.div`
   background: ${({ theme }) => theme.colors.cardBg};
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  padding: ${({ theme }) => theme.spacing.md};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
-  box-shadow: ${({ theme }) => theme.shadows.lg};
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
+  padding: ${({ theme }) => theme.spacing.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: ${({ theme }) => theme.shadows.card};
   position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      rgba(255, 255, 255, 0.1) 50%, 
-      transparent 100%
-    );
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    box-shadow: ${({ theme }) => theme.shadows.cardHover};
   }
 `
 
 export const Card = styled.div`
   background: ${({ theme }) => theme.colors.cardBg};
-  backdrop-filter: ${({ theme }) => theme.blur.sm};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
-  box-shadow: ${({ theme }) => theme.shadows.md};
+  box-shadow: ${({ theme }) => theme.shadows.card};
   transition: all ${({ theme }) => theme.transitions.normal};
-  position: relative;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.border};
-    box-shadow: ${({ theme }) => theme.shadows.lg};
+    box-shadow: ${({ theme }) => theme.shadows.cardHover};
+    transform: translateY(-2px);
   }
 `
 
@@ -304,48 +289,43 @@ export const Button = styled.button.attrs(props => ({
     variant === 'outline' ? 'transparent' :
     variant === 'ghost' ? 'transparent' :
     variant === 'secondary' ? theme.colors.surface :
+    variant === 'danger' ? theme.colors.error :
     theme.colors.gradient.primary};
   color: ${({ variant, theme }) =>
     variant === 'outline' ? theme.colors.primary :
     variant === 'ghost' ? theme.colors.text.secondary :
     variant === 'secondary' ? theme.colors.text.primary :
-    theme.colors.text.primary};
+    theme.colors.text.inverse};
   border: ${({ variant, theme }) =>
     variant === 'outline' ? `2px solid ${theme.colors.primary}` :
-    variant === 'ghost' ? 'none' :
+    variant === 'secondary' ? `1px solid ${theme.colors.border}` :
     'none'};
-  padding: 12px 20px;
+  padding: 12px 24px;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
   width: ${({ $fullWidth }) => $fullWidth ? '100%' : 'auto'};
-  min-height: 44px;
+  min-height: 48px;
   position: relative;
-  overflow: hidden;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    transition: left 0.5s ease;
-  }
+  box-shadow: ${({ variant, theme }) =>
+    variant === 'outline' || variant === 'ghost' || variant === 'secondary' ? 'none' : theme.shadows.button};
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: ${({ variant, theme }) =>
-      variant === 'outline' || variant === 'ghost' ? 'none' : theme.shadows.glow};
-    
-    &::before {
-      left: 100%;
-    }
+      variant === 'outline' || variant === 'ghost' ? 'none' : 
+      variant === 'secondary' ? theme.shadows.sm :
+      theme.shadows.buttonHover};
+    background: ${({ variant, theme }) =>
+      variant === 'outline' ? theme.colors.primaryLight :
+      variant === 'ghost' ? theme.colors.surface :
+      variant === 'secondary' ? theme.colors.surfaceHover :
+      variant === 'danger' ? '#DC2626' :
+      undefined};
   }
 
   &:active:not(:disabled) {
@@ -359,9 +339,9 @@ export const Button = styled.button.attrs(props => ({
   }
 
   ${media.md`
-    padding: 14px 24px;
+    padding: 14px 28px;
     font-size: 1rem;
-    min-height: 48px;
+    min-height: 52px;
   `}
 `
 
@@ -381,6 +361,7 @@ export const IconButton = styled.button`
     background: ${({ theme }) => theme.colors.primaryLight};
     color: ${({ theme }) => theme.colors.primary};
     border-color: ${({ theme }) => theme.colors.primary};
+    transform: translateY(-2px);
   }
 
   &:disabled {
@@ -396,18 +377,19 @@ export const IconButton = styled.button`
 export const Input = styled.input`
   width: 100%;
   padding: 14px 16px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  background: ${({ theme }) => theme.colors.surfaceSolid};
+  border: 1.5px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: 1rem;
-  height: 48px;
+  height: 52px;
   transition: all ${({ theme }) => theme.transitions.normal};
+  box-shadow: ${({ theme }) => theme.shadows.input};
 
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primaryLight};
+    box-shadow: ${({ theme }) => theme.shadows.inputFocus};
     background: ${({ theme }) => theme.colors.surfaceSolid};
   }
 
@@ -417,14 +399,14 @@ export const Input = styled.input`
 
   ${media.md`
     padding: 16px 18px;
-    height: 52px;
+    height: 56px;
   `}
 `
 
 export const Label = styled.label`
   display: block;
   margin-bottom: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.text.secondary};
+  color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 500;
   font-size: 0.9rem;
   letter-spacing: 0.01em;
@@ -438,8 +420,8 @@ export const Badge = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 12px;
-  font-size: 0.75rem;
+  padding: 6px 14px;
+  font-size: 0.8rem;
   font-weight: 600;
   border-radius: ${({ theme }) => theme.borderRadius.full};
   background: ${({ variant, theme }) =>
@@ -455,12 +437,8 @@ export const Badge = styled.span`
 `
 
 export const Skeleton = styled.div`
-  background: linear-gradient(
-    90deg,
-    ${({ theme }) => theme.colors.surface} 25%,
-    ${({ theme }) => theme.colors.surfaceSolid} 50%,
-    ${({ theme }) => theme.colors.surface} 75%
-  );
+  background: ${({ theme }) => theme.colors.surface};
+  background-image: ${({ theme }) => theme.colors.gradient.shimmer};
   background-size: 200% 100%;
   animation: ${shimmer} 1.5s infinite;
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -470,19 +448,118 @@ export const Skeleton = styled.div`
 
 export const Divider = styled.div`
   height: 1px;
-  background: ${({ theme }) => theme.colors.borderLight};
+  background: ${({ theme }) => theme.colors.border};
   margin: ${({ theme }) => theme.spacing.md} 0;
 `
 
 export const FloatingOrb = styled.div`
   position: absolute;
-  width: ${({ size }) => size || '200px'};
-  height: ${({ size }) => size || '200px'};
+  width: ${({ size }) => size || '300px'};
+  height: ${({ size }) => size || '300px'};
   border-radius: 50%;
   background: ${({ color, theme }) => color || theme.colors.gradient.primary};
-  filter: blur(80px);
-  opacity: 0.3;
+  filter: blur(120px);
+  opacity: 0.15;
   pointer-events: none;
-  animation: ${float} 6s ease-in-out infinite;
-  animation-delay: ${({ delay }) => delay || '0s'};
+  animation: ${float} 8s ease-in-out infinite;
+  animation-delay: ${({ $delay }) => $delay || '0s'};
+`
+
+export const PageHeader = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.text.primary};
+    margin-bottom: 0.25rem;
+    
+    ${media.md`
+      font-size: 2rem;
+    `}
+  }
+  
+  p {
+    color: ${({ theme }) => theme.colors.text.secondary};
+    font-size: 0.95rem;
+  }
+`
+
+export const StatCard = styled.div`
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  transition: all ${({ theme }) => theme.transitions.normal};
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme.shadows.cardHover};
+  }
+`
+
+export const StatIcon = styled.div`
+  width: 48px;
+  height: 48px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  background: ${({ $color, theme }) => 
+    $color === 'primary' ? theme.colors.primaryLight :
+    $color === 'secondary' ? theme.colors.secondaryLight :
+    $color === 'success' ? theme.colors.successLight :
+    $color === 'warning' ? theme.colors.warningLight :
+    theme.colors.primaryLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ $color, theme }) => 
+    $color === 'primary' ? theme.colors.primary :
+    $color === 'secondary' ? theme.colors.secondary :
+    $color === 'success' ? theme.colors.success :
+    $color === 'warning' ? theme.colors.warning :
+    theme.colors.primary};
+  font-size: 1.25rem;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+`
+
+export const StatValue = styled.div`
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: 0.25rem;
+  
+  ${media.md`
+    font-size: 1.75rem;
+  `}
+`
+
+export const StatLabel = styled.div`
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-weight: 500;
+`
+
+export const EmptyState = styled.div`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  
+  svg {
+    font-size: 3rem;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    color: ${({ theme }) => theme.colors.text.muted};
+  }
+  
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
+  
+  p {
+    font-size: 0.9rem;
+    max-width: 300px;
+    margin: 0 auto;
+  }
 `

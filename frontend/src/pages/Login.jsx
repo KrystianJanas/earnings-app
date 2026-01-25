@@ -3,10 +3,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiStar } from 'react-icons/fi'
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiScissors } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { authAPI } from '../services/api'
-import { GlassCard, Button, Input, Label, GradientText, FloatingOrb, media } from '../styles/theme'
+import { Button, Input, Label, GradientText, media } from '../styles/theme'
 
 const LoginContainer = styled.div`
   min-height: 100vh;
@@ -16,61 +16,70 @@ const LoginContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.md};
   position: relative;
   overflow: hidden;
+  background: ${({ theme }) => theme.colors.gradient.hero};
 `
 
-const BackgroundDecor = styled.div`
+const BackgroundPattern = styled.div`
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
+  opacity: 0.4;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.06) 0%, transparent 40%);
 `
 
-const LoginCard = styled(GlassCard)`
-  width: 100% !important;
-  max-width: 600px !important;
+const LoginCard = styled(motion.div)`
+  width: 100%;
+  max-width: 440px;
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
+  padding: ${({ theme }) => theme.spacing.xl};
+  box-shadow: ${({ theme }) => theme.shadows.xl};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
   position: relative;
   z-index: 1;
 
   ${media.md`
-    max-width: 750px !important;
-  `}
-
-  ${media.lg`
-    max-width: 850px !important;
+    padding: ${({ theme }) => theme.spacing['2xl']};
+    max-width: 480px;
   `}
 `
 
 const LogoSection = styled.div`
   text-align: center;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `
 
 const LogoIcon = styled(motion.div)`
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   margin: 0 auto ${({ theme }) => theme.spacing.md};
   background: ${({ theme }) => theme.colors.gradient.primary};
   border-radius: ${({ theme }) => theme.borderRadius.xl};
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: ${({ theme }) => theme.shadows.glow};
+  box-shadow: ${({ theme }) => theme.shadows.button};
 
   svg {
-    font-size: 1.75rem;
+    font-size: 2rem;
     color: white;
   }
 `
 
 const Title = styled.h1`
-  font-size: 1.75rem;
+  font-size: 1.875rem;
   font-weight: 700;
   margin-bottom: 8px;
+  color: ${({ theme }) => theme.colors.text.primary};
 `
 
 const Subtitle = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.95rem;
+  font-size: 1rem;
 `
 
 const Form = styled.form`
@@ -99,13 +108,13 @@ const InputIcon = styled.div`
   transition: color ${({ theme }) => theme.transitions.normal};
   
   svg {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
   }
 `
 
 const StyledInput = styled(Input)`
-  padding-left: 48px;
-  padding-right: ${({ hasToggle }) => hasToggle ? '48px' : '16px'};
+  padding-left: 52px;
+  padding-right: ${({ $hasToggle }) => $hasToggle ? '52px' : '16px'};
 `
 
 const PasswordToggle = styled.button`
@@ -124,32 +133,34 @@ const PasswordToggle = styled.button`
   transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover {
-    color: ${({ theme }) => theme.colors.text.primary};
-    background: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.primary};
   }
 
   svg {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
   }
 `
 
 const ErrorMessage = styled(motion.div)`
   background: ${({ theme }) => theme.colors.errorLight};
   color: ${({ theme }) => theme.colors.error};
-  padding: 12px 16px;
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-size: 0.875rem;
+  padding: 14px 16px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(239, 68, 68, 0.2);
 `
 
 const FieldError = styled.span`
   color: ${({ theme }) => theme.colors.error};
-  font-size: 0.8rem;
-  margin-top: 6px;
+  font-size: 0.85rem;
+  margin-top: 8px;
   display: block;
+  font-weight: 500;
 `
 
 const SubmitButton = styled(Button)`
-  margin-top: ${({ theme }) => theme.spacing.xs};
+  margin-top: ${({ theme }) => theme.spacing.sm};
   
   svg {
     transition: transform ${({ theme }) => theme.transitions.normal};
@@ -164,18 +175,19 @@ const Divider = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
-  margin: ${({ theme }) => theme.spacing.md} 0;
+  margin: ${({ theme }) => theme.spacing.lg} 0;
   
   &::before, &::after {
     content: '';
     flex: 1;
     height: 1px;
-    background: ${({ theme }) => theme.colors.borderLight};
+    background: ${({ theme }) => theme.colors.border};
   }
   
   span {
     color: ${({ theme }) => theme.colors.text.muted};
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 500;
   }
 `
 
@@ -188,10 +200,10 @@ const LinkSection = styled.div`
     color: ${({ theme }) => theme.colors.primary};
     font-weight: 600;
     transition: all ${({ theme }) => theme.transitions.normal};
+    margin-left: 4px;
     
     &:hover {
-      color: ${({ theme }) => theme.colors.secondary};
-      text-decoration: underline;
+      color: ${({ theme }) => theme.colors.primaryHover};
     }
   }
 `
@@ -226,116 +238,110 @@ const Login = () => {
 
   return (
     <LoginContainer>
-      <BackgroundDecor>
-        <FloatingOrb size="400px" color="rgba(139, 92, 246, 0.15)" style={{ top: '-10%', right: '-10%' }} delay="0s" />
-        <FloatingOrb size="300px" color="rgba(236, 72, 153, 0.12)" style={{ bottom: '-5%', left: '-5%' }} delay="2s" />
-        <FloatingOrb size="200px" color="rgba(6, 182, 212, 0.1)" style={{ top: '40%', left: '10%' }} delay="4s" />
-      </BackgroundDecor>
+      <BackgroundPattern />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
+      <LoginCard
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <LoginCard>
-          <LogoSection>
-            <LogoIcon
-              initial={{ scale: 0.8, rotate: -10 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <FiStar />
-            </LogoIcon>
-            <Title>
-              <GradientText>Witaj ponownie</GradientText>
-            </Title>
-            <Subtitle>Zaloguj się do swojego konta</Subtitle>
-          </LogoSection>
+        <LogoSection>
+          <LogoIcon
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <FiScissors />
+          </LogoIcon>
+          <Title>
+            <GradientText>Witaj ponownie</GradientText>
+          </Title>
+          <Subtitle>Zaloguj się do swojego konta</Subtitle>
+        </LogoSection>
 
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            {apiError && (
-              <ErrorMessage
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                {apiError}
-              </ErrorMessage>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          {apiError && (
+            <ErrorMessage
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {apiError}
+            </ErrorMessage>
+          )}
+
+          <FormGroup>
+            <Label htmlFor="email">Adres e-mail</Label>
+            <InputWrapper>
+              <StyledInput
+                id="email"
+                type="email"
+                placeholder="twoj@email.com"
+                {...register('email', { 
+                  required: 'Adres e-mail jest wymagany',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: 'Wprowadź poprawny adres e-mail'
+                  }
+                })}
+              />
+              <InputIcon>
+                <FiMail />
+              </InputIcon>
+            </InputWrapper>
+            {errors.email && (
+              <FieldError>{errors.email.message}</FieldError>
             )}
+          </FormGroup>
 
-            <FormGroup>
-              <Label htmlFor="email">Adres e-mail</Label>
-              <InputWrapper>
-                <StyledInput
-                  id="email"
-                  type="email"
-                  placeholder="twoj@email.com"
-                  {...register('email', { 
-                    required: 'Adres e-mail jest wymagany',
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: 'Wprowadź poprawny adres e-mail'
-                    }
-                  })}
-                />
-                <InputIcon>
-                  <FiMail />
-                </InputIcon>
-              </InputWrapper>
-              {errors.email && (
-                <FieldError>{errors.email.message}</FieldError>
-              )}
-            </FormGroup>
+          <FormGroup>
+            <Label htmlFor="password">Hasło</Label>
+            <InputWrapper>
+              <StyledInput
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Wprowadź hasło"
+                $hasToggle
+                {...register('password', { 
+                  required: 'Hasło jest wymagane'
+                })}
+              />
+              <InputIcon>
+                <FiLock />
+              </InputIcon>
+              <PasswordToggle 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </PasswordToggle>
+            </InputWrapper>
+            {errors.password && (
+              <FieldError>{errors.password.message}</FieldError>
+            )}
+          </FormGroup>
 
-            <FormGroup>
-              <Label htmlFor="password">Hasło</Label>
-              <InputWrapper>
-                <StyledInput
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Wprowadź hasło"
-                  hasToggle
-                  {...register('password', { 
-                    required: 'Hasło jest wymagane'
-                  })}
-                />
-                <InputIcon>
-                  <FiLock />
-                </InputIcon>
-                <PasswordToggle 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
-                </PasswordToggle>
-              </InputWrapper>
-              {errors.password && (
-                <FieldError>{errors.password.message}</FieldError>
-              )}
-            </FormGroup>
+          <SubmitButton 
+            type="submit" 
+            $fullWidth 
+            disabled={isLoading}
+          >
+            {isLoading ? 'Logowanie...' : (
+              <>
+                Zaloguj się
+                <FiArrowRight />
+              </>
+            )}
+          </SubmitButton>
+        </Form>
 
-            <SubmitButton 
-              type="submit" 
-              $fullWidth 
-              disabled={isLoading}
-            >
-              {isLoading ? 'Logowanie...' : (
-                <>
-                  Zaloguj się
-                  <FiArrowRight />
-                </>
-              )}
-            </SubmitButton>
-          </Form>
+        <Divider>
+          <span>lub</span>
+        </Divider>
 
-          <Divider>
-            <span>lub</span>
-          </Divider>
-
-          <LinkSection>
-            Nie masz jeszcze konta? <Link to="/register">Utwórz konto</Link>
-          </LinkSection>
-        </LoginCard>
-      </motion.div>
+        <LinkSection>
+          Nie masz jeszcze konta?<Link to="/register">Utwórz konto</Link>
+        </LinkSection>
+      </LoginCard>
     </LoginContainer>
   )
 }

@@ -11,12 +11,11 @@ const NavContainer = styled.nav`
   left: 0;
   right: 0;
   background: ${({ theme }) => theme.colors.cardBg};
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  border-top: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
   padding: 8px ${({ theme }) => theme.spacing.sm};
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
   z-index: 100;
-  box-shadow: ${({ theme }) => theme.shadows.lg};
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
 
   ${media.lg`
     display: none;
@@ -24,7 +23,7 @@ const NavContainer = styled.nav`
 `
 
 const NavContent = styled.div`
-  max-width: 428px;
+  max-width: 500px;
   margin: 0 auto;
   display: flex;
   justify-content: space-around;
@@ -35,24 +34,21 @@ const NavItem = styled(NavLink)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px ${({ theme }) => theme.spacing.xs};
+  padding: 8px 12px;
   color: ${({ theme }) => theme.colors.text.muted};
   text-decoration: none;
   transition: all ${({ theme }) => theme.transitions.normal};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  min-height: 44px;
-  justify-content: center;
-  position: relative;
+  min-width: 56px;
 
   &.active {
     color: ${({ theme }) => theme.colors.primary};
     background: ${({ theme }) => theme.colors.primaryLight};
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
   }
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-    background: ${({ theme }) => theme.colors.primaryLight};
+  &:hover:not(.active) {
+    color: ${({ theme }) => theme.colors.text.secondary};
+    background: ${({ theme }) => theme.colors.surface};
   }
 
   svg {
@@ -61,22 +57,24 @@ const NavItem = styled(NavLink)`
   }
 
   span {
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 400px) {
+    padding: 8px 8px;
+    min-width: 48px;
+    
     svg {
-      font-size: 1.4rem;
-      margin-bottom: 2px;
+      font-size: 1.35rem;
     }
     
     span {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
     }
   }
 `
-
 
 const Navigation = () => {
   const { currentCompany } = useAuth()

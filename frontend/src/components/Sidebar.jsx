@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
-import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck, FiArrowRight } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck, FiCheck, FiScissors } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { media } from '../styles/theme'
 import CreateCompany from './CreateCompany'
@@ -17,44 +17,53 @@ const SidebarContainer = styled.aside`
     left: 0;
     top: 0;
     bottom: 0;
-    width: 300px;
-    background: linear-gradient(180deg, ${({ theme }) => theme.colors.cardBg} 0%, ${({ theme }) => theme.colors.backgroundSecondary} 100%);
-    backdrop-filter: ${({ theme }) => theme.blur.md};
-    -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-    border-right: 1px solid ${({ theme }) => theme.colors.borderLight};
-    padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.md};
+    width: 280px;
+    background: ${({ theme }) => theme.colors.cardBg};
+    border-right: 1px solid ${({ theme }) => theme.colors.border};
+    padding: ${({ theme }) => theme.spacing.lg};
     z-index: 100;
-    box-shadow: 12px 0 48px rgba(0, 0, 0, 0.25);
   `}
 `
 
 const Logo = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   padding-bottom: ${({ theme }) => theme.spacing.lg};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`
 
+const LogoIcon = styled.div`
+  width: 44px;
+  height: 44px;
+  background: ${({ theme }) => theme.colors.gradient.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  svg {
+    font-size: 1.25rem;
+    color: white;
+  }
+`
+
+const LogoText = styled.div`
   h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    background: ${({ theme }) => theme.colors.gradient.primary};
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: ${({ theme }) => theme.colors.text.muted};
-    margin-top: 6px;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 `
 
 const CompanySelector = styled.div`
-  padding: 0 ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   position: relative;
 `
@@ -64,30 +73,32 @@ const CompanyButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.08) 100%);
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  padding: 12px 14px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   color: ${({ theme }) => theme.colors.text.primary};
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
 
   &:hover {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.12) 100%);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-    transform: translateY(-2px);
+    background: ${({ theme }) => theme.colors.surfaceHover};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `
 
 const CompanyInfo = styled.div`
   text-align: left;
   flex: 1;
+  min-width: 0;
 `
 
 const CompanyName = styled.div`
   font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 2px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const CompanyRole = styled.div`
@@ -95,28 +106,41 @@ const CompanyRole = styled.div`
   color: ${({ theme }) => theme.colors.text.muted};
 `
 
-const Dropdown = styled.div`
+const ChevronIcon = styled(FiChevronDown)`
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+  transition: transform 0.2s ease;
+  transform: ${({ $isOpen }) => $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+  flex-shrink: 0;
+`
+
+const Dropdown = styled(motion.div)`
   position: absolute;
-  top: 100%;
-  left: ${({ theme }) => theme.spacing.md};
-  right: ${({ theme }) => theme.spacing.md};
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
   background: ${({ theme }) => theme.colors.cardBg};
-  backdrop-filter: ${({ theme }) => theme.blur.md};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.md};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  margin-top: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
   overflow: hidden;
   z-index: 1000;
+`
+
+const DropdownSection = styled.div`
+  padding: 8px 0;
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  }
 `
 
 const DropdownItem = styled.button`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: 12px;
+  padding: 12px 16px;
   border: none;
   background: transparent;
   color: ${({ theme }) => theme.colors.text.primary};
@@ -126,17 +150,36 @@ const DropdownItem = styled.button`
   font-size: 0.9rem;
 
   &:hover {
-    background: rgba(139, 92, 246, 0.15);
-    padding-left: calc(${({ theme }) => theme.spacing.md} + 4px);
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+    background: ${({ theme }) => theme.colors.surface};
   }
 
   svg {
     font-size: 1rem;
     color: ${({ theme }) => theme.colors.primary};
+    flex-shrink: 0;
+  }
+`
+
+const CompanyMenuItem = styled(DropdownItem)`
+  justify-content: space-between;
+`
+
+const CompanyMenuInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+`
+
+const ActiveIndicator = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.primaryLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  svg {
+    font-size: 0.85rem;
   }
 `
 
@@ -152,87 +195,58 @@ const Overlay = styled.div`
 const NavList = styled.nav`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   flex: 1;
 `
 
 const NavSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 
-  &:first-child {
-    margin-top: 0;
+  &:last-child {
+    margin-top: auto;
+    margin-bottom: 0;
   }
 `
 
 const NavSectionTitle = styled.div`
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: ${({ theme }) => theme.colors.text.muted};
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: ${({ theme }) => theme.spacing.md} 0;
-  padding-left: ${({ theme }) => theme.spacing.sm};
+  letter-spacing: 0.08em;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.sm};
 `
 
-const NavItem = styled(motion(NavLink))`
+const NavItem = styled(NavLink)`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 12px 14px;
   color: ${({ theme }) => theme.colors.text.secondary};
   text-decoration: none;
   transition: all ${({ theme }) => theme.transitions.normal};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-weight: 500;
-  font-size: 0.95rem;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: ${({ theme }) => theme.colors.gradient.primary};
-    transform: scaleY(0);
-    transition: transform ${({ theme }) => theme.transitions.normal};
-  }
+  font-size: 0.9rem;
 
   &.active {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.1) 100%);
+    background: ${({ theme }) => theme.colors.primaryLight};
     color: ${({ theme }) => theme.colors.primary};
-    box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.15);
-
-    &::before {
-      transform: scaleY(1);
-    }
-
-    svg {
-      color: ${({ theme }) => theme.colors.secondary};
-    }
-  }
-
-  &:hover {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
-    color: ${({ theme }) => theme.colors.text.primary};
-    transform: translateX(4px);
 
     svg {
       color: ${({ theme }) => theme.colors.primary};
     }
   }
 
-  svg {
-    font-size: 1.3rem;
-    min-width: 24px;
-    transition: all ${({ theme }) => theme.transitions.normal};
-    color: ${({ theme }) => theme.colors.text.muted};
+  &:hover:not(.active) {
+    background: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
-  span {
-    transition: all ${({ theme }) => theme.transitions.normal};
+  svg {
+    font-size: 1.2rem;
+    color: ${({ theme }) => theme.colors.text.muted};
+    transition: color ${({ theme }) => theme.transitions.normal};
   }
 `
 
@@ -281,8 +295,13 @@ const Sidebar = () => {
   return (
     <SidebarContainer>
       <Logo>
-        <h1>Paulinka</h1>
-        <p>Zarządzanie salonem</p>
+        <LogoIcon>
+          <FiScissors />
+        </LogoIcon>
+        <LogoText>
+          <h1>BeautySalon</h1>
+          <p>Zarządzanie salonem</p>
+        </LogoText>
       </Logo>
 
       <CompanySelector>
@@ -291,43 +310,63 @@ const Sidebar = () => {
             <CompanyName>{currentCompany.name}</CompanyName>
             <CompanyRole>{getRoleLabel(currentCompany.userRole)}</CompanyRole>
           </CompanyInfo>
-          <FiChevronDown />
+          <ChevronIcon $isOpen={isDropdownOpen} />
         </CompanyButton>
 
-        {isDropdownOpen && (
-          <>
-            <Overlay onClick={() => setIsDropdownOpen(false)} />
-            <Dropdown>
-              {companies.map((company) => (
-                <DropdownItem
-                  key={company.id}
-                  onClick={() => handleCompanySwitch(company.id)}
-                >
-                  <div>
-                    <CompanyName>{company.name}</CompanyName>
-                    <CompanyRole>{getRoleLabel(company.userRole)}</CompanyRole>
-                  </div>
-                </DropdownItem>
-              ))}
-              <DropdownItem onClick={() => {
-                setShowCreateCompany(true)
-                setIsDropdownOpen(false)
-              }}>
-                <FiPlus />
-                Utwórz nowy salon
-              </DropdownItem>
-              <DropdownItem onClick={handleLogout}>
-                <FiLogOut />
-                Wyloguj się
-              </DropdownItem>
-            </Dropdown>
-          </>
-        )}
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <>
+              <Overlay onClick={() => setIsDropdownOpen(false)} />
+              <Dropdown
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.15 }}
+              >
+                {companies.length > 1 && (
+                  <DropdownSection>
+                    {companies.map((company) => (
+                      <CompanyMenuItem
+                        key={company.id}
+                        onClick={() => handleCompanySwitch(company.id)}
+                      >
+                        <CompanyMenuInfo>
+                          <CompanyName>{company.name}</CompanyName>
+                          <CompanyRole>{getRoleLabel(company.userRole)}</CompanyRole>
+                        </CompanyMenuInfo>
+                        {company.id === currentCompany.id && (
+                          <ActiveIndicator>
+                            <FiCheck />
+                          </ActiveIndicator>
+                        )}
+                      </CompanyMenuItem>
+                    ))}
+                  </DropdownSection>
+                )}
+                <DropdownSection>
+                  <DropdownItem onClick={() => {
+                    setShowCreateCompany(true)
+                    setIsDropdownOpen(false)
+                  }}>
+                    <FiPlus />
+                    Utwórz nowy salon
+                  </DropdownItem>
+                </DropdownSection>
+                <DropdownSection>
+                  <DropdownItem onClick={handleLogout}>
+                    <FiLogOut />
+                    Wyloguj się
+                  </DropdownItem>
+                </DropdownSection>
+              </Dropdown>
+            </>
+          )}
+        </AnimatePresence>
       </CompanySelector>
 
       <NavList>
         <NavSection>
-          <NavItem to="/" end whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+          <NavItem to="/" end>
             <FiHome />
             <span>Strona główna</span>
           </NavItem>
@@ -335,17 +374,17 @@ const Sidebar = () => {
 
         <NavSection>
           <NavSectionTitle>Zarządzanie</NavSectionTitle>
-          <NavItem to="/add-earnings" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+          <NavItem to="/add-earnings">
             <FiPlus />
             <span>Dodaj obrót</span>
           </NavItem>
 
-          <NavItem to="/monthly" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+          <NavItem to="/monthly">
             <FiBarChart />
             <span>Podsumowanie</span>
           </NavItem>
 
-          <NavItem to="/clients" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+          <NavItem to="/clients">
             <FiUserCheck />
             <span>Klientki</span>
           </NavItem>
@@ -354,15 +393,15 @@ const Sidebar = () => {
         {isOwner && (
           <NavSection>
             <NavSectionTitle>Admin</NavSectionTitle>
-            <NavItem to="/employees" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+            <NavItem to="/employees">
               <FiUsers />
               <span>Pracownicy</span>
             </NavItem>
           </NavSection>
         )}
 
-        <NavSection style={{ marginTop: 'auto', marginBottom: 0 }}>
-          <NavItem to="/settings" whileHover={{ x: 4 }} whileTap={{ x: 2 }}>
+        <NavSection>
+          <NavItem to="/settings">
             <FiSettings />
             <span>Ustawienia</span>
           </NavItem>

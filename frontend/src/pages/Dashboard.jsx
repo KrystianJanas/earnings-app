@@ -2,462 +2,282 @@ import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiCreditCard, FiGift, FiUsers, FiClock, FiChevronDown } from 'react-icons/fi'
+import { FiCreditCard, FiGift, FiUsers, FiClock, FiTrendingUp, FiDollarSign } from 'react-icons/fi'
 import { earningsAPI } from '../services/api'
 import { useAuth } from '../context/AuthContext'
-import { Container, Card, GlassCard, media, GradientText } from '../styles/theme'
-import Navigation from '../components/Navigation'
+import { Container, media } from '../styles/theme'
 
-const DashboardContainer = styled(motion.div)`
+const DashboardContainer = styled.div`
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.sm} 0;
+  padding: ${({ theme }) => theme.spacing.md};
   padding-bottom: 100px;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.background} 0%, ${({ theme }) => theme.colors.backgroundSecondary} 100%);
+  background: ${({ theme }) => theme.colors.background};
 
   ${media.lg`
-    padding: ${({ theme }) => theme.spacing.lg} 0;
-    padding-bottom: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.xl};
+    padding-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
-const ResponsiveContainer = styled(Container)`
-  ${media.lg`
-    max-width: 100%;
-    padding: 0 ${({ theme }) => theme.spacing.md};
-  `}
-
-  ${media.xl`
-    max-width: 1400px;
-    padding: 0 ${({ theme }) => theme.spacing.lg};
-  `}
-`
-
-const DashboardHeader = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  text-align: center;
+const PageHeader = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   ${media.lg`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: ${({ theme }) => theme.spacing.md};
-  `}
-`
-
-const DashboardHeaderContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-
-  ${media.lg`
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: ${({ theme }) => theme.spacing.md};
-  `}
-`
-
-const HeaderTextContent = styled.div`
-  ${media.lg`
-    text-align: left;
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
 const WelcomeText = styled.h1`
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  background: ${({ theme }) => theme.colors.gradient.primary};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: ${({ theme }) => theme.colors.text.primary};
   margin-bottom: 4px;
 
   ${media.lg`
-    font-size: 1.75rem;
+    font-size: 1.875rem;
   `}
 `
 
 const SubText = styled.p`
   color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.875rem;
-
-  ${media.lg`
-    font-size: 0.95rem;
-  `}
+  font-size: 0.95rem;
 `
 
 const PeriodSelector = styled.div`
-  padding: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%);
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  border: 2px solid ${({ theme }) => theme.colors.borderLight};
-`
-
-const PeriodsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${({ theme }) => theme.spacing.sm};
-
-  ${media.sm`
-    grid-template-columns: repeat(3, 1fr);
-    gap: ${({ theme }) => theme.spacing.md};
-  `}
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.sm};
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   ${media.lg`
-    grid-template-columns: repeat(6, 1fr);
-  `}
-`
-
-const PeriodButton = styled(motion.button)`
-  padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ isActive, theme }) =>
-    isActive 
-      ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
-      : 'linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.04) 100%)'};
-  border: 2px solid ${({ isActive, theme }) =>
-    isActive ? theme.colors.primary : theme.colors.borderLight};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  color: ${({ isActive, theme }) =>
-    isActive ? 'white' : theme.colors.text.primary};
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all ${({ theme }) => theme.transitions.normal};
-  text-transform: capitalize;
-
-  &:hover {
-    background: ${({ isActive, theme }) =>
-      isActive 
-        ? `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`
-        : 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%)'};
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
-    transform: translateY(-2px);
-  }
-
-  ${media.sm`
-    font-size: 0.85rem;
+    gap: 12px;
     padding: ${({ theme }) => theme.spacing.md};
   `}
+`
+
+const PeriodButton = styled.button`
+  padding: 10px 16px;
+  background: ${({ $isActive, theme }) =>
+    $isActive ? theme.colors.gradient.primary : 'transparent'};
+  border: ${({ $isActive, theme }) =>
+    $isActive ? 'none' : `1px solid ${theme.colors.border}`};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  color: ${({ $isActive, theme }) =>
+    $isActive ? 'white' : theme.colors.text.secondary};
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all ${({ theme }) => theme.transitions.normal};
+  box-shadow: ${({ $isActive, theme }) =>
+    $isActive ? theme.shadows.button : 'none'};
+
+  &:hover {
+    background: ${({ $isActive, theme }) =>
+      $isActive ? undefined : theme.colors.surface};
+    color: ${({ $isActive, theme }) =>
+      $isActive ? 'white' : theme.colors.text.primary};
+  }
 
   ${media.lg`
-    padding: 12px 16px;
+    padding: 12px 20px;
     font-size: 0.9rem;
   `}
 `
 
-const AllCardsGrid = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  grid-template-columns: 1fr;
-  max-width: 100%;
-  margin: 0 0 ${({ theme }) => theme.spacing.lg} 0;
-
-  ${media.md`
-    gap: ${({ theme }) => theme.spacing.md};
-  `}
-
-  ${media.lg`
-    max-width: 100%;
-    gap: ${({ theme }) => theme.spacing.md};
-    grid-template-columns: 1fr;
-  `}
-`
-
-const EarningsCard = styled(motion(GlassCard))`
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 100px;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
-  backdrop-filter: ${({ theme }) => theme.blur.sm};
-  -webkit-backdrop-filter: ${({ theme }) => theme.blur.sm};
-  border: 1px solid ${({ theme }) => theme.colors.borderLight};
-  transition: all ${({ theme }) => theme.transitions.normal};
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(139, 92, 246, 0.3);
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%);
-  }
-
-  ${media.lg`
-    min-height: 110px;
-    padding: ${({ theme }) => theme.spacing.lg};
-  `}
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: ${({ color }) => color};
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at top right, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-`
-
-const EarningsHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-  width: 100%;
-
-  ${media.lg`
-    margin-bottom: ${({ theme }) => theme.spacing.sm};
-  `}
-`
-
-const EarningsTitle = styled.h3`
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text.primary};
-
-  ${media.lg`
-    font-size: 1rem;
-  `}
-`
-
-const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: ${({ color, theme }) => color}20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${({ color }) => color};
-  font-size: 1.2rem;
-  box-shadow: 0 0 20px ${({ color }) => color}30;
-  transition: all ${({ theme }) => theme.transitions.normal};
-
-  svg {
-    font-size: 1.2rem;
-  }
-
-  ${media.lg`
-    width: 48px;
-    height: 48px;
-
-    svg {
-      font-size: 1.3rem;
-    }
-  `}
-`
-
-const EarningsAmount = styled.div`
-  font-size: 1.75rem;
-  font-weight: 800;
+const MainStatCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.gradient.primary};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
+  padding: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  text-align: center;
+  box-shadow: ${({ theme }) => theme.shadows.buttonHover};
+
+  ${media.lg`
+    padding: ${({ theme }) => theme.spacing.xl};
+  `}
+`
+
+const MainStatLabel = styled.div`
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+
+const MainStatValue = styled.div`
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
   margin-bottom: 4px;
 
-  ${media.md`
-    font-size: 2rem;
-  `}
-
   ${media.lg`
-    font-size: 2.25rem;
-    margin-bottom: 8px;
+    font-size: 3rem;
   `}
 `
 
-const EarningsLabel = styled.div`
-  color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 0.8rem;
-
-  ${media.lg`
-    font-size: 0.8rem;
-  `}
+const MainStatSubtext = styled.div`
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
 `
 
-const Section = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  padding-bottom: ${({ theme }) => theme.spacing.lg};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+const SectionTitle = styled.h2`
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-  &:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+  svg {
+    color: ${({ theme }) => theme.colors.primary};
   }
-
-  ${media.lg`
-    margin-bottom: ${({ theme }) => theme.spacing.xl};
-    padding-bottom: ${({ theme }) => theme.spacing.xl};
-  `}
 `
 
 const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   ${media.md`
-    gap: ${({ theme }) => theme.spacing.md};
-    grid-template-columns: ${({ columns }) => {
-      if (columns === 3) return 'repeat(3, 1fr)';
-      return '1fr 1fr';
-    }};
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   `}
 
   ${media.lg`
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: ${({ columns }) => columns === 4 ? 'center' : 'flex-start'};
-    gap: ${({ theme }) => theme.spacing.sm};
-
-    & > * {
-      flex: 0 0 ${({ columns }) => {
-        if (columns === 4) return 'calc(25% - 12px)';
-        if (columns === 3) return 'calc(33.333% - 12px)';
-        return 'calc(50% - 12px)';
-      }};
-      min-width: ${({ columns }) => columns === 4 ? '200px' : 'auto'};
-      max-width: ${({ columns }) => columns === 4 ? '280px' : 'none'};
-    }
-  `}
-
-  ${media.xl`
-    gap: ${({ theme }) => theme.spacing.md};
-
-    & > * {
-      flex: 0 0 ${({ columns }) => {
-        if (columns === 4) return 'calc(25% - 18px)';
-        if (columns === 3) return 'calc(33.333% - 18px)';
-        return 'calc(50% - 18px)';
-      }};
-    }
+    grid-template-columns: repeat(4, 1fr);
   `}
 `
 
-const StatCard = styled(motion(Card))`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100px;
+const StatCard = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   padding: ${({ theme }) => theme.spacing.md};
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(236, 72, 153, 0.05) 100%);
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  box-shadow: ${({ theme }) => theme.shadows.card};
   transition: all ${({ theme }) => theme.transitions.normal};
-  position: relative;
-  overflow: hidden;
 
   &:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 20px 50px rgba(139, 92, 246, 0.25);
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(236, 72, 153, 0.08) 100%);
-  }
-
-  ${media.lg`
-    min-height: 120px;
-    padding: ${({ theme }) => theme.spacing.md};
-  `}
-
-  ${media.xl`
-    padding: ${({ theme }) => theme.spacing.lg};
-  `}
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
-    transition: all ${({ theme }) => theme.transitions.normal};
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme.shadows.cardHover};
+    border-color: ${({ theme }) => theme.colors.border};
   }
 `
 
-const StatsContainer = styled.div`
+const StatIconWrapper = styled.div`
+  width: 44px;
+  height: 44px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  background: ${({ $color }) => $color}15;
   display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.lg};
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+  color: ${({ $color }) => $color};
 `
 
-const StatAmount = styled.div`
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: ${({ color, theme }) => color || theme.colors.text.primary};
-  margin-bottom: 8px;
-  text-shadow: 0 0 20px ${({ color, theme }) => color}30;
-
-  ${media.md`
-    font-size: 1.5rem;
-  `}
+const StatValue = styled.div`
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: 4px;
 
   ${media.lg`
-    font-size: 1.75rem;
-    margin-bottom: 12px;
-  `}
-
-  ${media.xl`
-    font-size: 2rem;
+    font-size: 1.5rem;
   `}
 `
 
 const StatLabel = styled.div`
-  color: ${({ theme }) => theme.colors.text.secondary};
   font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-weight: 500;
+`
 
-  svg {
-    font-size: 0.9rem;
-  }
+const PaymentMethodsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  ${media.md`
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  `}
 
   ${media.lg`
-    font-size: 0.75rem;
-    gap: 4px;
-
-    svg {
-      font-size: 0.9rem;
-    }
-  `}
-
-  ${media.xl`
-    font-size: 0.875rem;
+    grid-template-columns: repeat(4, 1fr);
   `}
 `
 
-const LoadingCard = styled(Card)`
+const PaymentCard = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.cardBg};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${({ theme }) => theme.shadows.cardHover};
+  }
+`
+
+const PaymentIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: ${({ $color }) => $color}12;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 120px;
+  font-size: 1.1rem;
+  color: ${({ $color }) => $color};
+  flex-shrink: 0;
+`
+
+const PaymentInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+`
+
+const PaymentValue = styled.div`
+  font-size: 1rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text.primary};
+`
+
+const PaymentLabel = styled.div`
+  font-size: 0.75rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+`
+
+const LoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
   color: ${({ theme }) => theme.colors.text.secondary};
 `
 
-const ErrorCard = styled(Card)`
+const ErrorContainer = styled.div`
   text-align: center;
+  padding: ${({ theme }) => theme.spacing.xl};
+  background: ${({ theme }) => theme.colors.errorLight};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   color: ${({ theme }) => theme.colors.error};
-  padding: ${({ theme }) => theme.spacing.lg};
 `
 
 const Dashboard = () => {
@@ -467,45 +287,40 @@ const Dashboard = () => {
   const { data: dashboardData, isLoading, error } = useQuery(
     ['dashboard', selectedPeriod],
     () => earningsAPI.getDashboard(selectedPeriod).then(res => res.data),
-    {
-      refetchOnMount: true,
-      // refetchInterval: 60000, // Disabled automatic refresh to reduce API calls
-    }
+    { refetchOnMount: true }
   )
 
   const getPeriodLabel = () => {
     switch (selectedPeriod) {
-      case 'day':
-        return 'dzisiaj'
-      case 'week':
-        return 'w tym tygodniu'
+      case 'day': return 'dzisiaj'
+      case 'week': return 'w tym tygodniu'
       case 'prev-month':
-        const prevMonth = new Date();
-        prevMonth.setMonth(prevMonth.getMonth() - 1);
+        const prevMonth = new Date()
+        prevMonth.setMonth(prevMonth.getMonth() - 1)
         return `w ${prevMonth.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' })}`
-      case 'year':
-        return `w ${new Date().getFullYear()} roku`
-      case 'all':
-        return 'od początku'
-      default:
-        return `w ${new Date().toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' })}`
+      case 'year': return `w ${new Date().getFullYear()} roku`
+      case 'all': return 'od początku'
+      default: return `w ${new Date().toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' })}`
     }
   }
+
+  const periodOptions = [
+    { value: 'day', label: 'Dzisiaj' },
+    { value: 'week', label: 'Tydzień' },
+    { value: 'month', label: 'Miesiąc' },
+    { value: 'prev-month', label: 'Poprzedni' },
+    { value: 'year', label: 'Rok' },
+    { value: 'all', label: 'Wszystko' },
+  ]
 
   if (isLoading) {
     return (
       <DashboardContainer>
-        <Container>
-          <DashboardHeader>
-            <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
-            <SubText>Oto przegląd Twoich zarobków</SubText>
-          </DashboardHeader>
-          
-          <LoadingCard>
-            Ładowanie Twoich zarobków...
-          </LoadingCard>
-        </Container>
-        <Navigation />
+        <PageHeader>
+          <WelcomeText>Witaj, {user?.firstName}!</WelcomeText>
+          <SubText>Ładowanie danych...</SubText>
+        </PageHeader>
+        <LoadingContainer>Ładowanie Twoich zarobków...</LoadingContainer>
       </DashboardContainer>
     )
   }
@@ -513,198 +328,131 @@ const Dashboard = () => {
   if (error) {
     return (
       <DashboardContainer>
-        <Container>
-          <DashboardHeader>
-            <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
-            <SubText>Oto przegląd Twoich zarobków</SubText>
-          </DashboardHeader>
-          
-          <ErrorCard>
-            <p>Nie udało się załadować danych o zarobkach</p>
-            <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-              Spróbuj ponownie później
-            </p>
-          </ErrorCard>
-        </Container>
-        <Navigation />
+        <PageHeader>
+          <WelcomeText>Witaj, {user?.firstName}!</WelcomeText>
+        </PageHeader>
+        <ErrorContainer>
+          <p>Nie udało się załadować danych o zarobkach</p>
+          <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+            Spróbuj ponownie później
+          </p>
+        </ErrorContainer>
       </DashboardContainer>
     )
   }
 
   const earnings = dashboardData?.data || {}
 
-  const periodOptions = [
-    { value: 'day', label: 'Dzisiaj' },
-    { value: 'week', label: 'Ten tydzień' },
-    { value: 'month', label: 'Ten miesiąc' },
-    { value: 'prev-month', label: 'Poprzedni' },
-    { value: 'year', label: 'Ten rok' },
-    { value: 'all', label: 'Od początku' },
+  const paymentMethods = [
+    { label: 'Gotówka', value: earnings.cashAmount || 0, icon: '💵', color: '#10B981' },
+    { label: 'Karta', value: earnings.cardAmount || 0, icon: <FiCreditCard />, color: '#3B82F6' },
+    { label: 'BLIK', value: earnings.blikAmount || 0, icon: '📱', color: '#8B5CF6' },
+    { label: 'Przedpłata', value: earnings.prepaidAmount || 0, icon: '💰', color: '#F59E0B' },
+    { label: 'Przelew', value: earnings.transferAmount || 0, icon: '🏦', color: '#06B6D4' },
+    { label: 'Gratis', value: earnings.freeAmount || 0, icon: '🎁', color: '#EC4899' },
+    { label: 'Napiwki', value: earnings.tipsAmount || 0, icon: <FiGift />, color: '#F59E0B' },
   ]
 
   return (
     <DashboardContainer>
-      <ResponsiveContainer>
-        <div style={{ marginBottom: '1rem' }}>
-          <DashboardHeaderContent>
-            <HeaderTextContent>
-              <WelcomeText>Witaj ponownie, {user?.firstName}!</WelcomeText>
-              <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
-            </HeaderTextContent>
-          </DashboardHeaderContent>
-        </div>
+      <PageHeader>
+        <WelcomeText>Witaj, {user?.firstName}!</WelcomeText>
+        <SubText>Oto przegląd zarobków {getPeriodLabel()}</SubText>
+      </PageHeader>
 
-        <PeriodSelector>
-          <PeriodsGrid>
-            {periodOptions.map((option) => (
-              <PeriodButton
-                key={option.value}
-                isActive={selectedPeriod === option.value}
-                onClick={() => setSelectedPeriod(option.value)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {option.label}
-              </PeriodButton>
-            ))}
-          </PeriodsGrid>
-        </PeriodSelector>
+      <PeriodSelector>
+        {periodOptions.map((option) => (
+          <PeriodButton
+            key={option.value}
+            $isActive={selectedPeriod === option.value}
+            onClick={() => setSelectedPeriod(option.value)}
+          >
+            {option.label}
+          </PeriodButton>
+        ))}
+      </PeriodSelector>
 
-        <motion.div
+      <MainStatCard
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <MainStatLabel>
+          <FiTrendingUp />
+          Łączny obrót
+        </MainStatLabel>
+        <MainStatValue>
+          {(earnings.totalEarnings || 0).toFixed(2)} zł
+        </MainStatValue>
+        <MainStatSubtext>Obrót {getPeriodLabel()}</MainStatSubtext>
+      </MainStatCard>
+
+      <SectionTitle>
+        <FiDollarSign />
+        Statystyki
+      </SectionTitle>
+
+      <StatsGrid>
+        <StatCard
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
-          {/* Sekcja 1: Łączny obrót */}
-          <Section>
-            <AllCardsGrid>
-              <EarningsCard color="#6366f1">
-                <EarningsHeader>
-                  <IconWrapper color="#6366f1">
-                    💰
-                  </IconWrapper>
-                  <EarningsTitle>Łączny obrót</EarningsTitle>
-                </EarningsHeader>
-                <EarningsAmount>
-                  {(earnings.totalEarnings || 0).toFixed(2)} zł
-                </EarningsAmount>
-                <EarningsLabel>Obrót {getPeriodLabel()}</EarningsLabel>
-              </EarningsCard>
-            </AllCardsGrid>
-          </Section>
+          <StatIconWrapper $color="#06B6D4">
+            <FiClock />
+          </StatIconWrapper>
+          <StatValue>{(earnings.hoursWorked || 0).toFixed(1)} h</StatValue>
+          <StatLabel>Przepracowane godziny</StatLabel>
+        </StatCard>
 
-          {/* Sekcja 2: Statystyki pracy */}
-          <Section>
-            <StatsGrid columns={3}>
-              <StatCard>
-                <StatAmount color="#06b6d4">
-                  {(earnings.hoursWorked || 0).toFixed(2)} h
-                </StatAmount>
-                <StatLabel>
-                  <FiClock />
-                  Przepracowane godziny
-                </StatLabel>
-              </StatCard>
+        <StatCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
+        >
+          <StatIconWrapper $color="#8B5CF6">
+            <FiUsers />
+          </StatIconWrapper>
+          <StatValue>{earnings.clientsCount || 0}</StatValue>
+          <StatLabel>Klientek</StatLabel>
+        </StatCard>
 
-              <StatCard>
-                <StatAmount color="#8b5cf6">
-                  {earnings.clientsCount || 0}
-                </StatAmount>
-                <StatLabel>
-                  <FiUsers />
-                  Klientek
-                </StatLabel>
-              </StatCard>
+        <StatCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <StatIconWrapper $color="#10B981">
+            💰
+          </StatIconWrapper>
+          <StatValue>{(earnings.estimatedEarnings || 0).toFixed(0)} zł</StatValue>
+          <StatLabel>Prognozowana wypłata</StatLabel>
+        </StatCard>
+      </StatsGrid>
 
-              <StatCard>
-                <StatAmount color="#ef4444">
-                  {(earnings.estimatedEarnings || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  💰
-                  Prognozowana wypłata
-                </StatLabel>
-              </StatCard>
-            </StatsGrid>
-          </Section>
+      <SectionTitle>
+        <FiCreditCard />
+        Metody płatności
+      </SectionTitle>
 
-          {/* Sekcja 3: Metody płatności */}
-          <Section>
-            <StatsGrid columns={4}>
-              <StatCard>
-                <StatAmount color="#10b981">
-                  {(earnings.cashAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  💵
-                  Gotówka
-                </StatLabel>
-              </StatCard>
-
-              <StatCard>
-                <StatAmount color="#3b82f6">
-                  {(earnings.cardAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  <FiCreditCard />
-                  Karta
-                </StatLabel>
-              </StatCard>
-
-              <StatCard>
-                <StatAmount color="#9333ea">
-                  {(earnings.blikAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  📱
-                  BLIK
-                </StatLabel>
-              </StatCard>
-
-              <StatCard>
-                <StatAmount color="#ea580c">
-                  {(earnings.prepaidAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  💰
-                  Przedpłata
-                </StatLabel>
-              </StatCard>
-
-              <StatCard>
-                <StatAmount color="#0891b2">
-                  {(earnings.transferAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  🏦
-                  Przelew
-                </StatLabel>
-              </StatCard>
-
-              <StatCard>
-                <StatAmount color="#dc2626">
-                  {(earnings.freeAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  🎁
-                  Gratis
-                </StatLabel>
-              </StatCard>
-
-              <StatCard>
-                <StatAmount color="#f59e0b">
-                  {(earnings.tipsAmount || 0).toFixed(2)} zł
-                </StatAmount>
-                <StatLabel>
-                  <FiGift />
-                  Napiwki
-                </StatLabel>
-              </StatCard>
-            </StatsGrid>
-          </Section>
-        </motion.div>
-      </ResponsiveContainer>
-      <Navigation />
+      <PaymentMethodsGrid>
+        {paymentMethods.map((method, index) => (
+          <PaymentCard
+            key={method.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.05 * index }}
+          >
+            <PaymentIcon $color={method.color}>
+              {method.icon}
+            </PaymentIcon>
+            <PaymentInfo>
+              <PaymentValue>{method.value.toFixed(2)} zł</PaymentValue>
+              <PaymentLabel>{method.label}</PaymentLabel>
+            </PaymentInfo>
+          </PaymentCard>
+        ))}
+      </PaymentMethodsGrid>
     </DashboardContainer>
   )
 }
