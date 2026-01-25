@@ -400,7 +400,7 @@ const AddEarnings = () => {
 
   const { data: existingEarning, isLoading: loadingExisting } = useQuery(
     ['earningByDate', dateStr],
-    () => earningsAPI.getByDate(dateStr).then(res => res.data),
+    () => earningsAPI.getDayEarnings(dateStr).then(res => res.data),
     {
       refetchOnMount: true,
       onSuccess: (data) => {
@@ -432,7 +432,7 @@ const AddEarnings = () => {
   )
 
   const saveMutation = useMutation(
-    (data) => earningsAPI.saveEarning(data),
+    (data) => earningsAPI.saveDayEarnings(data),
     {
       onSuccess: () => {
         setSuccessMessage('Dane zostały zapisane!')
