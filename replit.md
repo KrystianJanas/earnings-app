@@ -1,7 +1,7 @@
 # Beautician Earnings Tracker - Replit Setup
 
 ## Project Overview
-A modern, mobile-first web application for tracking daily earnings designed specifically for beauticians and salon owners. Features a beautiful light theme with warm purple/pink accents (#7C3AED, #EC4899) suitable for the beauty/wellness industry.
+A modern, mobile-first web application for tracking daily earnings designed specifically for beauticians and salon owners. Features a beautiful light theme with soft, muted purple/pink accents (#8B7EC8, #D4A5C9) suitable for the beauty/wellness industry. Now includes dark mode support!
 
 ## Architecture
 - **Frontend**: React 18 + Vite (Port 5000)
@@ -12,16 +12,23 @@ A modern, mobile-first web application for tracking daily earnings designed spec
   - Backend: Express, JWT auth, bcryptjs, PostgreSQL (pg)
 
 ## UI Design System (Updated January 2026)
-### Theme Colors
+### Theme Colors (Light Mode - Soft Pastel)
 - **Background**: #FAFAFA (light gray)
 - **Cards**: #FFFFFF (white)
-- **Primary**: #7C3AED (purple)
-- **Secondary**: #EC4899 (pink)
-- **Success**: #10B981 (green)
-- **Error**: #EF4444 (red)
-- **Text Primary**: #1F2937
+- **Primary**: #8B7EC8 (soft purple)
+- **Secondary**: #D4A5C9 (soft pink)
+- **Accent**: #E8B4A0 (peach)
+- **Success**: #6EAF8D (sage green)
+- **Error**: #D4736D (soft coral)
+- **Text Primary**: #3D3A4A
 - **Text Secondary**: #6B7280
 - **Text Muted**: #9CA3AF
+
+### Theme Colors (Dark Mode)
+- **Background**: #1A1A2E
+- **Cards**: #252542
+- **Primary**: #A99CD4 (light purple)
+- **Secondary**: #D4A5C9 (soft pink)
 
 ### Design Tokens
 - Border radius: sm (6px), md (10px), lg (14px), xl (18px), 2xl (24px)
