@@ -32,17 +32,24 @@ class Earnings {
       const dailyEarnings = result.rows[0];
       console.log('💾 Database saved/updated record:', { id: dailyEarnings.id, date: dailyEarnings.date, entry_mode: dailyEarnings.entry_mode });
       
-      // If detailed mode, handle client transactions (if tables exist)
-      if (entryMode === 'detailed' && clients && clients.length > 0) {
+      // Handle client transactions based on entry mode
+      if (entryMode === 'detailed') {
         try {
-          console.log('💾 Attempting to save client transactions:', { 
-            dailyEarningsId: dailyEarnings.id, 
-            clientsCount: clients.length,
-            clients: clients
-          });
-          // Pass the transaction client to use the same connection
-          await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId, client);
-          console.log('✅ Client transactions saved successfully');
+          if (clients && clients.length > 0) {
+            console.log('💾 Attempting to save client transactions:', {
+              dailyEarningsId: dailyEarnings.id,
+              clientsCount: clients.length,
+              clients: clients
+            });
+            // Pass the transaction client to use the same connection
+            await ClientTransaction.createMultiple(dailyEarnings.id, clients, userId, companyId, client);
+            console.log('✅ Client transactions saved successfully');
+          } else {
+            // Detailed mode but no clients - delete existing transactions
+            console.log('🗑️ Deleting existing client transactions (no clients in detailed mode)');
+            await client.query('DELETE FROM client_transactions WHERE daily_earnings_id = $1', [dailyEarnings.id]);
+            console.log('✅ Existing client transactions deleted');
+          }
         } catch (error) {
           console.error('❌ ClientTransaction error:', error);
           console.warn('ClientTransaction tables not found or error occurred, skipping detailed client data:', error.message);
