@@ -537,6 +537,7 @@ const AddEarnings = () => {
   const handleSubmit = () => {
     const data = {
       date: dateStr,
+      entryMode: detailedMode ? 'detailed' : 'summary',
       hoursWorked: parseFloat(hoursWorked) || 0,
       tipsAmount: parseFloat(tipsAmount) || 0,
       notes: notes || '',
@@ -547,7 +548,7 @@ const AddEarnings = () => {
       transferAmount: totals.transfer,
       freeAmount: totals.free,
       clientsCount,
-      transactions: detailedMode ? clients.map(client => ({
+      clients: detailedMode ? clients.map(client => ({
         clientId: client.clientId,
         clientName: client.clientName,
         paymentMethod: client.paymentMethod,
