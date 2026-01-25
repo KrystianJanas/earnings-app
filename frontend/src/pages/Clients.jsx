@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiUsers, FiSearch, FiX, FiCalendar, FiDollarSign, FiPhone, FiMail, FiFileText, FiPlus, FiEdit3, FiTrash2, FiSave } from 'react-icons/fi'
+import { FiUsers, FiSearch, FiX, FiCalendar, FiDollarSign, FiPhone, FiMail, FiFileText, FiPlus, FiEdit3, FiTrash2, FiSave, FiEye, FiEyeOff } from 'react-icons/fi'
 import { clientsAPI } from '../services/api'
 import { Container, Card, GlassCard, Button, Input, Label, media, GradientText } from '../styles/theme'
 import Navigation from '../components/Navigation'
@@ -226,6 +226,41 @@ const ContactItem = styled.div`
 
   svg {
     font-size: 0.75rem;
+  }
+`
+
+const RevealableContact = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary}15;
+  }
+
+  svg {
+    font-size: 0.75rem;
+  }
+`
+
+const RevealIcon = styled.span`
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+  color: ${({ theme }) => theme.colors.primary};
+  opacity: 0.7;
+
+  svg {
+    font-size: 0.7rem;
+  }
+
+  &:hover {
+    opacity: 1;
   }
 `
 
@@ -537,6 +572,38 @@ const Clients = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [revealedContacts, setRevealedContacts] = useState({}) // { clientId: { phone: true, email: true } }
+
+  // Funkcje maskowania danych kontaktowych
+  const maskPhone = (phone) => {
+    if (!phone || phone.length < 6) return phone
+    const visibleStart = 3
+    const visibleEnd = 2
+    return phone.slice(0, visibleStart) + '***' + phone.slice(-visibleEnd)
+  }
+
+  const maskEmail = (email) => {
+    if (!email) return email
+    const [local, domain] = email.split('@')
+    if (!domain) return email
+    const visibleChars = Math.min(2, local.length)
+    return local.slice(0, visibleChars) + '***@' + domain
+  }
+
+  const toggleReveal = (clientId, field, e) => {
+    e.stopPropagation() // Zapobiega otwarciu modala
+    setRevealedContacts(prev => ({
+      ...prev,
+      [clientId]: {
+        ...prev[clientId],
+        [field]: !prev[clientId]?.[field]
+      }
+    }))
+  }
+
+  const isRevealed = (clientId, field) => {
+    return revealedContacts[clientId]?.[field] || false
+  }
 
   // Form state
   const [formData, setFormData] = useState({
@@ -783,16 +850,22 @@ const Clients = () => {
                       <ClientName>#{client.id} - {client.full_name}</ClientName>
                       <ClientContact>
                         {client.phone && (
-                          <ContactItem>
+                          <RevealableContact onClick={(e) => toggleReveal(client.id, 'phone', e)}>
                             <FiPhone />
-                            {client.phone}
-                          </ContactItem>
+                            {isRevealed(client.id, 'phone') ? client.phone : maskPhone(client.phone)}
+                            <RevealIcon>
+                              {isRevealed(client.id, 'phone') ? <FiEyeOff /> : <FiEye />}
+                            </RevealIcon>
+                          </RevealableContact>
                         )}
                         {client.email && (
-                          <ContactItem>
+                          <RevealableContact onClick={(e) => toggleReveal(client.id, 'email', e)}>
                             <FiMail />
-                            {client.email}
-                          </ContactItem>
+                            {isRevealed(client.id, 'email') ? client.email : maskEmail(client.email)}
+                            <RevealIcon>
+                              {isRevealed(client.id, 'email') ? <FiEyeOff /> : <FiEye />}
+                            </RevealIcon>
+                          </RevealableContact>
                         )}
                       </ClientContact>
                     </ClientInfo>
