@@ -55,14 +55,19 @@ const EmployeeList = styled.div`
 
 const EmployeeCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.cardBg};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  padding: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ $isSelected, theme }) => 
     $isSelected ? theme.colors.primary : theme.colors.border};
   box-shadow: ${({ $isSelected, theme }) => 
     $isSelected ? `0 0 0 3px ${theme.colors.primary}30` : theme.shadows.card};
   cursor: pointer;
   transition: all ${({ theme }) => theme.transitions.normal};
+
+  ${media.md`
+    border-radius: ${({ theme }) => theme.borderRadius.xl};
+    padding: ${({ theme }) => theme.spacing.lg};
+  `}
 
   &:hover {
     transform: translateY(-2px);
@@ -73,9 +78,16 @@ const EmployeeCard = styled(motion.div)`
 
 const EmployeeHeader = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+
+  ${media.md`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+  `}
 `
 
 const EmployeeInfo = styled.div`
@@ -172,10 +184,15 @@ const StatLabel = styled.div`
 
 const InviteSection = styled.div`
   background: ${({ theme }) => theme.colors.cardBg};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  padding: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.border};
   text-align: center;
+
+  ${media.md`
+    border-radius: ${({ theme }) => theme.borderRadius.xl};
+    padding: ${({ theme }) => theme.spacing.lg};
+  `}
 `
 
 const InviteTitle = styled.h3`
