@@ -488,7 +488,7 @@ const ClientEntry = ({ client, index, onChange, onRemove, canRemove }) => {
                   className={highlightedIndex === resultIndex ? 'highlighted' : ''}
                   onClick={() => handleClientSelect(result)}
                 >
-                  <ClientName>{result.full_name}</ClientName>
+                  <ClientName>#{result.id} - {result.full_name}</ClientName>
                   <ClientInfo>
                     {result.phone && `Tel: ${result.phone}`}
                     {result.last_visit_date && ` • Ostatnia wizyta: ${new Date(result.last_visit_date).toLocaleDateString('pl-PL')}`}

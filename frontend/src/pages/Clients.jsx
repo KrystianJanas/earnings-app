@@ -780,7 +780,7 @@ const Clients = () => {
                 <ClientCard onClick={() => setSelectedClient(client)}>
                   <ClientHeader>
                     <ClientInfo>
-                      <ClientName>{client.full_name}</ClientName>
+                      <ClientName>#{client.id} - {client.full_name}</ClientName>
                       <ClientContact>
                         {client.phone && (
                           <ContactItem>
@@ -851,7 +851,7 @@ const Clients = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <ModalHeader>
-                <ModalTitle>{selectedClient.full_name}</ModalTitle>
+                <ModalTitle>#{selectedClient.id} - {selectedClient.full_name}</ModalTitle>
                 <CloseButton onClick={() => setSelectedClient(null)}>
                   <FiX />
                 </CloseButton>
@@ -909,6 +909,9 @@ const Clients = () => {
                       </>
                     ) : (
                       <>
+                        <div style={{ marginBottom: '8px', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                          <strong>ID klientki:</strong> {clientDetails.id}
+                        </div>
                         <ClientContact>
                           {clientDetails.phone && (
                             <ContactItem>
