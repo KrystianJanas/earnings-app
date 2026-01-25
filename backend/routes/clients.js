@@ -110,9 +110,9 @@ router.post('/', [
 // Update client
 router.put('/:id', [
   body('fullName').optional().isString().isLength({ min: 2, max: 255 }).trim(),
-  body('phone').optional().isString().isLength({ max: 20 }).trim(),
-  body('email').optional().isEmail().normalizeEmail(),
-  body('notes').optional().isString().isLength({ max: 1000 }).trim()
+  body('phone').optional({ checkFalsy: true }).isString().isLength({ max: 20 }).trim(),
+  body('email').optional({ checkFalsy: true }).isEmail().normalizeEmail(),
+  body('notes').optional({ checkFalsy: true }).isString().isLength({ max: 1000 }).trim()
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

@@ -127,17 +127,22 @@ class Client {
   }
 
   static async update(id, { fullName, phone, email, notes }) {
+    // Konwertuj puste stringi na null, aby można było czyścić pola
+    const phoneValue = phone === '' ? null : (phone || null);
+    const emailValue = email === '' ? null : (email || null);
+    const notesValue = notes === '' ? null : (notes || null);
+
     const result = await db.query(`
-      UPDATE clients 
-      SET 
+      UPDATE clients
+      SET
         full_name = COALESCE($2, full_name),
-        phone = COALESCE($3, phone),
-        email = COALESCE($4, email),
-        notes = COALESCE($5, notes),
+        phone = $3,
+        email = $4,
+        notes = $5,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *
-    `, [id, fullName, phone, email, notes]);
+    `, [id, fullName, phoneValue, emailValue, notesValue]);
     return result.rows[0];
   }
 
