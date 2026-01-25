@@ -390,11 +390,9 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
           <FiUser size={16} />
           Klient #{index + 1}
         </ClientNumber>
-        {canRemove && (
-          <RemoveButton type="button" onClick={() => onRemove(index)}>
-            <FiTrash2 size={14} />
-          </RemoveButton>
-        )}
+        <RemoveButton type="button" onClick={onRemove}>
+          <FiTrash2 size={14} />
+        </RemoveButton>
       </ClientHeader>
 
       <ClientSearchWrapper ref={searchRef}>
