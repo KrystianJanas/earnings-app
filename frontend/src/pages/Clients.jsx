@@ -495,8 +495,18 @@ const Clients = () => {
 
   const clients = Array.isArray(clientsData) ? clientsData : (clientsData?.clients || [])
   const filteredClients = clients.filter(client => {
-    const fullName = (client.full_name || client.fullName || `${client.firstName || ''} ${client.lastName || ''}`).toLowerCase()
-    return fullName.includes(searchQuery.toLowerCase())
+    const query = searchQuery.trim()
+
+    // Wyszukiwanie po ID gdy query zaczyna się od #
+    if (query.startsWith('#')) {
+      const idQuery = query.slice(1).trim()
+      if (!idQuery) return true // Pokaż wszystkich gdy tylko #
+      return client.id.toString() === idQuery || client.id.toString().startsWith(idQuery)
+    }
+
+    // Standardowe wyszukiwanie po nazwie
+    const fullName = (client.full_name || '').toLowerCase()
+    return fullName.includes(query.toLowerCase())
   })
 
   if (isLoading) {
@@ -543,7 +553,7 @@ const Clients = () => {
         </SearchIcon>
         <SearchInput
           type="text"
-          placeholder="Szukaj klienta..."
+          placeholder="Szukaj po nazwie lub #ID..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
