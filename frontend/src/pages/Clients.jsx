@@ -151,6 +151,33 @@ const ClientContact = styled.div`
   }
 `
 
+const RevealableContact = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 2px 6px;
+  margin: -2px -6px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryLight};
+  }
+`
+
+const RevealIcon = styled.span`
+  display: flex;
+  align-items: center;
+  margin-left: 4px;
+  color: ${({ theme }) => theme.colors.primary};
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+`
+
 const ClientStats = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -338,13 +365,44 @@ const Clients = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null)
+  const [revealedContacts, setRevealedContacts] = useState({})
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     phone: '',
     email: '',
     notes: '',
   })
+
+  // Funkcje maskowania danych kontaktowych
+  const maskPhone = (phone) => {
+    if (!phone || phone.length < 6) return phone
+    const visibleStart = 3
+    const visibleEnd = 2
+    return phone.slice(0, visibleStart) + '***' + phone.slice(-visibleEnd)
+  }
+
+  const maskEmail = (email) => {
+    if (!email) return email
+    const [local, domain] = email.split('@')
+    if (!domain) return email
+    const visibleChars = Math.min(2, local.length)
+    return local.slice(0, visibleChars) + '***@' + domain
+  }
+
+  const toggleReveal = (clientId, field, e) => {
+    e.stopPropagation()
+    setRevealedContacts(prev => ({
+      ...prev,
+      [clientId]: {
+        ...prev[clientId],
+        [field]: !prev[clientId]?.[field]
+      }
+    }))
+  }
+
+  const isRevealed = (clientId, field) => {
+    return revealedContacts[clientId]?.[field] || false
+  }
 
   const { data: clientsData, isLoading, error } = useQuery(
     ['clients'],
@@ -386,8 +444,7 @@ const Clients = () => {
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
+      fullName: '',
       phone: '',
       email: '',
       notes: '',
@@ -398,8 +455,7 @@ const Clients = () => {
     e.stopPropagation()
     setSelectedClient(client)
     setFormData({
-      firstName: client.firstName || '',
-      lastName: client.lastName || '',
+      fullName: client.full_name || '',
       phone: client.phone || '',
       email: client.email || '',
       notes: client.notes || '',
@@ -417,8 +473,7 @@ const Clients = () => {
   const handleSubmitAdd = (e) => {
     e.preventDefault()
     addClientMutation.mutate({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      fullName: formData.fullName,
       phone: formData.phone,
       email: formData.email,
       notes: formData.notes,
@@ -430,8 +485,7 @@ const Clients = () => {
     updateClientMutation.mutate({
       id: selectedClient.id,
       data: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        fullName: formData.fullName,
         phone: formData.phone,
         email: formData.email,
         notes: formData.notes,
@@ -518,14 +572,26 @@ const Clients = () => {
               <ClientHeader>
                 <ClientInfo>
                   <ClientName>
-                    {client.full_name || `${client.firstName || ''} ${client.lastName || ''}`.trim() || 'Brak nazwy'}
+                    #{client.id} - {client.full_name || 'Brak nazwy'}
                   </ClientName>
                   <ClientContact>
                     {client.phone && (
-                      <span><FiPhone size={14} /> {client.phone}</span>
+                      <RevealableContact onClick={(e) => toggleReveal(client.id, 'phone', e)}>
+                        <FiPhone size={14} />
+                        {isRevealed(client.id, 'phone') ? client.phone : maskPhone(client.phone)}
+                        <RevealIcon>
+                          {isRevealed(client.id, 'phone') ? <FiEyeOff size={12} /> : <FiEye size={12} />}
+                        </RevealIcon>
+                      </RevealableContact>
                     )}
                     {client.email && (
-                      <span><FiMail size={14} /> {client.email}</span>
+                      <RevealableContact onClick={(e) => toggleReveal(client.id, 'email', e)}>
+                        <FiMail size={14} />
+                        {isRevealed(client.id, 'email') ? client.email : maskEmail(client.email)}
+                        <RevealIcon>
+                          {isRevealed(client.id, 'email') ? <FiEyeOff size={12} /> : <FiEye size={12} />}
+                        </RevealIcon>
+                      </RevealableContact>
                     )}
                   </ClientContact>
                 </ClientInfo>
@@ -541,17 +607,17 @@ const Clients = () => {
 
               <ClientStats>
                 <StatItem>
-                  <StatValue $color="#8B5CF6">{client.totalVisits || 0}</StatValue>
+                  <StatValue $color="#8B5CF6">{client.total_visits || 0}</StatValue>
                   <StatLabel>Wizyty</StatLabel>
                 </StatItem>
                 <StatItem>
-                  <StatValue $color="#10B981">{(client.totalSpent || 0).toFixed(0)} zł</StatValue>
+                  <StatValue $color="#10B981">{parseFloat(client.total_spent || 0).toFixed(0)} zł</StatValue>
                   <StatLabel>Wydane</StatLabel>
                 </StatItem>
                 <StatItem>
                   <StatValue $color="#F59E0B">
-                    {client.lastVisit 
-                      ? new Date(client.lastVisit).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })
+                    {client.last_visit_date
+                      ? new Date(client.last_visit_date).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })
                       : '-'
                     }
                   </StatValue>
@@ -586,22 +652,13 @@ const Clients = () => {
               
               <Form onSubmit={handleSubmitAdd}>
                 <FormGroup>
-                  <Label>Imię</Label>
+                  <Label>Imię i nazwisko</Label>
                   <Input
                     type="text"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    placeholder="Imię klienta"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    placeholder="Imię i nazwisko klienta"
                     required
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label>Nazwisko</Label>
-                  <Input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    placeholder="Nazwisko klienta"
                   />
                 </FormGroup>
                 <FormGroup>
@@ -668,22 +725,13 @@ const Clients = () => {
               
               <Form onSubmit={handleSubmitEdit}>
                 <FormGroup>
-                  <Label>Imię</Label>
+                  <Label>Imię i nazwisko</Label>
                   <Input
                     type="text"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    placeholder="Imię klienta"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    placeholder="Imię i nazwisko klienta"
                     required
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label>Nazwisko</Label>
-                  <Input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    placeholder="Nazwisko klienta"
                   />
                 </FormGroup>
                 <FormGroup>
