@@ -5,14 +5,14 @@ import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch } from 'react
 import { Input, Label, Button, media } from '../styles/theme'
 
 const ClientCard = styled.div`
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   ${media.md`
-    padding: ${({ theme }) => theme.spacing.lg};
+    padding: ${({ theme }) => theme.spacing.xl};
   `}
 `
 
@@ -44,17 +44,18 @@ const RemoveButton = styled(Button)`
 `
 
 const PaymentsSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
 `
 
 const PaymentEntry = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
   background: ${({ theme }) => theme.colors.cardBg};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
 `
 
@@ -64,8 +65,10 @@ const AmountInputWrapper = styled.div`
 
 const AmountInput = styled(Input)`
   width: 100%;
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 14px 16px;
+  text-align: center;
 `
 
 const PaymentMethodWrapper = styled.div`
@@ -82,36 +85,40 @@ const PaymentMethodHeader = styled.div`
 const PaymentButtons = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 10px;
 
   ${media.md`
     grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
   `}
 `
 
 const PaymentButton = styled.button`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 10px 8px;
-  border: 1px solid ${({ $active, theme }) => $active ? theme.colors.primary : theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  gap: 6px;
+  padding: 14px 10px;
+  border: 2px solid ${({ $active, theme }) => $active ? theme.colors.primary : theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   background: ${({ $active, theme }) => $active 
     ? theme.colors.gradient.primary
-    : theme.colors.surface};
+    : theme.colors.cardBg};
   color: ${({ $active, theme }) => $active ? 'white' : theme.colors.text.secondary};
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 42px;
-  box-shadow: ${({ $active, theme }) => $active ? theme.shadows.button : 'none'};
+  min-height: 56px;
+  box-shadow: ${({ $active, theme }) => $active ? theme.shadows.button : theme.shadows.xs};
 
   ${media.md`
-    padding: 12px 10px;
+    flex-direction: row;
+    padding: 12px 14px;
     font-size: 0.8rem;
     min-height: 48px;
+    gap: 6px;
   `}
 
   &:hover {
@@ -119,6 +126,7 @@ const PaymentButton = styled.button`
     background: ${({ $active, theme }) => $active 
       ? undefined
       : theme.colors.surfaceHover};
+    transform: translateY(-1px);
   }
 `
 
@@ -165,11 +173,14 @@ const TotalAmountDisplay = styled.div`
 
 const ClientSearchWrapper = styled.div`
   position: relative;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `
 
 const ClientSearchInput = styled(Input)`
-  padding-left: 40px;
+  padding-left: 44px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  font-size: 1rem;
   font-weight: 500;
 `
 
@@ -235,7 +246,9 @@ const NoResults = styled.div`
 `
 
 const NotesInput = styled(Input)`
-  font-size: 0.9rem;
+  font-size: 1rem;
+  padding: 14px 16px;
+  margin-top: ${({ theme }) => theme.spacing.sm};
 `
 
 const PAYMENT_METHODS = [
