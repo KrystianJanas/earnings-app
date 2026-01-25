@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
-import { FiSettings, FiUsers, FiArrowRight, FiMail, FiLock, FiUser, FiSave, FiEye, FiEyeOff } from 'react-icons/fi'
+import { FiSettings, FiUsers, FiArrowRight, FiMail, FiLock, FiUser, FiSave, FiEye, FiEyeOff, FiSun, FiMoon } from 'react-icons/fi'
 import { useMutation } from 'react-query'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import { useNavigate } from 'react-router-dom'
 import { Button, Input, Label, media } from '../styles/theme'
 
@@ -171,8 +172,59 @@ const InfoText = styled.p`
   line-height: 1.6;
 `
 
+const ThemeToggleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+`
+
+const ThemeLabel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  svg {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+  
+  span {
+    color: ${({ theme }) => theme.colors.text.primary};
+    font-weight: 500;
+  }
+`
+
+const ThemeToggle = styled.button`
+  position: relative;
+  width: 56px;
+  height: 30px;
+  border-radius: 15px;
+  background: ${({ $isDark, theme }) => 
+    $isDark ? theme.colors.primary : theme.colors.border};
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: ${({ $isDark }) => $isDark ? '29px' : '3px'};
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease;
+  }
+`
+
 const Settings = () => {
   const { currentCompany, user } = useAuth()
+  const { isDarkMode, toggleTheme } = useTheme()
   const navigate = useNavigate()
   
   const [firstName, setFirstName] = useState(user?.firstName || '')
@@ -282,6 +334,30 @@ const Settings = () => {
               {user?.email || 'Brak adresu e-mail'}
             </EmailDisplay>
           </FormGroup>
+        </SectionCard>
+
+        <SectionCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.05 }}
+        >
+          <SectionTitle>
+            {isDarkMode ? <FiMoon /> : <FiSun />}
+            Wygląd
+          </SectionTitle>
+          
+          <ThemeToggleWrapper>
+            <ThemeLabel>
+              {isDarkMode ? <FiMoon size={20} /> : <FiSun size={20} />}
+              <span>{isDarkMode ? 'Ciemny motyw' : 'Jasny motyw'}</span>
+            </ThemeLabel>
+            <ThemeToggle 
+              $isDark={isDarkMode} 
+              onClick={toggleTheme}
+              type="button"
+              aria-label="Przełącz motyw"
+            />
+          </ThemeToggleWrapper>
         </SectionCard>
 
         <SectionCard

@@ -22,8 +22,8 @@ function App() {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        background: '#0a0a0a',
-        color: '#a3a3a3'
+        background: '#FAFAFA',
+        color: '#6B7280'
       }}>
         Ładowanie...
       </div>

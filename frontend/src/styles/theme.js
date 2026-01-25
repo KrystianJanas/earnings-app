@@ -19,48 +19,48 @@ export const media = {
 
 export const theme = {
   colors: {
-    primary: '#7C3AED',
-    primaryHover: '#6D28D9',
-    primaryLight: 'rgba(124, 58, 237, 0.08)',
-    primarySoft: 'rgba(124, 58, 237, 0.12)',
-    secondary: '#EC4899',
-    secondaryLight: 'rgba(236, 72, 153, 0.08)',
-    accent: '#F59E0B',
-    accentLight: 'rgba(245, 158, 11, 0.08)',
+    primary: '#8B7EC8',
+    primaryHover: '#7A6DB8',
+    primaryLight: 'rgba(139, 126, 200, 0.08)',
+    primarySoft: 'rgba(139, 126, 200, 0.12)',
+    secondary: '#D4A5C9',
+    secondaryLight: 'rgba(212, 165, 201, 0.08)',
+    accent: '#E8B4A0',
+    accentLight: 'rgba(232, 180, 160, 0.08)',
     
     background: '#FAFAFA',
-    backgroundSecondary: '#F5F3FF',
+    backgroundSecondary: '#F8F6FC',
     cardBg: '#FFFFFF',
     cardBgSolid: '#FFFFFF',
-    surface: '#F8F7FC',
+    surface: '#FAF9FC',
     surfaceSolid: '#FFFFFF',
-    surfaceHover: '#F3F0FF',
+    surfaceHover: '#F5F3FA',
     
     text: {
-      primary: '#1F1A2E',
+      primary: '#3D3A4A',
       secondary: '#6B7280',
       muted: '#9CA3AF',
-      accent: '#7C3AED',
+      accent: '#8B7EC8',
       inverse: '#FFFFFF'
     },
     
-    success: '#10B981',
-    successLight: 'rgba(16, 185, 129, 0.1)',
-    warning: '#F59E0B',
-    warningLight: 'rgba(245, 158, 11, 0.1)',
-    error: '#EF4444',
-    errorLight: 'rgba(239, 68, 68, 0.1)',
+    success: '#6EAF8D',
+    successLight: 'rgba(110, 175, 141, 0.1)',
+    warning: '#D4A574',
+    warningLight: 'rgba(212, 165, 116, 0.1)',
+    error: '#D4736D',
+    errorLight: 'rgba(212, 115, 109, 0.1)',
     
-    border: '#E5E7EB',
-    borderLight: '#F3F4F6',
-    borderFocus: '#7C3AED',
+    border: '#E8E6EE',
+    borderLight: '#F3F2F6',
+    borderFocus: '#8B7EC8',
     
     gradient: {
-      primary: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
-      secondary: 'linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%)',
-      accent: 'linear-gradient(135deg, #F59E0B 0%, #EC4899 100%)',
-      soft: 'linear-gradient(135deg, #F5F3FF 0%, #FDF2F8 100%)',
-      hero: 'linear-gradient(135deg, #EDE9FE 0%, #FCE7F3 50%, #FEF3C7 100%)',
+      primary: 'linear-gradient(135deg, #8B7EC8 0%, #D4A5C9 100%)',
+      secondary: 'linear-gradient(135deg, #A99CD4 0%, #94C5CC 100%)',
+      accent: 'linear-gradient(135deg, #E8B4A0 0%, #D4A5C9 100%)',
+      soft: 'linear-gradient(135deg, #F8F6FC 0%, #FDF6FA 100%)',
+      hero: 'linear-gradient(135deg, #F3F0F9 0%, #FDF6FA 50%, #FEF8F4 100%)',
       card: 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)',
       shimmer: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)'
     }
@@ -87,14 +87,14 @@ export const theme = {
     md: '0 4px 16px rgba(0, 0, 0, 0.08)',
     lg: '0 8px 32px rgba(0, 0, 0, 0.1)',
     xl: '0 16px 48px rgba(0, 0, 0, 0.12)',
-    glow: '0 0 40px rgba(124, 58, 237, 0.15)',
-    glowSm: '0 0 20px rgba(124, 58, 237, 0.1)',
+    glow: '0 0 40px rgba(139, 126, 200, 0.15)',
+    glowSm: '0 0 20px rgba(139, 126, 200, 0.1)',
     card: '0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.04)',
     cardHover: '0 4px 12px rgba(0, 0, 0, 0.08), 0 16px 32px rgba(0, 0, 0, 0.06)',
     input: '0 1px 2px rgba(0, 0, 0, 0.04)',
-    inputFocus: '0 0 0 3px rgba(124, 58, 237, 0.12)',
-    button: '0 2px 8px rgba(124, 58, 237, 0.25)',
-    buttonHover: '0 8px 24px rgba(124, 58, 237, 0.3)'
+    inputFocus: '0 0 0 3px rgba(139, 126, 200, 0.12)',
+    button: '0 2px 8px rgba(139, 126, 200, 0.25)',
+    buttonHover: '0 8px 24px rgba(139, 126, 200, 0.3)'
   },
   blur: {
     sm: 'blur(8px)',
@@ -109,6 +109,67 @@ export const theme = {
   },
   breakpoints,
   media
+}
+
+export const darkTheme = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary: '#A99CD4',
+    primaryHover: '#9A8DC5',
+    primaryLight: 'rgba(169, 156, 212, 0.15)',
+    primarySoft: 'rgba(169, 156, 212, 0.2)',
+    secondary: '#D4A5C9',
+    secondaryLight: 'rgba(212, 165, 201, 0.15)',
+    accent: '#E8B4A0',
+    accentLight: 'rgba(232, 180, 160, 0.15)',
+    
+    background: '#1A1A2E',
+    backgroundSecondary: '#16162B',
+    cardBg: '#252542',
+    cardBgSolid: '#252542',
+    surface: '#1E1E38',
+    surfaceSolid: '#252542',
+    surfaceHover: '#2D2D4A',
+    
+    text: {
+      primary: '#F0EDF5',
+      secondary: '#B8B5C4',
+      muted: '#8A879A',
+      accent: '#A99CD4',
+      inverse: '#1A1A2E'
+    },
+    
+    success: '#6EAF8D',
+    successLight: 'rgba(110, 175, 141, 0.15)',
+    warning: '#D4A574',
+    warningLight: 'rgba(212, 165, 116, 0.15)',
+    error: '#D4736D',
+    errorLight: 'rgba(212, 115, 109, 0.15)',
+    
+    border: '#3A3A55',
+    borderLight: '#2D2D4A',
+    borderFocus: '#A99CD4',
+    
+    gradient: {
+      primary: 'linear-gradient(135deg, #A99CD4 0%, #D4A5C9 100%)',
+      secondary: 'linear-gradient(135deg, #8B7EC8 0%, #94C5CC 100%)',
+      accent: 'linear-gradient(135deg, #E8B4A0 0%, #D4A5C9 100%)',
+      soft: 'linear-gradient(135deg, #252542 0%, #2D2A45 100%)',
+      hero: 'linear-gradient(135deg, #1E1E38 0%, #252542 50%, #2A2545 100%)',
+      card: 'linear-gradient(180deg, #252542 0%, #1E1E38 100%)',
+      shimmer: 'linear-gradient(90deg, transparent 0%, rgba(169, 156, 212, 0.1) 50%, transparent 100%)'
+    }
+  },
+  shadows: {
+    ...theme.shadows,
+    card: '0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2)',
+    cardHover: '0 4px 16px rgba(0, 0, 0, 0.4), 0 16px 48px rgba(0, 0, 0, 0.25)',
+    input: '0 2px 4px rgba(0, 0, 0, 0.2)',
+    inputFocus: '0 0 0 3px rgba(169, 156, 212, 0.25)',
+    button: '0 2px 12px rgba(169, 156, 212, 0.3)',
+    buttonHover: '0 8px 28px rgba(169, 156, 212, 0.4)'
+  }
 }
 
 const shimmer = keyframes`

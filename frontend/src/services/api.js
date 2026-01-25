@@ -81,10 +81,14 @@ export const invitationsAPI = {
 export const clientsAPI = {
   search: (query) => api.get('/clients/search', { params: { q: query } }),
   getClients: (limit = 50, offset = 0) => api.get('/clients', { params: { limit, offset } }),
+  getAll: (limit = 50, offset = 0) => api.get('/clients', { params: { limit, offset } }),
   getClient: (id) => api.get(`/clients/${id}`),
   createClient: (data) => api.post('/clients', data),
+  create: (data) => api.post('/clients', data),
   updateClient: (id, data) => api.put(`/clients/${id}`, data),
+  update: (id, data) => api.put(`/clients/${id}`, data),
   deleteClient: (id) => api.delete(`/clients/${id}`),
+  delete: (id) => api.delete(`/clients/${id}`),
   getTransactionHistory: (id, limit = 20) => api.get(`/clients/${id}/transactions`, { params: { limit } }),
 }
 
@@ -94,6 +98,7 @@ export const settingsAPI = {
 }
 
 export const employeesAPI = {
+  getAll: (companyId) => api.get(`/companies/${companyId}/employees`),
   getEmployeeStats: (userId, period) => api.get(`/employees/${userId}/stats`, { params: { period } }),
   updateHourlyRate: (userId, hourlyRate) => api.put(`/employees/${userId}/hourly-rate`, { hourlyRate }),
 }

@@ -299,8 +299,8 @@ const Sidebar = () => {
           <FiScissors />
         </LogoIcon>
         <LogoText>
-          <h1>BeautySalon</h1>
-          <p>Zarządzanie salonem</p>
+          <h1>Salon Manager</h1>
+          <p>Aplikacja do zarządzania salonem</p>
         </LogoText>
       </Logo>
 
