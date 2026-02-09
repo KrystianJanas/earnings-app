@@ -623,6 +623,51 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
         )}
       </ClientSearchWrapper>
 
+      <ServicesSection>
+        <Label>Usługi</Label>
+        {(client.services || []).length > 0 && (
+          <SelectedServicesList>
+            {(client.services || []).map((service, serviceIndex) => (
+              <SelectedServiceRow key={serviceIndex}>
+                <ServiceNameText>{service.serviceName}</ServiceNameText>
+                <ServicePriceText>
+                  {parseFloat(service.overridePrice ?? service.servicePrice).toFixed(2)} zł
+                </ServicePriceText>
+                <RemoveServiceButton type="button" onClick={() => removeService(serviceIndex)}>
+                  <FiX size={14} />
+                </RemoveServiceButton>
+              </SelectedServiceRow>
+            ))}
+          </SelectedServicesList>
+        )}
+        <ServiceSearchWrapper ref={serviceSearchRef}>
+          <ServiceSearchInput
+            type="text"
+            placeholder="Wyszukaj usługę..."
+            value={serviceSearchTerm}
+            onChange={(e) => {
+              setServiceSearchTerm(e.target.value)
+              setShowServiceResults(e.target.value.length > 0)
+            }}
+            onFocus={() => {
+              if (serviceSearchTerm.length > 0 || availableServices.length > 0) {
+                setShowServiceResults(true)
+              }
+            }}
+          />
+          {showServiceResults && filteredServices.length > 0 && (
+            <ServiceDropdown>
+              {filteredServices.map((service) => (
+                <ServiceOption key={service.id} onClick={() => addService(service)}>
+                  <span>{service.name}</span>
+                  <ServiceOptionPrice>{parseFloat(service.price).toFixed(2)} zł</ServiceOptionPrice>
+                </ServiceOption>
+              ))}
+            </ServiceDropdown>
+          )}
+        </ServiceSearchWrapper>
+      </ServicesSection>
+
       {totalAmount > 0 && (
         <TotalAmountDisplay>
           Łączna kwota: {totalAmount.toFixed(2)} zł
@@ -687,51 +732,6 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
           </PaymentEntry>
         ))}
       </PaymentsSection>
-
-      <ServicesSection>
-        <Label>Usługi</Label>
-        {(client.services || []).length > 0 && (
-          <SelectedServicesList>
-            {(client.services || []).map((service, serviceIndex) => (
-              <SelectedServiceRow key={serviceIndex}>
-                <ServiceNameText>{service.serviceName}</ServiceNameText>
-                <ServicePriceText>
-                  {parseFloat(service.overridePrice ?? service.servicePrice).toFixed(2)} zł
-                </ServicePriceText>
-                <RemoveServiceButton type="button" onClick={() => removeService(serviceIndex)}>
-                  <FiX size={14} />
-                </RemoveServiceButton>
-              </SelectedServiceRow>
-            ))}
-          </SelectedServicesList>
-        )}
-        <ServiceSearchWrapper ref={serviceSearchRef}>
-          <ServiceSearchInput
-            type="text"
-            placeholder="Wyszukaj usługę..."
-            value={serviceSearchTerm}
-            onChange={(e) => {
-              setServiceSearchTerm(e.target.value)
-              setShowServiceResults(e.target.value.length > 0)
-            }}
-            onFocus={() => {
-              if (serviceSearchTerm.length > 0 || availableServices.length > 0) {
-                setShowServiceResults(true)
-              }
-            }}
-          />
-          {showServiceResults && filteredServices.length > 0 && (
-            <ServiceDropdown>
-              {filteredServices.map((service) => (
-                <ServiceOption key={service.id} onClick={() => addService(service)}>
-                  <span>{service.name}</span>
-                  <ServiceOptionPrice>{parseFloat(service.price).toFixed(2)} zł</ServiceOptionPrice>
-                </ServiceOption>
-              ))}
-            </ServiceDropdown>
-          )}
-        </ServiceSearchWrapper>
-      </ServicesSection>
     </ClientCard>
   )
 }

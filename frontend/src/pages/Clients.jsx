@@ -408,13 +408,16 @@ const VisitsList = styled.div`
 `
 
 const VisitItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   background: ${({ theme }) => theme.colors.surface};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.borderLight};
+`
+
+const VisitRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 
 const VisitDate = styled.div`
@@ -427,6 +430,22 @@ const VisitDetails = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const VisitServices = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+`
+
+const VisitServiceTag = styled.span`
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  background: ${({ theme }) => theme.colors.successLight || '#ecfdf5'};
+  color: ${({ theme }) => theme.colors.success};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  font-weight: 500;
 `
 
 const VisitAmount = styled.div`
@@ -968,21 +987,30 @@ const Clients = () => {
                   <VisitsList>
                     {transactionHistory.map((visit, index) => (
                       <VisitItem key={index}>
-                        <VisitDate>
-                          {new Date(visit.date).toLocaleDateString('pl-PL', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                          })}
-                        </VisitDate>
-                        <VisitDetails>
-                          {visit.payments && visit.payments.map((p, i) => (
-                            <VisitPayment key={i}>
-                              {paymentMethodLabels[p.method] || p.method}
-                            </VisitPayment>
-                          ))}
-                          <VisitAmount>{parseFloat(visit.amount).toFixed(0)} zł</VisitAmount>
-                        </VisitDetails>
+                        <VisitRow>
+                          <VisitDate>
+                            {new Date(visit.date).toLocaleDateString('pl-PL', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </VisitDate>
+                          <VisitDetails>
+                            {visit.payments && visit.payments.map((p, i) => (
+                              <VisitPayment key={i}>
+                                {paymentMethodLabels[p.method] || p.method}
+                              </VisitPayment>
+                            ))}
+                            <VisitAmount>{parseFloat(visit.amount).toFixed(0)} zł</VisitAmount>
+                          </VisitDetails>
+                        </VisitRow>
+                        {visit.services && visit.services.length > 0 && (
+                          <VisitServices>
+                            {visit.services.map((s, i) => (
+                              <VisitServiceTag key={i}>{s.serviceName}</VisitServiceTag>
+                            ))}
+                          </VisitServices>
+                        )}
                       </VisitItem>
                     ))}
                   </VisitsList>

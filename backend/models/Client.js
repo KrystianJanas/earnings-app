@@ -170,21 +170,21 @@ class Client {
   // Get client transaction history
   static async getTransactionHistory(clientId, limit = 20) {
     const result = await db.query(`
-      SELECT 
+      SELECT
         de.date,
-        CASE 
+        CASE
           WHEN ct.has_multiple_payments = TRUE THEN ct.total_amount
           ELSE ct.amount
         END as amount,
-        CASE 
-          WHEN ct.has_multiple_payments = TRUE THEN 
+        CASE
+          WHEN ct.has_multiple_payments = TRUE THEN
             (SELECT JSON_AGG(
               JSON_BUILD_OBJECT(
                 'amount', cpm.amount,
                 'method', cpm.payment_method
               ) ORDER BY cpm.id
             ) FROM client_payment_methods cpm WHERE cpm.client_transaction_id = ct.id)
-          ELSE 
+          ELSE
             JSON_BUILD_ARRAY(
               JSON_BUILD_OBJECT(
                 'amount', ct.amount,
@@ -192,6 +192,13 @@ class Client {
               )
             )
         END as payments,
+        (SELECT JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'serviceName', cts.service_name,
+            'servicePrice', cts.service_price,
+            'overridePrice', cts.override_price
+          ) ORDER BY cts.id
+        ) FROM client_transaction_services cts WHERE cts.client_transaction_id = ct.id) as services,
         ct.notes
       FROM client_transactions ct
       JOIN daily_earnings de ON ct.daily_earnings_id = de.id
