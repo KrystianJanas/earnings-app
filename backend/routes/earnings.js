@@ -112,10 +112,11 @@ router.get('/day/:date', async (req, res) => {
         clientName: client.client_name,
         clientPhone: client.client_phone,
         clientEmail: client.client_email,
-        payments: client.payments || (client.payment_method ? 
-          [{ amount: parseFloat(client.amount || 0), method: client.payment_method }] : 
+        payments: client.payments || (client.payment_method ?
+          [{ amount: parseFloat(client.amount || 0), method: client.payment_method }] :
           [{ amount: 0, method: 'cash' }]
-        )
+        ),
+        services: client.services || []
       })) : []
     });
   } catch (error) {
@@ -149,7 +150,12 @@ router.post('/day', [
   body('clients.*.payments').optional().isArray(),
   body('clients.*.payments.*.amount').optional().isFloat({ min: 0 }),
   body('clients.*.payments.*.method').optional().isIn(['cash', 'card', 'blik', 'prepaid', 'transfer', 'free']),
-  body('clients.*.notes').optional().isString()
+  body('clients.*.notes').optional().isString(),
+  body('clients.*.services').optional().isArray(),
+  body('clients.*.services.*.serviceId').optional().isInt(),
+  body('clients.*.services.*.serviceName').optional().isString(),
+  body('clients.*.services.*.servicePrice').optional().isFloat({ min: 0 }),
+  body('clients.*.services.*.overridePrice').optional({ nullable: true }).isFloat({ min: 0 })
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

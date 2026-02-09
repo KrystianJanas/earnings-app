@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
-import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch } from 'react-icons/fi'
+import { FiCreditCard, FiTrash2, FiUser, FiPlus, FiMinus, FiSearch, FiX } from 'react-icons/fi'
 import { Input, Label, Button, media } from '../styles/theme'
+import { servicesAPI } from '../services/api'
 
 const ClientCard = styled.div`
   padding: ${({ theme }) => theme.spacing.sm};
@@ -261,10 +262,103 @@ const NoResults = styled.div`
   text-align: center;
 `
 
-const NotesInput = styled(Input)`
-  font-size: 1rem;
-  padding: 14px 16px;
-  margin-top: ${({ theme }) => theme.spacing.sm};
+const ServicesSection = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
+const SelectedServicesList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+`
+
+const SelectedServiceRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: ${({ theme }) => theme.colors.cardBg};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: 0.9rem;
+`
+
+const ServiceNameText = styled.span`
+  flex: 1;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: 500;
+`
+
+const ServicePriceText = styled.span`
+  color: ${({ theme }) => theme.colors.success};
+  font-weight: 600;
+  margin: 0 8px;
+`
+
+const RemoveServiceButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.text.muted};
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.error};
+  }
+`
+
+const ServiceSearchWrapper = styled.div`
+  position: relative;
+`
+
+const ServiceSearchInput = styled(Input)`
+  font-size: 0.95rem;
+  padding: 10px 14px;
+`
+
+const ServiceDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: ${({ theme }) => theme.colors.cardBg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-top: none;
+  border-radius: 0 0 ${({ theme }) => theme.borderRadius.md} ${({ theme }) => theme.borderRadius.md};
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: ${({ theme }) => theme.shadows.lg};
+`
+
+const ServiceOption = styled.div`
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.text.primary};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryLight};
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`
+
+const ServiceOptionPrice = styled.span`
+  color: ${({ theme }) => theme.colors.success};
+  font-weight: 600;
+  font-size: 0.85rem;
 `
 
 const PAYMENT_METHODS = [
@@ -281,6 +375,9 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
   const [showResults, setShowResults] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const searchRef = useRef(null)
+  const [serviceSearchTerm, setServiceSearchTerm] = useState('')
+  const [showServiceResults, setShowServiceResults] = useState(false)
+  const serviceSearchRef = useRef(null)
 
   const { data: searchResults = [] } = useQuery(
     ['clientSearch', searchTerm],
@@ -403,10 +500,72 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
     }
   }
 
-  const handleNotesChange = (value) => {
+  // Services
+  const { data: availableServices = [] } = useQuery(
+    ['services'],
+    () => servicesAPI.getAll().then(res => res.data),
+    { staleTime: 5 * 60 * 1000 }
+  )
+
+  const filteredServices = availableServices.filter(s =>
+    s.name.toLowerCase().includes(serviceSearchTerm.toLowerCase()) &&
+    !(client.services || []).some(cs => cs.serviceId === s.id)
+  )
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (serviceSearchRef.current && !serviceSearchRef.current.contains(event.target)) {
+        setShowServiceResults(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const addService = (service) => {
+    const newServices = [...(client.services || []), {
+      serviceId: service.id,
+      serviceName: service.name,
+      servicePrice: parseFloat(service.price),
+      overridePrice: null
+    }]
+
+    const totalFromServices = newServices.reduce(
+      (sum, s) => sum + parseFloat(s.overridePrice ?? s.servicePrice), 0
+    )
+
+    const updatedPayments = [...payments]
+    if (updatedPayments.length === 1) {
+      updatedPayments[0] = { ...updatedPayments[0], amount: totalFromServices }
+    }
+
     onUpdate({
       ...client,
-      notes: value
+      services: newServices,
+      payments: updatedPayments,
+      amount: totalFromServices
+    })
+
+    setServiceSearchTerm('')
+    setShowServiceResults(false)
+  }
+
+  const removeService = (serviceIndex) => {
+    const newServices = (client.services || []).filter((_, i) => i !== serviceIndex)
+    const totalFromServices = newServices.reduce(
+      (sum, s) => sum + parseFloat(s.overridePrice ?? s.servicePrice), 0
+    )
+
+    const updatedPayments = [...payments]
+    if (updatedPayments.length === 1) {
+      updatedPayments[0] = { ...updatedPayments[0], amount: totalFromServices }
+    }
+
+    onUpdate({
+      ...client,
+      services: newServices,
+      payments: updatedPayments,
+      amount: totalFromServices
     })
   }
 
@@ -529,16 +688,50 @@ const ClientEntry = ({ client, index, onUpdate, onRemove }) => {
         ))}
       </PaymentsSection>
 
-      <div>
-        <Label htmlFor={`client-notes-${index}`}>Notatki (opcjonalnie)</Label>
-        <NotesInput
-          id={`client-notes-${index}`}
-          type="text"
-          placeholder="np. manicure, pedicure..."
-          value={client.notes || ''}
-          onChange={(e) => handleNotesChange(e.target.value)}
-        />
-      </div>
+      <ServicesSection>
+        <Label>Usługi</Label>
+        {(client.services || []).length > 0 && (
+          <SelectedServicesList>
+            {(client.services || []).map((service, serviceIndex) => (
+              <SelectedServiceRow key={serviceIndex}>
+                <ServiceNameText>{service.serviceName}</ServiceNameText>
+                <ServicePriceText>
+                  {parseFloat(service.overridePrice ?? service.servicePrice).toFixed(2)} zł
+                </ServicePriceText>
+                <RemoveServiceButton type="button" onClick={() => removeService(serviceIndex)}>
+                  <FiX size={14} />
+                </RemoveServiceButton>
+              </SelectedServiceRow>
+            ))}
+          </SelectedServicesList>
+        )}
+        <ServiceSearchWrapper ref={serviceSearchRef}>
+          <ServiceSearchInput
+            type="text"
+            placeholder="Wyszukaj usługę..."
+            value={serviceSearchTerm}
+            onChange={(e) => {
+              setServiceSearchTerm(e.target.value)
+              setShowServiceResults(e.target.value.length > 0)
+            }}
+            onFocus={() => {
+              if (serviceSearchTerm.length > 0 || availableServices.length > 0) {
+                setShowServiceResults(true)
+              }
+            }}
+          />
+          {showServiceResults && filteredServices.length > 0 && (
+            <ServiceDropdown>
+              {filteredServices.map((service) => (
+                <ServiceOption key={service.id} onClick={() => addService(service)}>
+                  <span>{service.name}</span>
+                  <ServiceOptionPrice>{parseFloat(service.price).toFixed(2)} zł</ServiceOptionPrice>
+                </ServiceOption>
+              ))}
+            </ServiceDropdown>
+          )}
+        </ServiceSearchWrapper>
+      </ServicesSection>
     </ClientCard>
   )
 }

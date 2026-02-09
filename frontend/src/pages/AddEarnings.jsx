@@ -174,30 +174,6 @@ const AmountInput = styled(Input)`
   font-weight: 600;
 `
 
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 14px 16px;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 0.95rem;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 80px;
-  transition: all ${({ theme }) => theme.transitions.normal};
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.text.muted};
-  }
-`
-
 const PaymentMethodsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -399,7 +375,6 @@ const AddEarnings = () => {
 
   const [hoursWorked, setHoursWorked] = useState('')
   const [tipsAmount, setTipsAmount] = useState('')
-  const [notes, setNotes] = useState('')
   const [activePaymentMethod, setActivePaymentMethod] = useState('cash')
   const [paymentAmounts, setPaymentAmounts] = useState({
     cash: '',
@@ -429,7 +404,6 @@ const AddEarnings = () => {
         if (data) {
           setHoursWorked(data.hoursWorked?.toString() || '')
           setTipsAmount(data.tipsAmount?.toString() || '')
-          setNotes(data.notes || '')
           setDetailedMode(data.entryMode === 'detailed')
           setPaymentAmounts({
             cash: data.cashAmount?.toString() || '',
@@ -447,7 +421,7 @@ const AddEarnings = () => {
               paymentMethod: c.paymentMethod || 'cash',
               amount: c.amount?.toString() || '',
               payments: c.payments || [{ amount: c.amount || 0, method: c.paymentMethod || 'cash' }],
-              notes: c.notes || '',
+              services: c.services || [],
               isNewClient: false,
             })))
           } else {
@@ -502,7 +476,6 @@ const AddEarnings = () => {
     setClients([])
     setHoursWorked('')
     setTipsAmount('')
-    setNotes('')
     setPaymentAmounts({
       cash: '',
       card: '',
@@ -569,7 +542,7 @@ const AddEarnings = () => {
       entryMode: detailedMode ? 'detailed' : 'summary',
       hoursWorked: parseFloat(hoursWorked) || 0,
       tipsAmount: parseFloat(tipsAmount) || 0,
-      notes: notes || '',
+      notes: '',
       cashAmount: totals.cash,
       cardAmount: totals.card,
       blikAmount: totals.blik,
@@ -580,9 +553,15 @@ const AddEarnings = () => {
       clients: detailedMode ? clients.map(client => ({
         clientId: client.clientId,
         clientName: client.clientName,
-        paymentMethod: client.paymentMethod,
         amount: parseFloat(client.amount) || 0,
         isNewClient: client.isNewClient,
+        payments: client.payments || [{ amount: parseFloat(client.amount) || 0, method: 'cash' }],
+        services: (client.services || []).map(s => ({
+          serviceId: s.serviceId,
+          serviceName: s.serviceName,
+          servicePrice: s.servicePrice,
+          overridePrice: s.overridePrice
+        }))
       })) : [],
     }
 
@@ -764,15 +743,6 @@ const AddEarnings = () => {
                 </AddClientButton>
               </ClientsSection>
             )}
-
-            <FormGroup>
-              <Label>Notatki (opcjonalnie)</Label>
-              <TextArea
-                placeholder="Dodatkowe informacje o dniu..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
-            </FormGroup>
 
             <SubmitButton
               type="button"

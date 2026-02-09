@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiUserCheck } from 'react-icons/fi'
+import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiUserCheck, FiList } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { media } from '../styles/theme'
 
@@ -107,6 +107,13 @@ const Navigation = () => {
           <NavItem to="/employees">
             <FiUsers />
             <span>Pracownicy</span>
+          </NavItem>
+        )}
+
+        {isOwner && (
+          <NavItem to="/services">
+            <FiList />
+            <span>Usługi</span>
           </NavItem>
         )}
 

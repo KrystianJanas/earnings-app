@@ -103,4 +103,14 @@ export const employeesAPI = {
   updateHourlyRate: (userId, hourlyRate) => api.put(`/employees/${userId}/hourly-rate`, { hourlyRate }),
 }
 
+export const servicesAPI = {
+  getAll: () => api.get('/services'),
+  search: (query) => api.get('/services/search', { params: { q: query } }),
+  create: (data) => api.post('/services', data),
+  update: (id, data) => api.put(`/services/${id}`, data),
+  delete: (id) => api.delete(`/services/${id}`),
+  activate: (id) => api.put(`/services/${id}/activate`),
+  getPriceHistory: (id) => api.get(`/services/${id}/price-history`),
+}
+
 export default api

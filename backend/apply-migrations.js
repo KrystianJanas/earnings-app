@@ -24,7 +24,8 @@ async function applyMigrations() {
     const migrationsDir = path.join(__dirname, 'migrations');
     const migrationFiles = [
       'add_companies_system.sql',
-      'add_clients_view.sql'
+      'add_clients_view.sql',
+      'add_services_catalog.sql'
     ];
 
     for (const file of migrationFiles) {

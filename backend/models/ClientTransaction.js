@@ -1,5 +1,6 @@
 const db = require('../config/database');
 const Client = require('./Client');
+const Service = require('./Service');
 
 class ClientTransaction {
   static async create({ dailyEarningsId, amount, paymentMethod, clientOrder, notes, payments }) {
@@ -113,6 +114,15 @@ class ClientTransaction {
             }
           }
 
+          // Save services linked to this transaction
+          if (clientData.services && clientData.services.length > 0) {
+            try {
+              await Service.addToTransaction(transaction.id, clientData.services, txClient);
+            } catch (err) {
+              console.warn('Could not save transaction services:', err.message);
+            }
+          }
+
           // Update client stats if we have a client and actual spending (outside transaction is ok)
           if (clientId && totalAmount > 0) {
             try {
@@ -134,6 +144,15 @@ class ClientTransaction {
             VALUES ($1, $2, $3, $4, $5, $6, FALSE)
             RETURNING *
           `, [dailyEarningsId, clientId, amount, clientData.paymentMethod || 'cash', i + 1, clientData.notes || null]);
+
+          // Save services linked to this transaction
+          if (clientData.services && clientData.services.length > 0) {
+            try {
+              await Service.addToTransaction(result.rows[0].id, clientData.services, txClient);
+            } catch (err) {
+              console.warn('Could not save transaction services:', err.message);
+            }
+          }
 
           // Update client stats if we have a client and actual spending
           if (clientId && amount > 0) {
@@ -195,10 +214,19 @@ class ClientTransaction {
                 'method', ct.payment_method
               )
             )
-        END as payments
+        END as payments,
+        (SELECT JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'id', cts.id,
+            'serviceId', cts.service_id,
+            'serviceName', cts.service_name,
+            'servicePrice', cts.service_price,
+            'overridePrice', cts.override_price
+          ) ORDER BY cts.id
+        ) FROM client_transaction_services cts WHERE cts.client_transaction_id = ct.id) as services
       FROM client_transactions ct
       LEFT JOIN clients c ON ct.client_id = c.id
-      WHERE ct.daily_earnings_id = $1 
+      WHERE ct.daily_earnings_id = $1
       ORDER BY ct.client_order ASC
     `, [dailyEarningsId]);
     return result.rows;

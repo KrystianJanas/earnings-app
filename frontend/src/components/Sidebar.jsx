@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck, FiCheck, FiScissors } from 'react-icons/fi'
+import { FiHome, FiPlus, FiBarChart, FiSettings, FiUsers, FiChevronDown, FiLogOut, FiUserCheck, FiCheck, FiScissors, FiList } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { media } from '../styles/theme'
 import CreateCompany from './CreateCompany'
@@ -396,6 +396,10 @@ const Sidebar = () => {
             <NavItem to="/employees">
               <FiUsers />
               <span>Pracownicy</span>
+            </NavItem>
+            <NavItem to="/services">
+              <FiList />
+              <span>Katalog usług</span>
             </NavItem>
           </NavSection>
         )}
