@@ -359,11 +359,104 @@ const EmptyState = styled.div`
   }
 `
 
+const DetailSection = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const DetailLabel = styled.div`
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: ${({ theme }) => theme.colors.text.muted};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  font-weight: 600;
+`
+
+const DetailStatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const DetailStatItem = styled.div`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+`
+
+const DetailStatValue = styled.div`
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: ${({ $color, theme }) => $color || theme.colors.text.primary};
+`
+
+const DetailStatLabel = styled.div`
+  font-size: 0.7rem;
+  color: ${({ theme }) => theme.colors.text.muted};
+  margin-top: 4px;
+`
+
+const VisitsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+  max-height: 300px;
+  overflow-y: auto;
+`
+
+const VisitItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.borderLight};
+`
+
+const VisitDate = styled.div`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: 500;
+`
+
+const VisitDetails = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const VisitAmount = styled.div`
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.success};
+`
+
+const VisitPayment = styled.span`
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  background: ${({ theme }) => theme.colors.primaryLight};
+  color: ${({ theme }) => theme.colors.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  font-weight: 500;
+`
+
+const EmptyVisits = styled.div`
+  text-align: center;
+  padding: ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.colors.text.muted};
+  font-size: 0.9rem;
+`
+
 const Clients = () => {
   const queryClient = useQueryClient()
   const [searchQuery, setSearchQuery] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [showDetailModal, setShowDetailModal] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null)
   const [revealedContacts, setRevealedContacts] = useState({})
   const [formData, setFormData] = useState({
@@ -404,10 +497,25 @@ const Clients = () => {
     return revealedContacts[clientId]?.[field] || false
   }
 
+  const paymentMethodLabels = {
+    cash: 'Gotówka',
+    card: 'Karta',
+    blik: 'BLIK',
+    prepaid: 'Prepaid',
+    transfer: 'Przelew',
+    free: 'Gratis',
+  }
+
   const { data: clientsData, isLoading, error } = useQuery(
     ['clients'],
     () => clientsAPI.getAll().then(res => res.data),
     { refetchOnMount: true }
+  )
+
+  const { data: transactionHistory, isLoading: loadingHistory } = useQuery(
+    ['clientHistory', selectedClient?.id],
+    () => clientsAPI.getTransactionHistory(selectedClient.id).then(res => res.data),
+    { enabled: !!selectedClient?.id && showDetailModal }
   )
 
   const addClientMutation = useMutation(
@@ -449,6 +557,11 @@ const Clients = () => {
       email: '',
       notes: '',
     })
+  }
+
+  const handleClientClick = (client) => {
+    setSelectedClient(client)
+    setShowDetailModal(true)
   }
 
   const handleEdit = (client, e) => {
@@ -578,6 +691,7 @@ const Clients = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
+              onClick={() => handleClientClick(client)}
             >
               <ClientHeader>
                 <ClientInfo>
@@ -780,6 +894,102 @@ const Clients = () => {
                   </Button>
                 </ButtonGroup>
               </Form>
+            </ModalContent>
+          </Modal>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showDetailModal && selectedClient && (
+          <Modal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDetailModal(false)}
+          >
+            <ModalContent
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ModalHeader>
+                <ModalTitle>#{selectedClient.id} - {selectedClient.full_name}</ModalTitle>
+                <CloseButton onClick={() => setShowDetailModal(false)}>
+                  <FiX size={20} />
+                </CloseButton>
+              </ModalHeader>
+
+              <DetailStatsGrid>
+                <DetailStatItem>
+                  <DetailStatValue $color="#8B5CF6">{selectedClient.total_visits || 0}</DetailStatValue>
+                  <DetailStatLabel>Wizyty</DetailStatLabel>
+                </DetailStatItem>
+                <DetailStatItem>
+                  <DetailStatValue $color="#10B981">{parseFloat(selectedClient.total_spent || 0).toFixed(0)} zł</DetailStatValue>
+                  <DetailStatLabel>Wydane</DetailStatLabel>
+                </DetailStatItem>
+                <DetailStatItem>
+                  <DetailStatValue $color="#F59E0B">
+                    {selectedClient.last_visit_date
+                      ? new Date(selectedClient.last_visit_date).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' })
+                      : '-'
+                    }
+                  </DetailStatValue>
+                  <DetailStatLabel>Ostatnia wizyta</DetailStatLabel>
+                </DetailStatItem>
+              </DetailStatsGrid>
+
+              {(selectedClient.phone || selectedClient.email) && (
+                <DetailSection>
+                  <DetailLabel>Kontakt</DetailLabel>
+                  <ClientContact>
+                    {selectedClient.phone && (
+                      <span><FiPhone size={14} /> {selectedClient.phone}</span>
+                    )}
+                    {selectedClient.email && (
+                      <span><FiMail size={14} /> {selectedClient.email}</span>
+                    )}
+                  </ClientContact>
+                </DetailSection>
+              )}
+
+              {selectedClient.notes && (
+                <DetailSection>
+                  <DetailLabel>Notatki</DetailLabel>
+                  <span style={{ fontSize: '0.9rem', color: 'inherit' }}>{selectedClient.notes}</span>
+                </DetailSection>
+              )}
+
+              <DetailSection>
+                <DetailLabel>Historia wizyt</DetailLabel>
+                {loadingHistory ? (
+                  <EmptyVisits>Ładowanie historii...</EmptyVisits>
+                ) : transactionHistory && transactionHistory.length > 0 ? (
+                  <VisitsList>
+                    {transactionHistory.map((visit, index) => (
+                      <VisitItem key={index}>
+                        <VisitDate>
+                          {new Date(visit.date).toLocaleDateString('pl-PL', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                          })}
+                        </VisitDate>
+                        <VisitDetails>
+                          {visit.payments && visit.payments.map((p, i) => (
+                            <VisitPayment key={i}>
+                              {paymentMethodLabels[p.method] || p.method}
+                            </VisitPayment>
+                          ))}
+                          <VisitAmount>{parseFloat(visit.amount).toFixed(0)} zł</VisitAmount>
+                        </VisitDetails>
+                      </VisitItem>
+                    ))}
+                  </VisitsList>
+                ) : (
+                  <EmptyVisits>Brak historii wizyt</EmptyVisits>
+                )}
+              </DetailSection>
             </ModalContent>
           </Modal>
         )}
