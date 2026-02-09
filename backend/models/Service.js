@@ -52,7 +52,7 @@ class Service {
       await db.query(`
         INSERT INTO service_price_history (service_id, price, changed_by)
         VALUES ($1, $2, $3)
-      `, [id, existing.price, userId]);
+      `, [id, price, userId]);
     }
 
     const result = await db.query(`
@@ -98,8 +98,8 @@ class Service {
       SELECT sph.*, u.first_name, u.last_name
       FROM service_price_history sph
       LEFT JOIN users u ON sph.changed_by = u.id
+      WHERE sph.service_id = $1
       ORDER BY sph.changed_at DESC
-    WHERE sph.service_id = $1
     `, [serviceId]);
     return result.rows;
   }
